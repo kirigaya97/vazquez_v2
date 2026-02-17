@@ -424,19 +424,6 @@ const columns = [
 </script>
 
 <style>
-    .hero-noise-bg {
-        background: #111413;
-    }
-    .hero-noise-bg::after {
-        content: "";
-        position: absolute;
-        inset: 0;
-        background: repeating-conic-gradient(#f2f2f2 0.00005%, #111413 0.0004%)
-            50% 50%/2500px 2500px;
-        opacity: 0.04;
-        pointer-events: none;
-    }
-
     /* Hide trigger when mobile menu is active */
     :global(body.mobile-menu-active) #hero-magic-trigger {
         opacity: 0 !important;

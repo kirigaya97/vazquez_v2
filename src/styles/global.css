@@ -67,17 +67,73 @@ html {
 }
 
 /* ═══ Hero Dark Noise Background ═══ */
+/* Note: The HTML container has 'absolute inset-0' utility classes. 
+   We do NOT set position:relative here to avoid overriding them. */
 .hero-noise-bg {
   background: #111413;
+  overflow: hidden;
 }
 
 .hero-noise-bg::after {
   content: '';
   position: absolute;
-  inset: 0;
-  background: repeating-conic-gradient(#F2F2F2 0.00005%, #111413 0.0004%) 50% 50%/2500px 2500px;
-  opacity: 0.04;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  /* SVG Noise Pattern for guaranteed visibility */
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.35' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.5'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
+  /* Tiling */
+  opacity: 0.25;
   pointer-events: none;
+  animation: noise-jitter 0.2s steps(3) infinite;
+}
+
+@keyframes noise-jitter {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+
+  10% {
+    transform: translate3d(-1%, -2%, 0);
+  }
+
+  20% {
+    transform: translate3d(-2%, 1%, 0);
+  }
+
+  30% {
+    transform: translate3d(1%, -1%, 0);
+  }
+
+  40% {
+    transform: translate3d(-1%, -1%, 0);
+  }
+
+  50% {
+    transform: translate3d(-1%, 2%, 0);
+  }
+
+  60% {
+    transform: translate3d(1%, 2%, 0);
+  }
+
+  70% {
+    transform: translate3d(2%, 1%, 0);
+  }
+
+  80% {
+    transform: translate3d(1%, -2%, 0);
+  }
+
+  90% {
+    transform: translate3d(-1%, 1%, 0);
+  }
+
+  100% {
+    transform: translate3d(1%, -1%, 0);
+  }
 }
 
 /* ═══ Hero 3D Symbol ═══ */
