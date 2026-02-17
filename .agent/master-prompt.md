@@ -1,4 +1,4 @@
-# MASTER PROMPT: ChapMagic — High-Performance Bilingual Magician Landing Page
+# MASTER PROMPT: Vazquez Ilusionista — High-Performance Magician Landing Page
 
 > **⚠️ THIS IS THE CORRECTED MASTER PROMPT. All information here has been verified against official documentation as of February 2026.**
 >
@@ -48,11 +48,11 @@ Skill files are comprehensive reference guides located at `.agent/skills/*/SKILL
 
 ## 1. Project Overview
 
-You are building a **premium, high-performance, bilingual (Spanish/English) landing page** for a world-class Magician/Mentalist. The site name is **ChapMagic**.
+You are building a **premium, high-performance, Spanish-only (Argentine Spanish) landing page** for a world-class Magician/Mentalist. The site name is **Vazquez Ilusionista** (full name: Fernando Vazquez Ilusionista).
 
 ### Design Vision
 - **Aesthetic**: Premium Mystery — think luxury brand meets dark theatrical magic
-- **Palette**: Deep Obsidian blacks (`#0A0A0A`), "Magic Gold" accents (`#D4AF37`), clean off-white Ivory (`#F5F0E8`)
+- **Palette**: Near-black (`#111413`), Deep Purple (`#330673`), Light Purple (`#9582D9`), Dark Gray (`#3D3C45`), Off-white (`#F2F2F2`)
 - **Feel**: Large negative space, smooth scroll, elegant reveals, "anti-gravity" physics feel
 - **Typography**: Serif headings (Playfair Display), clean sans-serif body (Inter)
 
@@ -161,40 +161,30 @@ When using `<ClientRouter />`, scripts do NOT automatically re-run on page navig
 </script>
 ```
 
-### 3.4 Internationalization (i18n)
+### 3.4 Language (Spanish Only)
+
+This site is **Spanish-only (Argentine Spanish)**. There is no bilingual routing.
 
 **URL structure:**
 ```
-/          → redirects to /es/ (Spanish, default)
-/es/       → Spanish landing page
-/en/       → English landing page
+/          → main landing page (Spanish)
 ```
 
 **File structure:**
 ```
 src/pages/
-├── index.astro           # Redirects to /es/
-└── [lang]/
-    └── index.astro       # Dynamic route, lang = "es" | "en"
+└── index.astro           # Main landing page
 ```
 
-**The `[lang]/index.astro` page loads translations from `site-config.json`:**
+**The `index.astro` page loads content from `site-config.json`:**
 ```astro
 ---
-import siteConfig from '../../data/site-config.json';
-import BaseLayout from '../../layouts/BaseLayout.astro';
+import siteConfig from '../data/site-config.json';
+import BaseLayout from '../layouts/BaseLayout.astro';
 
-export function getStaticPaths() {
-  return [
-    { params: { lang: 'es' } },
-    { params: { lang: 'en' } },
-  ];
-}
-
-const { lang } = Astro.params;
-const t = siteConfig.translations[lang as 'es' | 'en'];
+const t = siteConfig.translations.es;
 ---
-<BaseLayout lang={lang} title={t.meta.title} description={t.meta.description}>
+<BaseLayout lang="es" title={t.meta.title} description={t.meta.description}>
   <!-- Sections receive translation slices as props -->
 </BaseLayout>
 ```
@@ -364,13 +354,13 @@ export default defineConfig({
 @import "tailwindcss";
 
 @theme {
-  --color-obsidian: #0A0A0A;
-  --color-obsidian-light: #1A1A1A;
-  --color-gold: #D4AF37;
-  --color-gold-light: #E8C860;
-  --color-gold-dark: #B8941F;
-  --color-ivory: #F5F0E8;
-  --color-ivory-muted: #D9D0C0;
+  --color-dark: #111413;
+  --color-dark-gray: #3D3C45;
+  --color-purple: #330673;
+  --color-purple-light: #9582D9;
+  --color-purple-glow: #7B68C8;
+  --color-light: #F2F2F2;
+  --color-light-muted: #D9D9D9;
   --color-smoke: #2A2A2A;
 
   --font-heading: 'Playfair Display', Georgia, serif;
@@ -385,8 +375,8 @@ export default defineConfig({
 
 **These tokens then become available as Tailwind utilities:**
 ```html
-<h1 class="text-gold font-heading text-6xl">...</h1>
-<section class="bg-obsidian text-ivory py-section">...</section>
+<h1 class="text-purple-light font-heading text-6xl">...</h1>
+<section class="bg-dark text-light py-section">...</section>
 ```
 
 ---
@@ -397,7 +387,7 @@ export default defineConfig({
 
 ### `src/data/site-config.json`
 
-This JSON file is the **single source of truth** for ALL user-facing content, contact info, colors, links, and bilingual translations. The user should NEVER need to edit component code to change text, a phone number, or a translation.
+This JSON file is the **single source of truth** for ALL user-facing content, contact info, colors, links, and translations. The user should NEVER need to edit component code to change text, a phone number, or a translation.
 
 **Required top-level keys:**
 
@@ -405,10 +395,9 @@ This JSON file is the **single source of truth** for ALL user-facing content, co
 {
   "branding": { "siteName", "logo", "colors": {...}, "fonts": {...} },
   "contact":  { "whatsapp", "email", "formDestinationEmail" },
-  "links":    { "atrapalo", "instagram", "youtube", "heroVideoSrc" },
+  "links":    { "instagram", "youtube", "heroVideoSrc" },
   "translations": {
-    "es": { "meta", "nav", "hero", "shows", "jury", "stats", "tickets", "contact", "whatsapp", "footer" },
-    "en": { /* same structure as "es" */ }
+    "es": { "meta", "nav", "hero", "shows", "jury", "stats", "tickets", "contact", "whatsapp", "footer" }
   }
 }
 ```
@@ -419,7 +408,7 @@ This JSON file is the **single source of truth** for ALL user-facing content, co
 
 ```
 site-config.json
-  └─→ [lang]/index.astro (reads JSON, extracts `t = translations[lang]`)
+  └─→ index.astro (reads JSON, extracts `t = translations.es`)
        └─→ Hero.astro        (receives `t.hero` as prop)
        └─→ Shows.astro       (receives `t.shows` as prop)
        └─→ Stats.astro       (receives `t.stats` as prop)
@@ -522,13 +511,13 @@ Each section below is a separate `.astro` component in `src/components/sections/
 > 📖 **Full file structure with naming rules:** `.agent/skills/project-conventions/SKILL.md` §1 and §2.
 
 ```
-chapmagic/
-├── astro.config.mjs              # Astro config (adapter, TW4 vite plugin, i18n, React)
+vazquez-ilusionista/
+├── astro.config.mjs              # Astro config (adapter, TW4 vite plugin, React)
 ├── tsconfig.json                 # TypeScript strict config
 ├── package.json
 ├── public/
 │   ├── fonts/                    # Self-hosted font files (optional)
-│   ├── videos/                   # Hero video (AGT Golden Button)
+│   ├── videos/                   # Hero video
 │   ├── favicon.svg
 │   └── robots.txt
 ├── src/
@@ -540,7 +529,6 @@ chapmagic/
 │   ├── components/
 │   │   ├── ui/                   # Button.astro, Reveal.astro, Counter.tsx, etc.
 │   │   ├── sections/             # Hero, Shows, JuryFeedback, Stats, Tickets, Contact, Footer
-│   │   ├── i18n/                 # LanguageToggle.astro
 │   │   ├── WhatsAppButton.astro
 │   │   └── SmoothScroll.astro
 │   ├── data/
@@ -548,9 +536,7 @@ chapmagic/
 │   ├── layouts/
 │   │   └── BaseLayout.astro      # HTML shell, <ClientRouter />, meta tags, fonts
 │   ├── pages/
-│   │   ├── index.astro           # Redirect → /es/
-│   │   ├── [lang]/
-│   │   │   └── index.astro       # Main landing page
+│   │   ├── index.astro           # Main landing page (Spanish)
 │   │   └── api/
 │   │       └── send-email.ts     # POST /api/send-email
 │   └── styles/
@@ -577,19 +563,12 @@ import react from '@astrojs/react';
 // import node from '@astrojs/node'; // Required for API routes (uncomment when needed)
 
 export default defineConfig({
-  site: 'https://chapmagic.com', // Replace with actual domain
+  site: 'https://vazquezilusionista.com', // Replace with actual domain
   integrations: [
     react(),
   ],
   vite: {
     plugins: [tailwindcss()],
-  },
-  i18n: {
-    defaultLocale: 'es',
-    locales: ['es', 'en'],
-    routing: {
-      prefixDefaultLocale: true,
-    },
   },
   // output: 'hybrid',                    // Uncomment for API routes
   // adapter: node({ mode: 'standalone' }), // Uncomment for API routes
@@ -610,18 +589,17 @@ export default defineConfig({
 ### Accessibility (WCAG AA)
 - All images have descriptive `alt` text
 - All interactive elements keyboard-accessible
-- Color contrast ≥ 4.5:1 (Gold on Obsidian = 8.2:1 ✅, Ivory on Obsidian = 16.4:1 ✅)
+- Color contrast ≥ 4.5:1 (Light Purple on Dark = high ✅, Off-white on Dark = very high ✅)
 - Form inputs have associated `<label>` elements
-- `<html lang="es">` or `<html lang="en">` set correctly
+- `<html lang="es">` set correctly
 - `prefers-reduced-motion` respected (skip animations if user prefers)
 
 ### SEO
-- Unique `<title>` and `<meta name="description">` per language
+- Unique `<title>` and `<meta name="description">`
 - Single `<h1>` per page
 - Semantic HTML5 elements (`<header>`, `<main>`, `<section>`, `<footer>`, `<nav>`)
 - Open Graph meta tags for social sharing
-- `<link rel="canonical">` set per language
-- `hreflang` alternate links for es/en
+- `<link rel="canonical">` set
 
 ---
 
@@ -645,4 +623,4 @@ Execute in this exact sequence:
 - Ensure `site-config.json` is exhaustive — the user NEVER touches component code to change content.
 - Prioritize: **speed** (Lighthouse 95+), **smooth scrolling** (Lenis), **magical feel** (elegant animations).
 - Every piece of text on the site MUST come from `site-config.json` translations.
-- Test that both `/es/` and `/en/` render correctly with all translated content.
+- Test that `/` renders correctly with all Spanish content.

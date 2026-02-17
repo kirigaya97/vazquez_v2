@@ -3,7 +3,7 @@ name: astro-architecture
 description: Astro v5 Islands Architecture, Content Collections, View Transitions, i18n routing, and API routes — verified against official docs.
 ---
 
-# Astro v5 Architecture Guide for ChapMagic
+# Astro v5 Architecture Guide for Vazquez Ilusionista
 
 > **CRITICAL**: This guide is the single source of truth for Astro patterns in this project.
 > Do NOT use patterns from older Astro tutorials (pre-v5). If you are unsure, follow this document exactly.
@@ -323,7 +323,7 @@ import react from '@astrojs/react'; // Needed for Counter.tsx island
 // import node from '@astrojs/node'; // Uncomment for API route SSR
 
 export default defineConfig({
-  site: 'https://chapmagic.com', // Replace with actual domain
+  site: 'https://vazquezilusionista.com', // Replace with actual domain
   integrations: [
     react(), // For .tsx islands
   ],

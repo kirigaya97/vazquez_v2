@@ -1,4 +1,4 @@
----
+﻿---
 interface Props {
     selector: string;
     borderRadius?: number;
@@ -145,12 +145,12 @@ const { selector, borderRadius = 16 } = Astro.props;
                 const halfPerim = totalPerim / 2;
                 const drawLen = p * halfPerim;
 
-                ctx.strokeStyle = "#D4AF37";
+                ctx.strokeStyle = "#9582D9";
                 ctx.lineWidth = 1.5;
                 ctx.lineCap = "round";
                 ctx.lineJoin = "round";
                 ctx.globalAlpha = 0.35 + p * 0.25;
-                ctx.shadowColor = "rgba(212, 175, 55, 0.5)";
+                ctx.shadowColor = "rgba(149, 130, 217, 0.5)";
                 ctx.shadowBlur = 6 * p;
 
                 ctx.save();

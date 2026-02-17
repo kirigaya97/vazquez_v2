@@ -1,4 +1,4 @@
----
+﻿---
 interface Props {
     href?: string;
     variant?: "primary" | "secondary" | "gold" | "outline";
@@ -16,12 +16,12 @@ const {
 } = Astro.props;
 
 const variants = {
-    primary: "bg-ivory text-obsidian hover:bg-ivory-muted",
+    primary: "bg-light text-dark hover:bg-light-muted",
     secondary:
-        "bg-obsidian-light text-ivory border border-smoke hover:border-gold/30",
-    gold: "bg-gradient-to-r from-gold-dark via-gold to-gold-light text-obsidian font-semibold hover:shadow-lg hover:shadow-gold/20 hover:scale-105 active:scale-95",
+        "bg-dark-gray text-light border border-smoke hover:border-purple-light/30",
+    gold: "bg-gradient-to-r from-purple via-purple-light to-purple-glow text-dark font-semibold hover:shadow-lg hover:shadow-purple-light/20 hover:scale-105 active:scale-95",
     outline:
-        "bg-transparent text-gold border border-gold hover:bg-gold hover:text-obsidian",
+        "bg-transparent text-purple-light border border-purple-light hover:bg-purple-light hover:text-dark",
 };
 
 const baseClass =

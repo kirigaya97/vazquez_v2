@@ -1,14 +1,14 @@
 @import "tailwindcss";
 
 @theme {
-  /* Colors — ChapMagic Premium/Mystery palette */
-  --color-obsidian: #0A0A0A;
-  --color-obsidian-light: #1A1A1A;
-  --color-gold: #D4AF37;
-  --color-gold-light: #E8C860;
-  --color-gold-dark: #B8941F;
-  --color-ivory: #F5F0E8;
-  --color-ivory-muted: #D9D0C0;
+  /* Colors — Vazquez Ilusionista Purple/Mystery palette */
+  --color-dark: #111413;
+  --color-dark-gray: #3D3C45;
+  --color-purple: #330673;
+  --color-purple-light: #9582D9;
+  --color-purple-glow: #7B68C8;
+  --color-light: #F2F2F2;
+  --color-light-muted: #D9D9D9;
   --color-smoke: #2A2A2A;
 
   /* Fonts */
@@ -37,11 +37,11 @@
   }
 
   body {
-    @apply bg-obsidian text-ivory font-body antialiased;
+    @apply bg-dark text-light font-body antialiased;
   }
 }
 
-/* ═══ Gold Scrollbar ═══ */
+/* ═══ Purple Scrollbar ═══ */
 ::-webkit-scrollbar {
   width: 6px;
 }
@@ -51,19 +51,33 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #D4AF37, #B8941F);
+  background: linear-gradient(180deg, #9582D9, #330673);
   border-radius: 99px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
   width: 8px;
-  background: linear-gradient(180deg, #E8C860, #D4AF37);
+  background: linear-gradient(180deg, #7B68C8, #9582D9);
 }
 
 /* Firefox */
 html {
   scrollbar-width: thin;
-  scrollbar-color: #D4AF37 transparent;
+  scrollbar-color: #9582D9 transparent;
+}
+
+/* ═══ Hero Dark Noise Background ═══ */
+.hero-noise-bg {
+  background: #111413;
+}
+
+.hero-noise-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-conic-gradient(#F2F2F2 0.00005%, #111413 0.0004%) 50% 50%/2500px 2500px;
+  opacity: 0.04;
+  pointer-events: none;
 }
 
 /* ═══ Hero 3D Symbol ═══ */
@@ -103,14 +117,14 @@ html {
   0%,
   100% {
     box-shadow:
-      0 0 30px rgba(212, 175, 55, 0.15),
-      0 0 60px rgba(212, 175, 55, 0.08);
+      0 0 30px rgba(149, 130, 217, 0.15),
+      0 0 60px rgba(149, 130, 217, 0.08);
   }
 
   50% {
     box-shadow:
-      0 0 50px rgba(212, 175, 55, 0.35),
-      0 0 100px rgba(212, 175, 55, 0.15);
+      0 0 50px rgba(149, 130, 217, 0.35),
+      0 0 100px rgba(149, 130, 217, 0.15);
   }
 }
 

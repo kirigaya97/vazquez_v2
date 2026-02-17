@@ -1,4 +1,4 @@
-import type { APIRoute } from 'astro';
+﻿import type { APIRoute } from 'astro';
 import { Resend } from 'resend';
 import siteConfig from '../../data/site-config.json';
 
@@ -57,21 +57,21 @@ export const POST: APIRoute = async ({ request }) => {
             replyTo: email,
             subject: `💌 Nuevo contacto: ${name}`,
             html: `
-                <div style="font-family: 'Helvetica Neue', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #0A0A0A; color: #F5F0E8; padding: 40px; border-radius: 12px;">
+                <div style="font-family: 'Helvetica Neue', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #111413; color: #F2F2F2; padding: 40px; border-radius: 12px;">
                     <div style="text-align: center; margin-bottom: 32px; border-bottom: 1px solid #2A2A2A; padding-bottom: 24px;">
-                        <h1 style="color: #D4AF37; font-size: 24px; margin: 0;">CHAP<span style="color: #F5F0E8;">MAGIC</span></h1>
+                        <h1 style="color: #9582D9; font-size: 24px; margin: 0;">CHAP<span style="color: #F2F2F2;">MAGIC</span></h1>
                         <p style="color: #D9D0C0; font-size: 12px; letter-spacing: 3px; margin-top: 8px;">NUEVO MENSAJE DE CONTACTO</p>
                     </div>
                     <div style="margin-bottom: 24px;">
-                        <p style="color: #D4AF37; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 4px;">Nombre</p>
+                        <p style="color: #9582D9; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 4px;">Nombre</p>
                         <p style="font-size: 18px; margin: 0;">${name}</p>
                     </div>
                     <div style="margin-bottom: 24px;">
-                        <p style="color: #D4AF37; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 4px;">Email</p>
-                        <p style="font-size: 18px; margin: 0;"><a href="mailto:${email}" style="color: #D4AF37;">${email}</a></p>
+                        <p style="color: #9582D9; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 4px;">Email</p>
+                        <p style="font-size: 18px; margin: 0;"><a href="mailto:${email}" style="color: #9582D9;">${email}</a></p>
                     </div>
-                    <div style="margin-bottom: 24px; padding: 20px; background: #1A1A1A; border-radius: 8px; border-left: 3px solid #D4AF37;">
-                        <p style="color: #D4AF37; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px;">Mensaje</p>
+                    <div style="margin-bottom: 24px; padding: 20px; background: #3D3C45; border-radius: 8px; border-left: 3px solid #9582D9;">
+                        <p style="color: #9582D9; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px;">Mensaje</p>
                         <p style="font-size: 16px; line-height: 1.6; margin: 0; white-space: pre-wrap;">${message}</p>
                     </div>
                     <div style="text-align: center; margin-top: 32px; padding-top: 24px; border-top: 1px solid #2A2A2A;">

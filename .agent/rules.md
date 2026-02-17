@@ -1,4 +1,4 @@
-# ChapMagic — Agent Rules
+# Vazquez Ilusionista — Agent Rules
 
 > **YOU MUST READ THIS FILE AND `.agent/master-prompt.md` BEFORE WRITING ANY CODE.**
 > **Failure to do so WILL result in broken, hallucinated, or deprecated code.**

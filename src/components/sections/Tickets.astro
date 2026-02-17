@@ -1,4 +1,4 @@
----
+﻿---
 import Button from "../ui/Button.astro";
 import Reveal from "../ui/Reveal.astro";
 import GoldenBorder from "../ui/GoldenBorder.astro";
@@ -15,9 +15,9 @@ interface Props {
 const { t, atrapaloUrl } = Astro.props;
 ---
 
-<section id="tickets" class="py-section-mobile md:py-section bg-obsidian px-6">
+<section id="tickets" class="py-section-mobile md:py-section bg-dark px-6">
     <div
-        class="max-w-5xl mx-auto rounded-card p-12 md:p-20 text-center relative border border-gold/20 shadow-2xl shadow-gold/5 ticket-card group"
+        class="max-w-5xl mx-auto rounded-card p-12 md:p-20 text-center relative border border-purple-light/20 shadow-2xl shadow-purple-light/5 ticket-card group"
     >
         <GoldenBorder selector=".ticket-card" borderRadius={12} />
         <!-- Decorative background elements -->
@@ -27,18 +27,18 @@ const { t, atrapaloUrl } = Astro.props;
             >
             </div>
             <div
-                class="absolute -top-24 -right-24 w-48 h-48 bg-gold/20 rounded-full blur-3xl"
+                class="absolute -top-24 -right-24 w-48 h-48 bg-purple-light/20 rounded-full blur-3xl"
             >
             </div>
             <div
-                class="absolute -bottom-24 -left-24 w-48 h-48 bg-gold/20 rounded-full blur-3xl"
+                class="absolute -bottom-24 -left-24 w-48 h-48 bg-purple-light/20 rounded-full blur-3xl"
             >
             </div>
         </div>
 
         <Reveal>
             <h2
-                class="text-3xl md:text-6xl font-heading text-ivory mb-6 leading-tight"
+                class="text-3xl md:text-6xl font-heading text-light mb-6 leading-tight"
             >
                 {t.sectionTitle}
             </h2>
@@ -46,7 +46,7 @@ const { t, atrapaloUrl } = Astro.props;
 
         <Reveal>
             <p
-                class="text-xl md:text-2xl text-ivory-muted font-body mb-12 max-w-2xl mx-auto italic"
+                class="text-xl md:text-2xl text-light-muted font-body mb-12 max-w-2xl mx-auto italic"
             >
                 {t.subtitle}
             </p>
@@ -65,7 +65,7 @@ const { t, atrapaloUrl } = Astro.props;
         </Reveal>
 
         <p
-            class="mt-8 text-sm text-gold/60 uppercase tracking-widest font-body"
+            class="mt-8 text-sm text-purple-light/60 uppercase tracking-widest font-body"
         >
             Venta exclusiva en Atrapalo.com
         </p>

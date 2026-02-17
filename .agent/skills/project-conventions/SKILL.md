@@ -1,9 +1,9 @@
 ---
 name: project-conventions
-description: File structure, naming conventions, data architecture, and bilingual content patterns for the ChapMagic magician landing page.
+description: File structure, naming conventions, data architecture, and content patterns for the Vazquez Ilusionista magician landing page.
 ---
 
-# ChapMagic Project Conventions
+# Vazquez Ilusionista Project Conventions
 
 > **This document defines the rules for this project.**
 > Every file you create or modify MUST follow these conventions.
@@ -14,7 +14,7 @@ description: File structure, naming conventions, data architecture, and bilingua
 ## 1. Project Structure (Canonical)
 
 ```
-chapmagic/
+vazquez-ilusionista/
 ├── astro.config.mjs              # Astro config
 ├── tsconfig.json                 # TypeScript strict
 ├── package.json
@@ -34,7 +34,6 @@ chapmagic/
 │   │   │   ├── Button.astro
 │   │   │   ├── Reveal.astro      # Motion inView wrapper
 │   │   │   ├── SectionHeading.astro
-│   │   │   ├── GoldStar.astro
 │   │   │   └── Counter.tsx       # React island (client:visible)
 │   │   ├── sections/             # Full page sections
 │   │   │   ├── Hero.astro
@@ -44,8 +43,6 @@ chapmagic/
 │   │   │   ├── Tickets.astro
 │   │   │   ├── Contact.astro
 │   │   │   └── Footer.astro
-│   │   ├── i18n/
-│   │   │   └── LanguageToggle.astro
 │   │   ├── WhatsAppButton.astro  # Floating FAB
 │   │   └── SmoothScroll.astro    # Lenis initialization
 │   ├── data/
@@ -53,9 +50,7 @@ chapmagic/
 │   ├── layouts/
 │   │   └── BaseLayout.astro      # HTML shell, <head>, ClientRouter
 │   ├── pages/
-│   │   ├── index.astro           # Redirect → /es/
-│   │   ├── [lang]/
-│   │   │   └── index.astro       # Main landing page
+│   │   ├── index.astro           # Main landing page (Spanish)
 │   │   └── api/
 │   │       └── send-email.ts     # POST /api/send-email
 │   └── styles/
@@ -125,14 +120,15 @@ The user should NEVER need to edit component code to change content.
 ```json
 {
   "branding": {
-    "siteName": "ChapMagic",
+    "siteName": "Vazquez Ilusionista",
     "logo": "/images/logo.svg",
     "colors": {
-      "primary": "#0A0A0A",
-      "secondary": "#1A1A1A",
-      "accent": "#D4AF37",
-      "text": "#F5F0E8",
-      "textMuted": "#D9D0C0"
+      "primary": "#111413",
+      "secondary": "#3D3C45",
+      "accent": "#330673",
+      "accentLight": "#9582D9",
+      "text": "#F2F2F2",
+      "textMuted": "#D9D9D9"
     },
     "fonts": {
       "heading": "Playfair Display",
@@ -140,20 +136,19 @@ The user should NEVER need to edit component code to change content.
     }
   },
   "contact": {
-    "whatsapp": "+34XXXXXXXXX",
-    "email": "info@chapmagic.com",
-    "formDestinationEmail": "bookings@chapmagic.com"
+    "whatsapp": "+54XXXXXXXXX",
+    "email": "info@vazquezilusionista.com",
+    "formDestinationEmail": "bookings@vazquezilusionista.com"
   },
   "links": {
-    "atrapalo": "https://www.atrapalo.com/...",
     "instagram": "https://www.instagram.com/...",
     "youtube": "https://www.youtube.com/...",
-    "heroVideoSrc": "/videos/golden-button.mp4"
+    "heroVideoSrc": "/videos/hero.mp4"
   },
   "translations": {
     "es": {
       "meta": {
-        "title": "ChapMagic — Mago y Mentalista",
+        "title": "Vazquez Ilusionista — Mago y Mentalista",
         "description": "Espectáculos de magia y mentalismo..."
       },
       "nav": {
@@ -163,7 +158,7 @@ The user should NEVER need to edit component code to change content.
         "bookNow": "Reservar"
       },
       "hero": {
-        "title": "La Magia Que Desafía Lo Imposible",
+        "title": "...",
         "subtitle": "Mentalismo · Ilusionismo · Experiencias Únicas",
         "cta": "Reservar Ahora"
       },
@@ -174,41 +169,23 @@ The user should NEVER need to edit component code to change content.
             "id": "corporate",
             "title": "Corporativo",
             "description": "Eventos empresariales inolvidables..."
-          },
-          {
-            "id": "private",
-            "title": "Privado",
-            "description": "Celebraciones exclusivas..."
-          },
-          {
-            "id": "mentalism",
-            "title": "Mentalismo",
-            "description": "Lee la mente de tu audiencia..."
-          },
-          {
-            "id": "virtual",
-            "title": "Virtual",
-            "description": "Magia online interactiva..."
           }
         ]
       },
       "jury": {
-        "sectionTitle": "Lo Que Dicen Los Jueces",
+        "sectionTitle": "Lo Que Dicen",
         "quotes": [
           {
-            "text": "Increíble...",
-            "author": "Judge Name",
-            "role": "AGT Judge"
+            "text": "...",
+            "author": "Name",
+            "role": "Role"
           }
         ]
       },
       "stats": {
         "sectionTitle": "Los Números",
         "items": [
-          { "value": 14, "label": "Países", "prefix": "+" },
-          { "value": 700, "label": "Shows", "prefix": "+" },
-          { "value": 40000, "label": "Espectadores", "prefix": "+" },
-          { "value": 15, "label": "Años de Experiencia", "prefix": "+" }
+          { "value": 14, "label": "Países", "prefix": "+" }
         ]
       },
       "tickets": {
@@ -223,108 +200,24 @@ The user should NEVER need to edit component code to change content.
         "emailLabel": "Email",
         "emailPlaceholder": "tu@email.com",
         "messageLabel": "Mensaje",
-        "messagePlaceholder": "Cuéntanos sobre tu evento...",
+        "messagePlaceholder": "Contanos sobre tu evento...",
         "submitButton": "Enviar Mensaje",
         "submitting": "Enviando...",
         "successMessage": "¡Mensaje enviado! Te responderemos pronto.",
-        "errorMessage": "Error al enviar. Inténtalo de nuevo."
+        "errorMessage": "Error al enviar. Intentá de nuevo."
       },
       "whatsapp": {
         "prefillMessage": "Hola, me interesa contratar un espectáculo de magia."
       },
       "footer": {
-        "copyright": "© 2026 ChapMagic. Todos los derechos reservados.",
+        "copyright": "© 2026 Vazquez Ilusionista. Todos los derechos reservados.",
         "privacyPolicy": "Política de Privacidad",
         "termsOfService": "Términos de Servicio"
       }
-    },
-    "en": {
-      "meta": {
-        "title": "ChapMagic — Magician & Mentalist",
-        "description": "Magic and mentalism shows..."
-      },
-      "nav": {
-        "shows": "Shows",
-        "about": "About",
-        "contact": "Contact",
-        "bookNow": "Book Now"
-      },
-      "hero": {
-        "title": "Magic That Defies The Impossible",
-        "subtitle": "Mentalism · Illusion · Unique Experiences",
-        "cta": "Book Now"
-      },
-      "shows": {
-        "sectionTitle": "Shows",
-        "items": [
-          {
-            "id": "corporate",
-            "title": "Corporate",
-            "description": "Unforgettable corporate events..."
-          },
-          {
-            "id": "private",
-            "title": "Private",
-            "description": "Exclusive celebrations..."
-          },
-          {
-            "id": "mentalism",
-            "title": "Mentalism",
-            "description": "Read your audience's mind..."
-          },
-          {
-            "id": "virtual",
-            "title": "Virtual",
-            "description": "Interactive online magic..."
-          }
-        ]
-      },
-      "jury": {
-        "sectionTitle": "What The Judges Say",
-        "quotes": [
-          {
-            "text": "Incredible...",
-            "author": "Judge Name",
-            "role": "AGT Judge"
-          }
-        ]
-      },
-      "stats": {
-        "sectionTitle": "The Numbers",
-        "items": [
-          { "value": 14, "label": "Countries", "prefix": "+" },
-          { "value": 700, "label": "Shows", "prefix": "+" },
-          { "value": 40000, "label": "Spectators", "prefix": "+" },
-          { "value": 15, "label": "Years of Experience", "prefix": "+" }
-        ]
-      },
-      "tickets": {
-        "sectionTitle": "Tickets",
-        "cta": "Buy Tickets",
-        "subtitle": "Upcoming shows available"
-      },
-      "contact": {
-        "sectionTitle": "Contact",
-        "nameLabel": "Name",
-        "namePlaceholder": "Your name",
-        "emailLabel": "Email",
-        "emailPlaceholder": "you@email.com",
-        "messageLabel": "Message",
-        "messagePlaceholder": "Tell us about your event...",
-        "submitButton": "Send Message",
-        "submitting": "Sending...",
-        "successMessage": "Message sent! We'll get back to you soon.",
-        "errorMessage": "Failed to send. Please try again."
-      },
-      "whatsapp": {
-        "prefillMessage": "Hello, I'm interested in booking a magic show."
-      },
-      "footer": {
-        "copyright": "© 2026 ChapMagic. All rights reserved.",
-        "privacyPolicy": "Privacy Policy",
-        "termsOfService": "Terms of Service"
-      }
     }
+  }
+}
+```
   }
 }
 ```
@@ -359,24 +252,16 @@ The main page (`[lang]/index.astro`) loads the config and passes relevant slices
 
 ```astro
 ---
-// src/pages/[lang]/index.astro
-import siteConfig from '../../data/site-config.json';
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import Hero from '../../components/sections/Hero.astro';
-import Shows from '../../components/sections/Shows.astro';
+// src/pages/index.astro
+import siteConfig from '../data/site-config.json';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/sections/Hero.astro';
+import Shows from '../components/sections/Shows.astro';
 // ... other sections
 
-export function getStaticPaths() {
-  return [
-    { params: { lang: 'es' } },
-    { params: { lang: 'en' } },
-  ];
-}
-
-const { lang } = Astro.params;
-const t = siteConfig.translations[lang as 'es' | 'en'];
+const t = siteConfig.translations.es;
 ---
-<BaseLayout lang={lang} title={t.meta.title} description={t.meta.description}>
+<BaseLayout lang="es" title={t.meta.title} description={t.meta.description}>
   <Hero t={t.hero} videoSrc={siteConfig.links.heroVideoSrc} />
   <Shows t={t.shows} />
   <!-- ... more sections -->
@@ -392,8 +277,8 @@ const t = siteConfig.translations[lang as 'es' | 'en'];
 1. **All images** MUST have descriptive `alt` text.
 2. **All interactive elements** MUST be keyboard-accessible (Tab, Enter, Escape).
 3. **Color contrast** MUST meet WCAG AA (4.5:1 for text, 3:1 for large text).
-   - Gold (#D4AF37) on Obsidian (#0A0A0A) = 8.2:1 ✅
-   - Ivory (#F5F0E8) on Obsidian (#0A0A0A) = 16.4:1 ✅
+   - Light Purple (#9582D9) on Dark (#111413) = high contrast ✅
+   - Off-white (#F2F2F2) on Dark (#111413) = very high contrast ✅
 4. **Form inputs** MUST have associated `<label>` elements.
 5. **Language attribute** MUST be set on `<html lang="es">` or `<html lang="en">`.
 6. **Skip navigation** link should be provided.

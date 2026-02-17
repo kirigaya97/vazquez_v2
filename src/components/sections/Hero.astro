@@ -1,4 +1,4 @@
----
+﻿---
 import Button from "../ui/Button.astro";
 import siteConfig from "../../data/site-config.json";
 
@@ -16,183 +16,88 @@ interface Props {
             mobile: number;
         };
     };
-    videoSrc: string;
 }
 
-const { t, videoSrc } = Astro.props;
-const { heroVimeoDesktop, heroVimeoMobile } = siteConfig.links;
----
+const { t } = Astro.props;
 
-<!-- VIMEO OVERLAY — OUTSIDE section to avoid Android overflow:hidden clipping bug -->
-<div
-    id="hero-vimeo-wrapper"
-    class="fixed inset-0 w-full h-full opacity-0 overflow-hidden"
-    style="z-index: 9998; pointer-events: none; margin: 0; padding: 0;"
->
-    <iframe
-        id="hero-vimeo-iframe"
-        src=""
-        data-vimeo-desktop={heroVimeoDesktop}
-        data-vimeo-mobile={heroVimeoMobile}
-        frameborder="0"
-        allow="autoplay; fullscreen; picture-in-picture"
-        style="position: absolute; top: 50%; left: 50%; width: 100vw; height: 56.25vw; min-height: 100vh; min-width: 177.78vh; transform: translate(-50%, -50%); pointer-events: none; border: none;"
-        title="ChapMagic Performance"></iframe>
-</div>
+// Image pools for presentation
+const presentationImages = Array.from(
+    { length: 51 },
+    (_, i) =>
+        `/images/hero-presentation-webp/hero-${(i + 1).toString().padStart(2, "0")}.webp`,
+);
+
+// Split images into 3 columns for desktop
+const colSize = Math.ceil(presentationImages.length / 3);
+const columns = [
+    presentationImages.slice(0, colSize),
+    presentationImages.slice(colSize, colSize * 2),
+    presentationImages.slice(colSize * 2),
+];
+---
 
 <section
     id="hero-section"
-    class="relative min-h-screen flex items-center justify-center overflow-clip bg-obsidian"
+    class="relative h-screen flex items-center justify-center overflow-clip bg-dark"
 >
-    <!-- LAYER 0: AMBIENT VIDEO -->
-    <video
-        id="hero-video"
-        autoplay
-        muted
-        loop
-        playsinline
-        preload="metadata"
-        poster="/images/hero-poster.jpg"
-        class="absolute inset-0 w-full h-full object-cover"
-        style="z-index: 0;"
-    >
-        <source src={videoSrc} type="video/mp4" />
-    </video>
+    <!-- LAYER 0: NOISE BACKGROUND -->
+    <div class="absolute inset-0 hero-noise-bg z-0 pointer-events-none"></div>
 
-    <!-- LAYER 50: CURTAIN (ephemeral) -->
+    <!-- LAYER 5: IMAGE PRESENTATION GRID -->
     <div
-        id="hero-curtain"
-        class="absolute inset-0 bg-obsidian transition-opacity duration-[1500ms] ease-out"
-        style="z-index: 50; pointer-events: none;"
+        id="hero-presentation"
+        class="absolute inset-0 grid grid-cols-1 md:grid-cols-3 opacity-0 transition-opacity duration-500 z-[5] pointer-events-none"
     >
-    </div>
-
-    <!-- LAYER 10: OVERLAY — pointer-events ALWAYS none -->
-    <div
-        id="hero-overlay"
-        class="absolute inset-0 bg-gradient-to-b from-obsidian/60 via-obsidian/40 to-obsidian"
-        style="z-index: 10; pointer-events: none;"
-    >
-    </div>
-
-    <!--
-        LAYER 30: 3D SPINNING SYMBOL
-        Mobile:  bottom-8 left-6, 120×120
-        Desktop: bottom-16 left-10, 200×200
-    -->
-    <div
-        id="hero-magic-trigger"
-        class="hero-trigger-glow absolute bottom-[calc(2.5rem+3vh)] left-6 w-[140px] h-[140px] md:bottom-16 md:left-10 md:w-[200px] md:h-[200px] flex items-center justify-center cursor-pointer select-none"
-        style="z-index: 9999;"
-
-        role="button"
-        tabindex="0"
-        aria-label={t.hoverPrompt}
-        data-cursor="magic"
-    >
-        <!-- 3D Spinning Star -->
-        <div
-            class="hero-symbol-3d absolute inset-0 flex items-center justify-center"
-        >
-            <svg
-                viewBox="0 0 80 80"
-                class="w-14 h-14 md:w-20 md:h-20 drop-shadow-[0_0_20px_rgba(212,175,55,0.4)]"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-            >
-                <path
-                    d="M40 4L47.6 28.4H73.2L52.8 43.6L60.4 68L40 52.8L19.6 68L27.2 43.6L6.8 28.4H32.4L40 4Z"
-                    fill="#D4AF37"
-                    stroke="#E8C860"
-                    stroke-width="1"></path>
-            </svg>
-        </div>
-
-        <!-- Desktop Orbiting Text -->
-        <svg
-            class="hero-orbit-text absolute inset-0 w-full h-full hidden md:block"
-            viewBox="0 0 200 200"
-        >
-            <defs>
-                <path
-                    id="orbitDesktop"
-                    d="M100,100 m-75,0 a75,75 0 1,1 150,0 a75,75 0 1,1 -150,0"
-                ></path>
-            </defs>
-            <text
-                fill="#D4AF37"
-                font-size={t.circleFontSize.desktop}
-                font-weight="900"
-                font-family="Inter, sans-serif"
-                letter-spacing="2"
-            >
-                <textPath href="#orbitDesktop" startOffset="0%"
-                    >{t.hoverPrompt} · {t.hoverPrompt} ·</textPath
+        {
+            columns.map((colImages, colIdx) => (
+                <div
+                    id={`hero-col-${colIdx}`}
+                    class={`relative overflow-hidden ${colIdx > 0 ? "hidden md:block" : "col-span-1"}`}
                 >
-            </text>
-        </svg>
-
-        <!-- Mobile Orbiting Text -->
-        <svg
-            class="hero-orbit-text absolute inset-0 w-full h-full md:hidden"
-            viewBox="0 0 140 140"
-        >
-            <defs>
-                <path
-                    id="orbitMobile"
-                    d="M70,70 m-50,0 a50,50 0 1,1 100,0 a50,50 0 1,1 -100,0"
-                ></path>
-            </defs>
-            <text
-                fill="#D4AF37"
-                font-size={t.circleFontSize.mobile}
-                font-weight="900"
-                font-family="Inter, sans-serif"
-                letter-spacing="1"
-            >
-                <textPath href="#orbitMobile" startOffset="0%"
-                    >{t.tapPrompt} · {t.tapPrompt} ·</textPath
-                >
-            </text>
-        </svg>
-
-        <!-- TOOLTIP LABEL: relative to this container -->
-        <div
-            id="hero-trigger-tooltip"
-            class="absolute opacity-0 pointer-events-none select-none transition-opacity duration-500"
-        >
-            <!-- Desktop: positioned to the right of trigger (6vw offset) -->
-            <div class="hidden md:flex items-center gap-3 absolute left-[calc(100%+6vw)] top-1/2 -translate-y-1/2">
-                <div class="w-8 h-px bg-gold/50"></div>
-                <span class="text-base font-body font-bold text-gold whitespace-nowrap tracking-wide">
-                    {t.tooltipDesktop}
-                </span>
-            </div>
-            <!-- Mobile: positioned above the trigger (9vh offset + vertical line) -->
-            <div class="flex md:hidden flex-col items-center gap-2 absolute bottom-[calc(100%+9vh)] left-1/2 -translate-x-1/2">
-                <span class="text-sm font-body font-bold text-gold whitespace-nowrap tracking-wide">
-                    {t.tooltipMobile}
-                </span>
-                <div class="w-px h-8 bg-gold/50"></div>
-            </div>
-        </div>
+                    {colImages.map((src, imgIdx) => (
+                        <img
+                            src={src}
+                            alt=""
+                            class="absolute inset-0 w-full h-full object-cover opacity-0 scale-100 transition-transform duration-500"
+                            data-img-idx={imgIdx}
+                        />
+                    ))}
+                </div>
+            ))
+        }
     </div>
 
+    <!-- LAYER 8: DARK OVERLAY (for text readability over presentation) -->
+    <div
+        id="hero-presentation-overlay"
+        class="absolute inset-0 bg-dark/60 opacity-0 transition-opacity duration-500 z-[8] pointer-events-none"
+    >
+    </div>
 
+    <!-- LAYER 10: FOREGROUND IMAGE -->
+    <div
+        id="hero-foreground"
+        class="absolute inset-0 flex items-end justify-center md:justify-end md:translate-x-[5vw] z-10 pointer-events-none transition-opacity duration-500"
+    >
+        <img
+            src="/images/hero_foreground-removebg-preview.png"
+            alt="Fernando Vazquez"
+            class="h-[60vh] md:h-[60vh] w-auto object-contain object-bottom"
+        />
+    </div>
 
     <!-- LAYER 20: HERO CONTENT -->
     <div
         id="hero-content"
-        class="relative container mx-auto px-6 text-center -mt-[28vh] md:mt-0"
-        style="z-index: 20; pointer-events: none;"
+        class="relative container mx-auto px-6 text-center z-20 pointer-events-none -translate-y-[15vh] md:translate-y-0"
     >
         <h1
-            class="hero-title opacity-0 translate-y-20 text-4xl md:text-6xl lg:text-8xl font-heading font-bold text-ivory leading-tight mb-6"
+            class="hero-title opacity-0 translate-y-20 text-4xl md:text-6xl lg:text-8xl font-body font-black uppercase text-light leading-tight mb-6 drop-shadow-2xl"
         >
             {t.title}
         </h1>
         <p
-            class="hero-subtitle opacity-0 translate-y-10 text-xl md:text-2xl lg:text-3xl font-heading italic text-gold mb-6 md:mb-12"
+            class="hero-subtitle opacity-0 translate-y-10 text-xl md:text-2xl lg:text-3xl font-heading italic text-purple-light mb-6 md:mb-12 drop-shadow-lg"
         >
             {t.subtitle}
         </p>
@@ -206,28 +111,113 @@ const { heroVimeoDesktop, heroVimeoMobile } = siteConfig.links;
         </div>
     </div>
 
-    <!-- LAYER 9999: BRAND ANCHOR (immersive only) -->
+    <!-- LAYER 30: MAGIC TRIGGER -->
     <div
-        id="hero-brand-anchor"
-        class="absolute bottom-10 right-10 md:bottom-16 md:right-10 opacity-0"
-        style="z-index: 9999; pointer-events: none;"
+        id="hero-magic-trigger"
+        class="hero-trigger-glow absolute bottom-[calc(2.5rem+3vh)] left-6 w-[140px] h-[140px] md:bottom-16 md:left-10 md:w-[200px] md:h-[200px] flex items-center justify-center cursor-pointer select-none z-[30]"
+        role="button"
+        tabindex="0"
+        aria-label={t.hoverPrompt}
+        data-cursor="magic"
     >
-        <h2
-            class="text-5xl md:text-7xl lg:text-8xl font-body font-black text-ivory/30 uppercase leading-none tracking-tighter"
+        <!-- 3D Spinning Star -->
+        <div
+            class="hero-symbol-3d absolute inset-0 flex items-center justify-center"
         >
-            CHAP<span class="text-gold/40">MAGIC</span>
-        </h2>
+            <svg
+                viewBox="0 0 80 80"
+                class="w-14 h-14 md:w-20 md:h-20 drop-shadow-[0_0_20px_rgba(149,130,217,0.4)]"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+            >
+                <path
+                    d="M40 4L47.6 28.4H73.2L52.8 43.6L60.4 68L40 52.8L19.6 68L27.2 43.6L6.8 28.4H32.4L40 4Z"
+                    fill="#9582D9"
+                    stroke="#7B68C8"
+                    stroke-width="1"></path>
+            </svg>
+        </div>
+
+        <!-- Orbiting Text -->
+        <svg
+            class="hero-orbit-text absolute inset-0 w-full h-full hidden md:block"
+            viewBox="0 0 200 200"
+        >
+            <defs
+                ><path
+                    id="orbitDesktop"
+                    d="M100,100 m-75,0 a75,75 0 1,1 150,0 a75,75 0 1,1 -150,0"
+                ></path></defs
+            >
+            <text
+                fill="#9582D9"
+                font-size={t.circleFontSize.desktop}
+                font-weight="900"
+                font-family="Inter, sans-serif"
+                letter-spacing="2"
+            >
+                <textPath href="#orbitDesktop" startOffset="0%"
+                    >{t.hoverPrompt} · {t.hoverPrompt} ·</textPath
+                >
+            </text>
+        </svg>
+
+        <svg
+            class="hero-orbit-text absolute inset-0 w-full h-full md:hidden"
+            viewBox="0 0 140 140"
+        >
+            <defs
+                ><path
+                    id="orbitMobile"
+                    d="M70,70 m-50,0 a50,50 0 1,1 100,0 a50,50 0 1,1 -100,0"
+                ></path></defs
+            >
+            <text
+                fill="#9582D9"
+                font-size={t.circleFontSize.mobile}
+                font-weight="900"
+                font-family="Inter, sans-serif"
+                letter-spacing="1"
+            >
+                <textPath href="#orbitMobile" startOffset="0%"
+                    >{t.tapPrompt} · {t.tapPrompt} ·</textPath
+                >
+            </text>
+        </svg>
+
+        <!-- Tooltip -->
+        <div
+            id="hero-trigger-tooltip"
+            class="absolute opacity-0 pointer-events-none select-none transition-opacity duration-500"
+        >
+            <div
+                class="hidden md:flex items-center gap-3 absolute left-[calc(100%+6vw)] top-1/2 -translate-y-1/2"
+            >
+                <div class="w-8 h-px bg-purple-light/50"></div>
+                <span
+                    class="text-base font-body font-bold text-purple-light whitespace-nowrap tracking-wide"
+                    >{t.tooltipDesktop}</span
+                >
+            </div>
+            <div
+                class="flex md:hidden flex-col items-center gap-2 absolute bottom-[calc(100%+9vh)] left-1/2 -translate-x-1/2"
+            >
+                <span
+                    class="text-sm font-body font-bold text-purple-light whitespace-nowrap tracking-wide"
+                    >{t.tooltipMobile}</span
+                >
+                <div class="w-px h-8 bg-purple-light/50"></div>
+            </div>
+        </div>
     </div>
 
-
-    <!-- LAYER 20: SCROLL INDICATOR -->
+    <!-- SCROLL INDICATOR -->
     <div
         id="hero-scroll-indicator"
-        class="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce"
-        style="z-index: 20; pointer-events: none;"
+        class="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce z-20 pointer-events-none"
     >
         <svg
-            class="w-6 h-6 text-gold/50"
+            class="w-6 h-6 text-purple-light/50"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -242,36 +232,25 @@ const { heroVimeoDesktop, heroVimeoMobile } = siteConfig.links;
 </section>
 
 <script>
-    import { gsap, ScrollTrigger } from "../../lib/gsap-init";
+    import { gsap } from "../../lib/gsap-init";
 
     function initHero() {
-        const section = document.getElementById("hero-section");
         const trigger = document.getElementById("hero-magic-trigger");
-        const video = document.getElementById(
-            "hero-video",
-        ) as HTMLVideoElement | null;
-        const vWrapper = document.getElementById("hero-vimeo-wrapper");
-        const iframe = document.getElementById(
-            "hero-vimeo-iframe",
-        ) as HTMLIFrameElement | null;
-        const overlay = document.getElementById("hero-overlay");
-        const content = document.getElementById("hero-content");
-        const curtain = document.getElementById("hero-curtain");
-        const brand = document.getElementById("hero-brand-anchor");
-        const scrollInd = document.getElementById("hero-scroll-indicator");
+        const presentation = document.getElementById("hero-presentation");
+        const presOverlay = document.getElementById(
+            "hero-presentation-overlay",
+        );
+        const foreground = document.getElementById("hero-foreground");
+        const tooltip = document.getElementById("hero-trigger-tooltip");
 
-        if (
-            !section ||
-            !trigger ||
-            !iframe ||
-            !vWrapper ||
-            !overlay ||
-            !content
-        )
-            return;
+        if (!trigger || !presentation || !foreground) return;
 
-        // ───── 1. TEXT ANIMATION ─────
-        const tl = gsap.timeline({ paused: true });
+        // 1. Audio Setup
+        const audio = new Audio("/mp3/hero-track.mp3");
+        audio.loop = true;
+
+        // 2. Entrance Animation
+        const tl = gsap.timeline();
         tl.fromTo(
             ".hero-title",
             { opacity: 0, filter: "blur(20px)", y: 20 },
@@ -302,264 +281,165 @@ const { heroVimeoDesktop, heroVimeoMobile } = siteConfig.links;
                 "-=0.8",
             );
 
-        // ───── 2. CURTAIN ─────
-        function liftCurtain() {
-            if (curtain) {
-                curtain.style.opacity = "0";
-                setTimeout(() => curtain.remove(), 1600);
-            }
-        }
+        // 3. Presentation Logic
+        const columns = [
+            document.getElementById("hero-col-0"),
+            document.getElementById("hero-col-1"),
+            document.getElementById("hero-col-2"),
+        ].filter(Boolean) as HTMLElement[];
 
-        let textTriggered = false;
-        if (video) {
-            if (video.readyState >= 3) liftCurtain();
-            else video.addEventListener("canplay", liftCurtain, { once: true });
-            setTimeout(liftCurtain, 2500);
-
-            function onTimeUpdate() {
-                if (video && video.currentTime >= 5.5) {
-                    textTriggered = true;
-                    tl.play();
-                    video.removeEventListener("timeupdate", onTimeUpdate);
-                }
-            }
-            if (video) video.addEventListener("timeupdate", onTimeUpdate);
-            setTimeout(() => {
-                if (!textTriggered) {
-                    textTriggered = true;
-                    tl.play();
-                }
-            }, 8000);
-        } else {
-            liftCurtain();
-            tl.play();
-        }
-
-        // ───── 3. VIMEO PLAYER ─────
-        const desktopId = iframe?.dataset.vimeoDesktop;
-        const mobileId = iframe?.dataset.vimeoMobile;
-        const pickId = () => (window.innerWidth < 768 ? mobileId : desktopId);
-
-        if (iframe) {
-            iframe.src = `https://player.vimeo.com/video/${pickId()}?badge=0&autopause=0&player_id=hero-vimeo-iframe&app_id=58479&loop=1&background=1&muted=1`;
-        }
-
-        // Lazy-load Vimeo API — only when user triggers immersive mode
-        let player: any = null;
-
-        async function ensureVimeoPlayer() {
-            if (player) return player;
-            // Dynamically load the Vimeo Player API script
-            if (!(window as any).Vimeo) {
-                await new Promise<void>((resolve) => {
-                    const s = document.createElement("script");
-                    s.src = "https://player.vimeo.com/api/player.js";
-                    s.onload = () => resolve();
-                    document.head.appendChild(s);
-                });
-            }
-            // @ts-ignore
-            player = new Vimeo.Player(iframe);
-            return player;
-        }
-
-        // ───── 4. STATE MACHINE ─────
+        const intervals: number[] = [];
         let immersive = false;
-        let audioTimer: ReturnType<typeof setTimeout> | null = null;
 
-        let videoTimer: ReturnType<typeof setTimeout> | null = null;
-
-        async function enter() {
+        function startPresentation() {
             if (immersive) return;
             immersive = true;
 
-            const player = await ensureVimeoPlayer();
+            // Fade out foreground, fade in presentation
+            gsap.to(foreground, { opacity: 0, duration: 0.5 });
+            gsap.to(presentation, { opacity: 1, duration: 0.5 });
+            gsap.to(presOverlay, { opacity: 1, duration: 0.5 });
 
-            // Fade out UI immediately
-            gsap.to(overlay, { opacity: 0, duration: 0.8 });
-            gsap.to(content, { opacity: 0, y: -30, duration: 0.5 });
-            if (scrollInd) gsap.to(scrollInd, { opacity: 0, duration: 0.3 });
-            if (brand)
-                gsap.to(brand, { opacity: 1, duration: 0.8, delay: 0.3 });
+            // User requested animations:
+            // 1. Subtitle and CTA go transparent
+            // 2. Title increases size by 15% (scale 1.15)
+            // 3. Title moves downward to be centered
+            gsap.to(".hero-subtitle, .hero-cta", {
+                opacity: 0,
+                pointerEvents: "none",
+                duration: 0.6,
+                ease: "power2.inOut",
+            });
 
-            // 0.5s delay before video starts
-            videoTimer = setTimeout(() => {
-                player.setCurrentTime(0);
-                player.play();
+            gsap.to(".hero-title", {
+                scale: 1.15,
+                y: window.innerWidth < 768 ? "5vh" : "10vh", // Move down to center visually
+                duration: 1.2,
+                ease: "power2.inOut",
+            });
 
-                gsap.to(vWrapper, {
-                    opacity: 1,
-                    duration: 0.6,
-                    ease: "power2.out",
-                });
+            // Start audio
+            audio.play().catch((e) => console.log("Audio play blocked:", e));
 
-                // 0.5s after video starts, activate audio
-                audioTimer = setTimeout(() => {
-                    player.setMuted(false);
-                    player.setVolume(0);
-                    const vol = { v: 0 };
-                    gsap.to(vol, {
-                        v: 0.6,
-                        duration: 0.5,
-                        ease: "power2.out",
-                        onUpdate: () => player.setVolume(vol.v),
+            const isMobile = window.innerWidth < 768;
+            const intervalTime = isMobile ? 700 : 1000;
+
+            columns.forEach((col, colIdx) => {
+                const imgs = Array.from(col.querySelectorAll("img"));
+                if (imgs.length === 0) return;
+
+                let currentIdx = Math.floor(Math.random() * imgs.length);
+
+                // Show initial random image
+                gsap.set(imgs[currentIdx], { opacity: 1, scale: 1.05 });
+
+                const interval = window.setInterval(() => {
+                    const prevIdx = currentIdx;
+                    currentIdx = (currentIdx + 1) % imgs.length;
+
+                    // Crossfade
+                    gsap.to(imgs[prevIdx], {
+                        opacity: 0,
+                        scale: 1.15,
+                        duration: 0.4,
                     });
-                }, 500);
-            }, 500);
+                    gsap.fromTo(
+                        imgs[currentIdx],
+                        { opacity: 0, scale: 1.0 },
+                        { opacity: 1, scale: 1.05, duration: 0.4 },
+                    );
+                }, intervalTime);
+
+                intervals.push(interval);
+            });
         }
 
-        function exit() {
+        function stopPresentation() {
             if (!immersive) return;
             immersive = false;
 
-            if (videoTimer) {
-                clearTimeout(videoTimer);
-                videoTimer = null;
-            }
-            if (audioTimer) {
-                clearTimeout(audioTimer);
-                audioTimer = null;
-            }
+            intervals.forEach(clearInterval);
+            intervals.length = 0;
 
-            if (player) {
-                player.setMuted(true);
-                player.setVolume(0);
-                player.pause();
-            }
+            audio.pause();
+            audio.currentTime = 0;
 
-            gsap.set(vWrapper, { opacity: 0 });
-            gsap.set(overlay, { opacity: 1 });
-            gsap.set(content, { opacity: 1, y: 0 });
-            if (scrollInd) gsap.set(scrollInd, { opacity: 1 });
-            if (brand) gsap.set(brand, { opacity: 0 });
+            gsap.to(foreground, { opacity: 1, duration: 0.5 });
+            gsap.to(presentation, { opacity: 0, duration: 0.5 });
+            gsap.to(presOverlay, { opacity: 0, duration: 0.5 });
+
+            // Reset text animations
+            gsap.to(".hero-subtitle, .hero-cta", {
+                opacity: 1,
+                pointerEvents: "auto",
+                duration: 0.5,
+                ease: "power2.out",
+            });
+
+            gsap.to(".hero-title", {
+                scale: 1,
+                y: 0,
+                duration: 0.8,
+                ease: "power2.out",
+            });
+
+            // Reset all images
+            columns.forEach((col) => {
+                const imgs = col.querySelectorAll("img");
+                imgs.forEach((img) =>
+                    gsap.set(img, { opacity: 0, scale: 1.0 }),
+                );
+            });
         }
 
-        // ───── 5. DESKTOP: HOVER THE TRIGGER → ENTER, LEAVE THE TRIGGER → EXIT ─────
-        // The trigger (star circle) is ALWAYS visible, ALWAYS z-30, ALWAYS pointer-events:auto.
-        // Everything underneath (iframe, overlay) is pointer-events:none.
-        // So mouseleave on the trigger fires reliably.
-        let hoverTimer: ReturnType<typeof setTimeout> | null = null;
+        // 4. Hover/Tap Listeners
+        trigger.addEventListener("mouseenter", startPresentation);
+        trigger.addEventListener("mouseleave", stopPresentation);
 
-        trigger.addEventListener("mouseenter", () => {
-            hoverTimer = setTimeout(() => {
-                enter();
-            }, 150);
-        });
-
-        trigger.addEventListener("mouseleave", () => {
-            // Cancel delayed enter if it hasn't fired yet
-            if (hoverTimer) {
-                clearTimeout(hoverTimer);
-                hoverTimer = null;
-            }
-            // EXIT immediately when mouse leaves the trigger
-            exit();
-        });
-
-        // ───── 6. MOBILE: TAP TOGGLE ─────
         trigger.addEventListener(
             "touchstart",
             (e) => {
                 e.preventDefault();
-                if (immersive) {
-                    exit();
-                } else {
-                    enter();
-                }
+                immersive ? stopPresentation() : startPresentation();
             },
             { passive: false },
         );
 
-        // Tap anywhere else on the section to exit
-        section.addEventListener(
-            "touchstart",
-            (e) => {
-                if (
-                    immersive &&
-                    e.target !== trigger &&
-                    !trigger.contains(e.target as Node)
-                ) {
-                    exit();
-                }
-            },
-            { passive: true },
-        );
-        // ───── 7. NUDGE + TOOLTIP ATTENTION SYSTEM ─────
-        const tooltip = document.getElementById("hero-trigger-tooltip");
-        let nudgeInterval: ReturnType<typeof setInterval> | null = null;
+        // Attention System (Tooltips/Nudges)
         let hasInteracted = false;
-
-        function playNudge() {
-            if (hasInteracted || immersive) return;
-            gsap.timeline()
-                .to(trigger, { x: -8, duration: 0.08, ease: "power2.inOut" })
-                .to(trigger, { x: 8, duration: 0.08, ease: "power2.inOut" })
-                .to(trigger, { x: -5, duration: 0.06, ease: "power2.inOut" })
-                .to(trigger, { x: 5, duration: 0.06, ease: "power2.inOut" })
-                .to(trigger, { x: 0, duration: 0.1, ease: "power2.out" });
-        }
-
-        function stopAttentionSystem() {
+        function stopAttention() {
             hasInteracted = true;
-            if (nudgeInterval) {
-                clearInterval(nudgeInterval);
-                nudgeInterval = null;
-            }
-            // Fade out tooltip
             if (tooltip) tooltip.style.opacity = "0";
         }
 
-        // Show tooltip after 3 seconds
+        trigger.addEventListener("mouseenter", stopAttention, { once: true });
+        trigger.addEventListener("touchstart", stopAttention, { once: true });
+
         setTimeout(() => {
             if (!hasInteracted && tooltip) tooltip.style.opacity = "1";
         }, 3000);
-
-        // First nudge after 4 seconds, then every 10 seconds
-        setTimeout(() => {
-            playNudge();
-            nudgeInterval = setInterval(playNudge, 10000);
-        }, 4000);
-
-        // Stop everything permanently after first interaction
-        trigger.addEventListener("mouseenter", stopAttentionSystem, { once: true });
-        trigger.addEventListener("touchstart", stopAttentionSystem, { once: true });
     }
 
     document.addEventListener("astro:page-load", initHero);
-
-    // ───── PARALLAX ─────
-    function initParallax() {
-        const section = document.getElementById("hero-section");
-        const video = document.getElementById("hero-video");
-        if (!section || !video) return;
-
-        ScrollTrigger.getAll().forEach((st) => {
-            if (st.vars.trigger === section) st.kill();
-        });
-
-        gsap.to(video, {
-            yPercent: 20,
-            ease: "none",
-            scrollTrigger: {
-                trigger: section,
-                start: "top top",
-                end: "bottom top",
-                scrub: true,
-            },
-        });
-    }
-
-    document.addEventListener("astro:page-load", initParallax);
 </script>
 
 <style>
-    /* Hide trigger components when mobile menu is active */
+    .hero-noise-bg {
+        background: #111413;
+    }
+    .hero-noise-bg::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: repeating-conic-gradient(#f2f2f2 0.00005%, #111413 0.0004%)
+            50% 50%/2500px 2500px;
+        opacity: 0.04;
+        pointer-events: none;
+    }
+
+    /* Hide trigger when mobile menu is active */
     :global(body.mobile-menu-active) #hero-magic-trigger {
         opacity: 0 !important;
         visibility: hidden;
-        pointer-events: none;
-        transition:
-            opacity 0.3s ease,
-            visibility 0.3s ease;
     }
 </style>

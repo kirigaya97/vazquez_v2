@@ -1,4 +1,4 @@
----
+﻿---
 interface Props {
     title: string;
     subtitle?: string;
@@ -14,16 +14,16 @@ const { title, subtitle, align = "center", class: className } = Astro.props;
 >
     {
         subtitle && (
-            <span class="text-gold font-heading italic text-lg md:text-xl mb-4 block">
+            <span class="text-purple-light font-heading italic text-lg md:text-xl mb-4 block">
                 {subtitle}
             </span>
         )
     }
     <h2
-        class="text-3xl md:text-5xl lg:text-6xl font-heading text-ivory leading-tight"
+        class="text-3xl md:text-5xl lg:text-6xl font-heading text-light leading-tight"
     >
         {title}
     </h2>
-    <div class={`w-24 h-1 bg-gold mt-6 ${align === "center" ? "mx-auto" : ""}`}>
+    <div class={`w-24 h-1 bg-purple-light mt-6 ${align === "center" ? "mx-auto" : ""}`}>
     </div>
 </div>

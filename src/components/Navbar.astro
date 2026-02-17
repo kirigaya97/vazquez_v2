@@ -1,13 +1,8 @@
----
+﻿---
 import siteConfig from "../data/site-config.json";
 import Button from "./ui/Button.astro";
 
-interface Props {
-    currentLang: "es" | "en";
-}
-
-const { currentLang } = Astro.props;
-const t = siteConfig.translations[currentLang].nav;
+const t = siteConfig.translations.es.nav;
 const navigation = siteConfig.navigation;
 ---
 
@@ -19,14 +14,14 @@ const navigation = siteConfig.navigation;
     <div class="max-w-6xl mx-auto px-6">
         <!-- Desktop Pill Menu -->
         <nav
-            class="hidden lg:flex items-center justify-between bg-obsidian-light/80 backdrop-blur-xl border border-white/10 px-8 py-3 rounded-full shadow-2xl shadow-black/50"
+            class="hidden lg:flex items-center justify-between bg-dark-gray/80 backdrop-blur-xl border border-white/10 px-8 py-3 rounded-full shadow-2xl shadow-black/50"
         >
             <div class="flex items-center gap-12">
                 <a
-                    href={`/${currentLang}/`}
-                    class="text-xl font-heading font-bold text-ivory tracking-tighter"
+                    href="/"
+                    class="text-xl font-heading font-bold text-light tracking-tighter"
                 >
-                    CHAP<span class="text-gold">MAGIC</span>
+                    FERNANDO<span class="text-purple-light">VAZQUEZ</span>
                 </a>
 
                 <ul class="flex items-center gap-8">
@@ -34,8 +29,8 @@ const navigation = siteConfig.navigation;
                         navigation.map((item) => (
                             <li>
                                 <a
-                                    href={`/${currentLang}/${item.href}`}
-                                    class="text-sm font-body uppercase tracking-widest text-ivory-muted hover:text-gold transition-colors duration-300"
+                                    href={item.href}
+                                    class="text-sm font-body uppercase tracking-widest text-light-muted hover:text-purple-light transition-colors duration-300"
                                 >
                                     {t[item.id as keyof typeof t]}
                                 </a>
@@ -46,26 +41,8 @@ const navigation = siteConfig.navigation;
             </div>
 
             <div class="flex items-center gap-6">
-                <!-- Integrated Language Toggle -->
-                <div
-                    class="flex bg-obsidian/50 rounded-full border border-gold/10 p-1"
-                >
-                    <a
-                        href="/es/"
-                        class={`px-3 py-1 rounded-full text-[10px] font-bold transition-all duration-300 ${currentLang === "es" ? "bg-gold text-obsidian" : "text-ivory-muted hover:text-gold"}`}
-                    >
-                        ES
-                    </a>
-                    <a
-                        href="/en/"
-                        class={`px-3 py-1 rounded-full text-[10px] font-bold transition-all duration-300 ${currentLang === "en" ? "bg-gold text-obsidian" : "text-ivory-muted hover:text-gold"}`}
-                    >
-                        EN
-                    </a>
-                </div>
-
                 <Button
-                    href={`/${currentLang}/#contact`}
+                    href="#contact"
                     variant="gold"
                     class="py-2 px-6 text-sm"
                 >
@@ -76,13 +53,13 @@ const navigation = siteConfig.navigation;
 
         <!-- Mobile Menu Pill -->
         <div
-            class="lg:hidden flex items-center justify-between bg-obsidian-light/80 backdrop-blur-xl border border-white/10 px-6 py-4 rounded-full shadow-2xl"
+            class="lg:hidden flex items-center justify-between bg-dark-gray/80 backdrop-blur-xl border border-white/10 px-6 py-4 rounded-full shadow-2xl"
         >
             <a
-                href={`/${currentLang}/`}
-                class="text-lg font-heading font-bold text-ivory tracking-tighter"
+                href="/"
+                class="text-lg font-heading font-bold text-light tracking-tighter"
             >
-                CHAP<span class="text-gold">MAGIC</span>
+                FERNANDO<span class="text-purple-light">VAZQUEZ</span>
             </a>
 
             <div class="flex items-center gap-4">
@@ -92,13 +69,13 @@ const navigation = siteConfig.navigation;
                     aria-label="Toggle Menu"
                 >
                     <span
-                        class="hamburger-line w-full h-0.5 bg-gold transition-all duration-300"
+                        class="hamburger-line w-full h-0.5 bg-purple-light transition-all duration-300"
                     ></span>
                     <span
-                        class="hamburger-line w-full h-0.5 bg-gold transition-all duration-300"
+                        class="hamburger-line w-full h-0.5 bg-purple-light transition-all duration-300"
                     ></span>
                     <span
-                        class="hamburger-line w-full h-0.5 bg-gold transition-all duration-300"
+                        class="hamburger-line w-full h-0.5 bg-purple-light transition-all duration-300"
                     ></span>
                 </button>
             </div>
@@ -109,18 +86,18 @@ const navigation = siteConfig.navigation;
 <!-- Mobile Overlay (Outside Header for absolute viewport coverage) -->
 <div
     id="mobile-menu-overlay"
-    class="fixed inset-0 bg-obsidian z-[70] opacity-0 pointer-events-none transition-opacity duration-300 flex flex-col items-center justify-start pt-32 overflow-y-auto overflow-x-hidden"
+    class="fixed inset-0 bg-dark z-[70] opacity-0 pointer-events-none transition-opacity duration-300 flex flex-col items-center justify-start pt-32 overflow-y-auto overflow-x-hidden"
 >
     <!-- Background Decor -->
     <div
         class="absolute top-0 left-0 w-full h-full pointer-events-none opacity-20"
     >
         <div
-            class="absolute -top-[10%] -left-[10%] w-[80%] h-[80%] bg-gold/10 rounded-full blur-[150px]"
+            class="absolute -top-[10%] -left-[10%] w-[80%] h-[80%] bg-purple-light/10 rounded-full blur-[150px]"
         >
         </div>
         <div
-            class="absolute -bottom-[10%] -right-[10%] w-[80%] h-[80%] bg-gold/5 rounded-full blur-[150px]"
+            class="absolute -bottom-[10%] -right-[10%] w-[80%] h-[80%] bg-purple-light/5 rounded-full blur-[150px]"
         >
         </div>
     </div>
@@ -131,8 +108,8 @@ const navigation = siteConfig.navigation;
                 navigation.map((item) => (
                     <li class="mobile-nav-item opacity-0 translate-y-4">
                         <a
-                            href={`/${currentLang}/${item.href}`}
-                            class="text-4xl md:text-5xl font-heading font-bold text-ivory hover:text-gold transition-colors block text-center"
+                            href={item.href}
+                            class="text-4xl md:text-5xl font-heading font-bold text-light hover:text-purple-light transition-colors block text-center"
                         >
                             {t[item.id as keyof typeof t]}
                         </a>
@@ -141,27 +118,12 @@ const navigation = siteConfig.navigation;
             }
             <li class="mobile-nav-item opacity-0 translate-y-4 pt-8">
                 <Button
-                    href={`/${currentLang}/#contact`}
+                    href="#contact"
                     variant="gold"
                     class="text-xl px-12 py-5"
                 >
                     {t.bookNow}
                 </Button>
-            </li>
-            <li
-                class="mobile-nav-item opacity-0 translate-y-4 pt-4 flex gap-4 text-center justify-center"
-            >
-                <a
-                    href="/es/"
-                    class={`text-sm ${currentLang === "es" ? "text-gold" : "text-ivory-muted"}`}
-                    >ES</a
-                >
-                <span class="text-white/20">|</span>
-                <a
-                    href="/en/"
-                    class={`text-sm ${currentLang === "en" ? "text-gold" : "text-ivory-muted"}`}
-                    >EN</a
-                >
             </li>
         </ul>
     </nav>
@@ -180,7 +142,7 @@ const navigation = siteConfig.navigation;
 
         if (!header || !btn || !overlay) return;
 
-        // Scroll Logic: Hide on top, show on scroll (More sensitive)
+        // Scroll Logic: Hide on top, show on scroll
         const handleScroll = () => {
             if (window.scrollY > 30) {
                 header.classList.remove("-translate-y-full", "opacity-0");
@@ -190,7 +152,6 @@ const navigation = siteConfig.navigation;
         };
 
         window.addEventListener("scroll", handleScroll);
-        // Run once in case user starts scrolled down
         handleScroll();
 
         // Mobile Logic
@@ -202,14 +163,12 @@ const navigation = siteConfig.navigation;
                 document.body.style.overflow = "hidden";
                 overlay.classList.remove("pointer-events-none");
 
-                // Snappier black fade
                 gsap.to(overlay, {
                     opacity: 1,
                     duration: 0.4,
                     ease: "power2.out",
                 });
 
-                // Faster line animation to 'X'
                 gsap.to(lines[0], {
                     y: 8,
                     rotation: 45,
@@ -224,7 +183,6 @@ const navigation = siteConfig.navigation;
                     ease: "power2.inOut",
                 });
 
-                // Staggered fade, glide and scale - Snappy but Premium
                 gsap.fromTo(
                     navItems,
                     { opacity: 0, y: 30, scale: 0.95 },
@@ -241,7 +199,6 @@ const navigation = siteConfig.navigation;
             } else {
                 document.body.style.overflow = "";
 
-                // Snappier fade out
                 gsap.to(overlay, {
                     opacity: 0,
                     duration: 0.3,
@@ -250,7 +207,6 @@ const navigation = siteConfig.navigation;
                         overlay.classList.add("pointer-events-none"),
                 });
 
-                // Faster line reset
                 gsap.to(lines, {
                     y: 0,
                     rotation: 0,
@@ -259,7 +215,6 @@ const navigation = siteConfig.navigation;
                     ease: "power2.inOut",
                 });
 
-                // Reset items
                 gsap.to(navItems, {
                     opacity: 0,
                     y: 15,
@@ -269,46 +224,34 @@ const navigation = siteConfig.navigation;
             }
         });
 
-        // Smooth scroll for nav links (including localized ones like /es/#shows)
+        // Smooth scroll for nav links
         document.querySelectorAll("a").forEach((anchor) => {
             anchor.addEventListener("click", function (e) {
                 const link = e.currentTarget as HTMLAnchorElement;
                 const href = link.getAttribute("href");
                 if (!href) return;
 
-                // Check if it's a hash link
-                const isHashLink = href.includes("#");
+                const isHashLink = href.startsWith("#");
                 if (!isHashLink) return;
 
-                const targetId = href.substring(href.indexOf("#"));
-                if (!targetId || targetId === "#") return;
+                const targetElement = document.querySelector(href);
+                if (targetElement) {
+                    e.preventDefault();
 
-                // Only smooth scroll if on the same page
-                const isCurrentPage =
-                    link.pathname === window.location.pathname ||
-                    link.pathname === window.location.pathname + "/";
-
-                if (isCurrentPage) {
-                    const targetElement = document.querySelector(targetId);
-                    if (targetElement) {
-                        e.preventDefault();
-
-                        // Close mobile menu if open
-                        if (isOpen) {
-                            btn.click();
-                        }
-
-                        const offset = 100; // Header height + spacing
-                        const targetPosition =
-                            targetElement.getBoundingClientRect().top +
-                            window.scrollY -
-                            offset;
-
-                        window.scrollTo({
-                            top: targetPosition,
-                            behavior: "smooth",
-                        });
+                    if (isOpen) {
+                        btn.click();
                     }
+
+                    const offset = 100;
+                    const targetPosition =
+                        targetElement.getBoundingClientRect().top +
+                        window.scrollY -
+                        offset;
+
+                    window.scrollTo({
+                        top: targetPosition,
+                        behavior: "smooth",
+                    });
                 }
             });
         });

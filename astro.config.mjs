@@ -4,18 +4,11 @@ import vercel from '@astrojs/vercel';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://chapmagic.com',
+  site: 'https://vazquezilusionista.com',
   adapter: vercel(),
   integrations: [
   ],
   vite: {
     plugins: [tailwindcss()],
-  },
-  i18n: {
-    defaultLocale: 'es',
-    locales: ['es', 'en'],
-    routing: {
-      prefixDefaultLocale: true,
-    },
   },
 });

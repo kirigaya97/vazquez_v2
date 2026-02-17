@@ -1,4 +1,4 @@
----
+﻿---
 interface Props {
     target: number;
     prefix?: string;
@@ -18,13 +18,13 @@ const { target, prefix = "", suffix = "", label, duration = 2 } = Astro.props;
     data-duration={duration}
 >
     <div
-        class="text-4xl md:text-5xl lg:text-6xl font-heading font-bold text-gold mb-2 tabular-nums"
+        class="text-4xl md:text-5xl lg:text-6xl font-heading font-bold text-purple-light mb-2 tabular-nums"
     >
         <span class="counter-prefix">{prefix}</span><span class="counter-value"
             >0</span
         ><span class="counter-suffix">{suffix}</span>
     </div>
-    <div class="text-ivory-muted uppercase tracking-widest text-sm font-body">
+    <div class="text-light-muted uppercase tracking-widest text-sm font-body">
         {label}
     </div>
 </div>

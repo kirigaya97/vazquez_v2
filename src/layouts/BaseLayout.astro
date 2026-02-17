@@ -1,4 +1,4 @@
----
+﻿---
 import { ClientRouter } from "astro:transitions";
 import "../styles/global.css";
 
@@ -47,13 +47,13 @@ const { title, description, lang = "es" } = Astro.props;
     <!-- Custom Cursor (desktop only) -->
     <div
       id="cursor-dot"
-      class="fixed top-0 left-0 w-2 h-2 bg-gold rounded-full pointer-events-none z-[9999] opacity-0 mix-blend-difference"
+      class="fixed top-0 left-0 w-2 h-2 bg-purple-light rounded-full pointer-events-none z-[9999] opacity-0 mix-blend-difference"
       aria-hidden="true"
     >
     </div>
     <div
       id="cursor-ring"
-      class="fixed top-0 left-0 w-10 h-10 border border-gold/60 rounded-full pointer-events-none z-[9999] opacity-0 mix-blend-difference"
+      class="fixed top-0 left-0 w-10 h-10 border border-purple-light/60 rounded-full pointer-events-none z-[9999] opacity-0 mix-blend-difference"
       aria-hidden="true"
     >
     </div>
@@ -171,11 +171,11 @@ const { title, description, lang = "es" } = Astro.props;
             gsap.to(ring, {
               scale: isMagic ? 3 : 1.5,
               borderColor: isMagic
-                ? "rgba(212, 175, 55, 0.6)"
-                : "rgba(212, 175, 55, 0.3)",
+                ? "rgba(149, 130, 217, 0.6)"
+                : "rgba(149, 130, 217, 0.3)",
               backgroundColor: isMagic
-                ? "rgba(212, 175, 55, 0.3)"
-                : "rgba(212, 175, 55, 0.08)",
+                ? "rgba(149, 130, 217, 0.3)"
+                : "rgba(149, 130, 217, 0.08)",
               duration: isMagic ? 3 : 0.3,
               ease: "power2.out",
             });
@@ -188,7 +188,7 @@ const { title, description, lang = "es" } = Astro.props;
           el.addEventListener("mouseleave", () => {
             gsap.to(ring, {
               scale: 1,
-              borderColor: "rgba(212, 175, 55, 0.6)",
+              borderColor: "rgba(149, 130, 217, 0.6)",
               backgroundColor: "transparent",
               duration: 0.3,
               ease: "power2.out",

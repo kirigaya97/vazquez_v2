@@ -1,4 +1,4 @@
----
+﻿---
 import siteConfig from "../../data/site-config.json";
 
 interface Props {
@@ -17,7 +17,7 @@ const { t, lang } = Astro.props;
 const currentYear = new Date().getFullYear();
 ---
 
-<footer class="bg-obsidian py-16 px-6 border-t border-smoke">
+<footer class="bg-dark py-16 px-6 border-t border-smoke">
     <div class="max-w-7xl mx-auto">
         <div
             class="grid grid-cols-1 md:grid-cols-3 gap-12 items-center text-center md:text-left"
@@ -25,13 +25,13 @@ const currentYear = new Date().getFullYear();
             <!-- Branding -->
             <div>
                 <a
-                    href={`/${lang}/`}
-                    class="text-3xl font-heading font-bold text-ivory tracking-tighter"
+                    href="/"
+                    class="text-3xl font-heading font-bold text-light tracking-tighter uppercase"
                 >
-                    CHAP<span class="text-gold">MAGIC</span>
+                    FERNANDO<span class="text-purple-light">VAZQUEZ</span>
                 </a>
                 <p
-                    class="mt-4 text-ivory-muted text-sm max-w-xs mx-auto md:mx-0"
+                    class="mt-4 text-light-muted text-sm max-w-xs mx-auto md:mx-0 font-body"
                 >
                     Experiencias de mentalismo e ilusionismo de alto impacto
                     para eventos corporativos y privados.
@@ -43,7 +43,7 @@ const currentYear = new Date().getFullYear();
                 <a
                     href={siteConfig.links.instagram}
                     target="_blank"
-                    class="text-ivory-muted hover:text-gold transition-colors"
+                    class="text-light-muted hover:text-purple-light transition-colors"
                 >
                     <span class="sr-only">Instagram</span>
                     <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"
@@ -55,7 +55,7 @@ const currentYear = new Date().getFullYear();
                 <a
                     href={siteConfig.links.youtube}
                     target="_blank"
-                    class="text-ivory-muted hover:text-gold transition-colors"
+                    class="text-light-muted hover:text-purple-light transition-colors"
                 >
                     <span class="sr-only">YouTube</span>
                     <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"
@@ -67,18 +67,18 @@ const currentYear = new Date().getFullYear();
             </div>
 
             <!-- Contact Info -->
-            <div class="text-sm">
-                <p class="text-ivory">
+            <div class="text-sm font-body">
+                <p class="text-light">
                     Email: <a
                         href={`mailto:${siteConfig.contact.email}`}
-                        class="text-gold hover:underline"
+                        class="text-purple-light hover:underline transition-colors"
                         >{siteConfig.contact.email}</a
                     >
                 </p>
-                <p class="text-ivory mt-2">
+                <p class="text-light mt-2">
                     WhatsApp: <a
                         href={`https://wa.me/${siteConfig.contact.whatsapp.replace("+", "")}`}
-                        class="text-gold hover:underline"
+                        class="text-purple-light hover:underline transition-colors"
                         >{siteConfig.contact.whatsapp}</a
                     >
                 </p>
@@ -93,13 +93,13 @@ const currentYear = new Date().getFullYear();
             </p>
             <div class="flex gap-6 text-xs text-smoke font-body">
                 <a
-                    href={`/${lang}/privacy`}
-                    class="hover:text-gold transition-colors"
+                    href="/privacy"
+                    class="hover:text-purple-light transition-colors"
                     >{t.privacyPolicy}</a
                 >
                 <a
-                    href={`/${lang}/terms`}
-                    class="hover:text-gold transition-colors"
+                    href="/terms"
+                    class="hover:text-purple-light transition-colors"
                     >{t.termsOfService}</a
                 >
             </div>
@@ -111,17 +111,17 @@ const currentYear = new Date().getFullYear();
         >
             <p class="text-[10px] tracking-widest font-body uppercase">
                 <span class="text-[#74ACDF]">{t.madeBy}</span>
-                <span class="text-ivory">{t.with}</span>
+                <span class="text-light">{t.with}</span>
                 <span
-                    class="text-gold text-sm inline-block transform translate-y-[1px]"
+                    class="text-purple-light text-sm inline-block transform translate-y-[1px]"
                     >❤</span
                 >
-                <span class="text-ivory">{t.in}</span>
+                <span class="text-light">{t.in}</span>
                 <span class="text-[#74ACDF]">Argentina</span>.
                 <a
                     href="https://dev.rodrigocamino.com/"
                     target="_blank"
-                    class="ml-1 text-ivory-muted hover:text-gold transition-colors underline decoration-gold/20 underline-offset-4"
+                    class="ml-1 text-light-muted hover:text-purple-light transition-colors underline decoration-purple-light/20 underline-offset-4"
                 >
                     Rodrigo Camino
                 </a>

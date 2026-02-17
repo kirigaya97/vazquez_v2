@@ -57,14 +57,14 @@ Create `src/styles/global.css`:
 
 /* CUSTOM THEME: Use @theme to define design tokens */
 @theme {
-  /* Colors — ChapMagic Premium/Mystery palette */
-  --color-obsidian: #0A0A0A;
-  --color-obsidian-light: #1A1A1A;
-  --color-gold: #D4AF37;
-  --color-gold-light: #E8C860;
-  --color-gold-dark: #B8941F;
-  --color-ivory: #F5F0E8;
-  --color-ivory-muted: #D9D0C0;
+  /* Colors — Vazquez Ilusionista Purple/Mystery palette */
+  --color-dark: #111413;
+  --color-dark-gray: #3D3C45;
+  --color-purple: #330673;
+  --color-purple-light: #9582D9;
+  --color-purple-glow: #7B68C8;
+  --color-light: #F2F2F2;
+  --color-light-muted: #D9D9D9;
   --color-smoke: #2A2A2A;
 
   /* Fonts */
@@ -130,11 +130,11 @@ import '../styles/global.css';
 Custom `@theme` tokens are automatically available as utilities:
 
 ```html
-<!-- Uses --color-gold from @theme -->
-<h1 class="text-gold font-heading text-6xl">Magician Name</h1>
+<!-- Uses --color-purple-light from @theme -->
+<h1 class="text-purple-light font-heading text-6xl">Magician Name</h1>
 
-<!-- Uses --color-obsidian from @theme -->
-<section class="bg-obsidian text-ivory py-section">
+<!-- Uses --color-dark from @theme -->
+<section class="bg-dark text-light py-section">
 
 <!-- Responsive -->
 <section class="py-section-mobile md:py-section">
@@ -143,7 +143,7 @@ Custom `@theme` tokens are automatically available as utilities:
 ### In Arbitrary Values (when theme token doesn't map to a utility)
 
 ```html
-<div class="bg-[var(--color-obsidian-light)]">
+<div class="bg-[var(--color-dark-gray)]">
   <!-- For tokens not auto-mapped to a utility -->
 </div>
 ```
@@ -155,9 +155,9 @@ Custom `@theme` tokens are automatically available as utilities:
 .hero-gradient {
   background: linear-gradient(
     135deg,
-    var(--color-obsidian) 0%,
-    var(--color-smoke) 50%,
-    var(--color-obsidian) 100%
+    var(--color-dark) 0%,
+    var(--color-purple) 50%,
+    var(--color-dark) 100%
   );
 }
 ```
@@ -170,16 +170,16 @@ Use Tailwind's built-in responsive typography utilities:
 
 ```html
 <!-- Hero title: massive, responsive -->
-<h1 class="text-4xl md:text-6xl lg:text-8xl font-heading font-bold text-ivory leading-tight">
+<h1 class="text-4xl md:text-6xl lg:text-8xl font-heading font-bold text-light leading-tight">
   
 <!-- Section heading -->
-<h2 class="text-3xl md:text-5xl font-heading text-ivory">
+<h2 class="text-3xl md:text-5xl font-heading text-light">
 
 <!-- Body text -->
-<p class="text-base md:text-lg text-ivory-muted font-body leading-relaxed">
+<p class="text-base md:text-lg text-light-muted font-body leading-relaxed">
 
-<!-- Gold accent text -->
-<span class="text-gold font-heading italic">
+<!-- Purple accent text -->
+<span class="text-purple-light font-heading italic">
 ```
 
 ---
@@ -189,13 +189,13 @@ Use Tailwind's built-in responsive typography utilities:
 ### Card with Hover Effect
 
 ```html
-<div class="bg-obsidian-light rounded-card p-8 
+<div class="bg-dark-gray rounded-card p-8 
             border border-smoke
             transition-all duration-300 ease-smooth
-            hover:border-gold/30 hover:shadow-lg hover:shadow-gold/10
+            hover:border-purple-light/30 hover:shadow-lg hover:shadow-purple-light/10
             hover:-translate-y-1">
-  <h3 class="text-xl font-heading text-ivory mb-2">Show Title</h3>
-  <p class="text-ivory-muted">Description here</p>
+  <h3 class="text-xl font-heading text-light mb-2">Show Title</h3>
+  <p class="text-light-muted">Description here</p>
 </div>
 ```
 
@@ -203,20 +203,20 @@ Use Tailwind's built-in responsive typography utilities:
 
 ```html
 <a class="inline-block px-8 py-4 
-          bg-gradient-to-r from-gold-dark via-gold to-gold-light
-          text-obsidian font-body font-semibold text-lg
+          bg-gradient-to-r from-purple via-purple-light to-purple-glow
+          text-light font-body font-semibold text-lg
           rounded-full
           transition-all duration-300
-          hover:shadow-lg hover:shadow-gold/30 hover:scale-105
+          hover:shadow-lg hover:shadow-purple-light/30 hover:scale-105
           active:scale-95">
-  Book Now
+  Reservar Ahora
 </a>
 ```
 
 ### Section Container
 
 ```html
-<section class="bg-obsidian py-section-mobile md:py-section px-6 md:px-12 lg:px-24">
+<section class="bg-dark py-section-mobile md:py-section px-6 md:px-12 lg:px-24">
   <div class="max-w-7xl mx-auto">
     <!-- Content -->
   </div>
@@ -252,7 +252,7 @@ Use Tailwind's built-in responsive typography utilities:
 
 ## 8. Dark Mode Notes
 
-For this project, the entire site IS dark-themed (obsidian background). There is no light/dark toggle. However, if you need to respect `prefers-reduced-motion`:
+For this project, the entire site IS dark-themed (dark background). There is no light/dark toggle. However, if you need to respect `prefers-reduced-motion`:
 
 ```css
 @media (prefers-reduced-motion: reduce) {

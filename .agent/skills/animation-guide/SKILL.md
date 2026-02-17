@@ -3,7 +3,7 @@ name: animation-guide
 description: GSAP and Motion animation patterns for Astro — correct API usage verified against gsap.com and motion.dev official docs.
 ---
 
-# Animation Guide for ChapMagic
+# Animation Guide for Vazquez Ilusionista
 
 > **CRITICAL**: This guide defines the EXACT animation APIs to use. Do NOT hallucinate function signatures.
 > The library formerly known as "Motion One" is now just **"Motion"** (package name: `motion`).

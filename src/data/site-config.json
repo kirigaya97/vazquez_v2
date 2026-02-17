@@ -1,13 +1,15 @@
 {
     "branding": {
-        "siteName": "ChapMagic",
+        "siteName": "Vazquez Ilusionista",
+        "siteNameFull": "Fernando Vazquez Ilusionista",
         "logo": "/favicon.svg",
         "colors": {
-            "primary": "#0A0A0A",
-            "secondary": "#1A1A1A",
-            "accent": "#D4AF37",
-            "text": "#F5F0E8",
-            "textMuted": "#D9D0C0"
+            "primary": "#111413",
+            "secondary": "#3D3C45",
+            "accent": "#330673",
+            "accentLight": "#9582D9",
+            "text": "#F2F2F2",
+            "textMuted": "#D9D9D9"
         },
         "fonts": {
             "heading": "Playfair Display",
@@ -37,23 +39,20 @@
         }
     ],
     "contact": {
-        "whatsapp": "+34691665388",
-        "email": "hola@chapmagic.com",
+        "whatsapp": "+54XXXXXXXXX",
+        "email": "info@vazquezilusionista.com",
         "formDestinationEmail": "rodrigo.camino97@gmail.com"
     },
     "links": {
-        "atrapalo": "https://www.atrapalo.com/entradas/chapmagic-mentalismo-y-magia_e4895627/",
-        "instagram": "https://www.instagram.com/chapmagic",
-        "youtube": "https://www.youtube.com/@chapmagic",
-        "heroVideoSrc": "/videos/golden-button.mp4",
-        "heroVimeoDesktop": "1164214826",
-        "heroVimeoMobile": "1164214826"
+        "atrapalo": "https://www.atrapalo.com/entradas/vazquez-ilusionista",
+        "instagram": "https://www.instagram.com/vazquezilusionista",
+        "youtube": "https://www.youtube.com/@vazquezilusionista"
     },
     "translations": {
         "es": {
             "meta": {
-                "title": "ChapMagic — Mago y Mentalista | Experiencias Imposibles",
-                "description": "Descubre el mentalismo y la magia de ChapMagic. Espectáculos corporativos, eventos privados y shows teatrales que desafían la lógica."
+                "title": "Vazquez Ilusionista — Mago y Mentalista | Experiencias Imposibles",
+                "description": "Descubrí el mentalismo y la magia de Fernando Vazquez. Espectáculos corporativos, eventos privados y shows teatrales que desafían la lógica."
             },
             "nav": {
                 "shows": "Espectáculos",
@@ -65,31 +64,25 @@
                 "bookNow": "Reservar"
             },
             "hero": {
-                "title": "Magia Que Desafía Lo Imposible",
+                "title": "El arte del Imposible",
                 "subtitle": "Mentalismo · Ilusionismo · Experiencias Únicas",
                 "cta": "Reservar Ahora",
-                "hoverPrompt": "Hover para magia",
-                "tapPrompt": "Toca para magia",
-                "tooltipDesktop": "Hover para magia ✨",
-                "tooltipMobile": "Toca aquí ✨",
+                "hoverPrompt": "Mirame en acción",
+                "tapPrompt": "Tocá para ver",
+                "tooltipDesktop": "Poné el mouse acá ✨",
+                "tooltipMobile": "Toca acá ✨",
                 "circleFontSize": {
                     "desktop": 21,
-                    "mobile": 15.7
+                    "mobile": 19
                 }
             },
             "shows": {
                 "sectionTitle": "Espectáculos",
                 "items": [
                     {
-                        "id": "corporate",
-                        "title": "Magia para empresas",
-                        "description": "Chap crea experiencias mágicas para eventos corporativos en todo el mundo. Magia tecnológica y mentalismo diseñados a medida para generar impacto, conexión y recuerdo de marca.",
-                        "image": "/images/shows/show1.webp"
-                    },
-                    {
                         "id": "reception",
                         "title": "Magia de recepción",
-                        "description": "La magia sucede a centímetros de tus ojos. Chap sorprende a pequeños grupos con ilusiones modernas y tecnológicas, creando una experiencia íntima e inolvidable.",
+                        "description": "La magia sucede a centímetros de tus ojos. Sorprendé a pequeños grupos con ilusiones modernas y tecnológicas, creando una experiencia íntima e inolvidable.",
                         "image": "/images/shows/show2.webp"
                     },
                     {
@@ -99,35 +92,20 @@
                         "image": "/images/shows/show3.webp"
                     },
                     {
-                        "id": "magic-experience",
-                        "title": "Experiencia mágica",
-                        "description": "Un show íntimo para solo 12 personas en una exclusiva sala Speak Easy. Magia de alto nivel, muy cerca, en una de las mejores cocktailerías de Europa.",
-                        "image": "/images/shows/show4.webp"
+                        "id": "corporate",
+                        "title": "Magia de Cerca",
+                        "description": "Experiencias mágicas para eventos corporativos. Magia tecnológica y mentalismo diseñados a medida para generar impacto, conexión y recuerdo de marca.",
+                        "image": "/images/shows/show1.webp"
                     }
                 ]
             },
             "jury": {
-                "sectionTitle": "Lo Que Dicen Los Jueces",
+                "sectionTitle": "Lo Que Dicen",
                 "quotes": [
                     {
-                        "text": "Es mago de verdad, tiene poderes.",
-                        "author": "Santi Millán",
-                        "role": "Juez de AGT"
-                    },
-                    {
-                        "text": "Es que flipo. Me ha encantado.",
-                        "author": "Lorena Castell",
-                        "role": "Juez de AGT"
-                    },
-                    {
-                        "text": "Me fascina, me estoy volviendo loca.",
-                        "author": "Paula Echevarría",
-                        "role": "Juez de AGT"
-                    },
-                    {
-                        "text": "Con un número de esos ya era pase de oro, ¡que hizo 4!",
-                        "author": "Risto Meijide",
-                        "role": "Juez de AGT"
+                        "text": "Placeholder — reemplazar con testimonios reales.",
+                        "author": "Nombre",
+                        "role": "Rol"
                     }
                 ]
             },
@@ -168,17 +146,17 @@
                 "emailLabel": "Email",
                 "emailPlaceholder": "tu@email.com",
                 "messageLabel": "Mensaje",
-                "messagePlaceholder": "Cuéntanos sobre tu evento (fecha, lugar, tipo de público)...",
+                "messagePlaceholder": "Contanos sobre tu evento (fecha, lugar, tipo de público)...",
                 "submitButton": "Enviar Mensaje",
                 "submitting": "Enviando...",
-                "successMessage": "¡Mensaje enviado! Me pondré en contacto contigo pronto.",
-                "errorMessage": "Hubo un error al enviar. Por favor, inténtalo de nuevo."
+                "successMessage": "¡Mensaje enviado! Me voy a poner en contacto con vos pronto.",
+                "errorMessage": "Hubo un error al enviar. Por favor, intentá de nuevo."
             },
             "whatsapp": {
-                "prefillMessage": "Hola ChapMagic, me gustaría recibir información sobre tus espectáculos para un evento."
+                "prefillMessage": "Hola Vazquez Ilusionista, me gustaría recibir información sobre tus espectáculos para un evento."
             },
             "footer": {
-                "copyright": "© 2026 ChapMagic. Todos los derechos reservados.",
+                "copyright": "© 2026 Vazquez Ilusionista. Todos los derechos reservados.",
                 "privacyPolicy": "Política de Privacidad",
                 "termsOfService": "Términos de Servicio",
                 "madeBy": "Hecho",
@@ -191,7 +169,7 @@
                 "sections": [
                     {
                         "h3": "Responsable del Tratamiento",
-                        "p": "ChapMagic es el responsable de los datos personales recogidos a través de este sitio web."
+                        "p": "Vazquez Ilusionista es el responsable de los datos personales recogidos a través de este sitio web."
                     },
                     {
                         "h3": "Datos Recogidos",
@@ -203,7 +181,7 @@
                     },
                     {
                         "h3": "Derechos",
-                        "p": "Puede ejercer sus derechos de acceso, rectificación o supresión contactando con nosotros a través del correo electrónico hola@chapmagic.com."
+                        "p": "Puede ejercer sus derechos de acceso, rectificación o supresión contactando con nosotros a través del correo electrónico info@vazquezilusionista.com."
                     }
                 ]
             },
@@ -213,7 +191,7 @@
                 "sections": [
                     {
                         "h3": "Uso del Sitio",
-                        "p": "Este sitio web proporciona información sobre los servicios profesionales de ChapMagic."
+                        "p": "Este sitio web proporciona información sobre los servicios profesionales de Vazquez Ilusionista."
                     },
                     {
                         "h3": "Reservas",
@@ -221,191 +199,11 @@
                     },
                     {
                         "h3": "Propiedad Intelectual",
-                        "p": "Todo el contenido, incluyendo textos, imágenes y vídeos de los espectáculos, es propiedad de ChapMagic y está protegido por ley."
+                        "p": "Todo el contenido, incluyendo textos, imágenes y vídeos de los espectáculos, es propiedad de Vazquez Ilusionista y está protegido por ley."
                     },
                     {
                         "h3": "Limitación de Responsabilidad",
-                        "p": "ChapMagic no se hace responsable de las interrupciones técnicas del servicio o de errores tipográficos en el contenido."
-                    }
-                ]
-            }
-        },
-        "en": {
-            "meta": {
-                "title": "ChapMagic — Magician & Mentalist | Impossible Experiences",
-                "description": "Discover the mentalism and magic of ChapMagic. Corporate shows, private events, and theater performances that defy logic."
-            },
-            "nav": {
-                "shows": "Shows",
-                "jury": "Judges",
-                "stats": "Numbers",
-                "tickets": "Tickets",
-                "about": "About",
-                "contact": "Contact",
-                "bookNow": "Book Now"
-            },
-            "hero": {
-                "title": "Magic That Defies The Impossible",
-                "subtitle": "Mentalism · Illusion · Unique Experiences",
-                "cta": "Book Now",
-                "hoverPrompt": "Hover for magic",
-                "tapPrompt": "Tap for magic",
-                "tooltipDesktop": "Hover for magic ✨",
-                "tooltipMobile": "Tap here ✨",
-                "circleFontSize": {
-                    "desktop": 23,
-                    "mobile": 19
-                }
-            },
-            "shows": {
-                "sectionTitle": "Shows",
-                "items": [
-                    {
-                        "id": "corporate",
-                        "title": "Corporate Magic",
-                        "description": "Chap creates magical experiences for corporate events worldwide. Custom-designed tech magic and mentalism to generate impact, connection, and brand recall.",
-                        "image": "/images/shows/show1.webp"
-                    },
-                    {
-                        "id": "reception",
-                        "title": "Reception Magic",
-                        "description": "Magic happens inches from your eyes. Chap surprises small groups with modern and technological illusions, creating an intimate and unforgettable experience.",
-                        "image": "/images/shows/show2.webp"
-                    },
-                    {
-                        "id": "main-show",
-                        "title": "Main Show",
-                        "description": "A show that combines comedy and impactful magic. Different formats adaptable to family, social, and corporate events.",
-                        "image": "/images/shows/show3.jpg"
-                    },
-                    {
-                        "id": "magic-experience",
-                        "title": "Magic Experience",
-                        "description": "An intimate show for only 12 people in an exclusive Speak Easy room. High-level magic, up close, in one of the best cocktail bars in Europe.",
-                        "image": "/images/shows/show4.jpg"
-                    }
-                ]
-            },
-            "jury": {
-                "sectionTitle": "What The Judges Say",
-                "quotes": [
-                    {
-                        "text": "He's a real magician, he has powers.",
-                        "author": "Santi Millán",
-                        "role": "AGT Judge"
-                    },
-                    {
-                        "text": "I'm blown away. I absolutely loved it.",
-                        "author": "Lorena Castell",
-                        "role": "AGT Judge"
-                    },
-                    {
-                        "text": "I'm fascinated, it's driving me crazy!",
-                        "author": "Paula Echevarría",
-                        "role": "AGT Judge"
-                    },
-                    {
-                        "text": "With one of those acts it was already a golden buzzer, and he did four!!!",
-                        "author": "Risto Meijide",
-                        "role": "AGT Judge"
-                    }
-                ]
-            },
-            "stats": {
-                "sectionTitle": "In Numbers",
-                "items": [
-                    {
-                        "value": 14,
-                        "label": "Countries",
-                        "prefix": "+"
-                    },
-                    {
-                        "value": 700,
-                        "label": "Shows",
-                        "prefix": "+"
-                    },
-                    {
-                        "value": 40000,
-                        "label": "Spectators",
-                        "prefix": "+"
-                    },
-                    {
-                        "value": 15,
-                        "label": "Years of Magic",
-                        "prefix": "+"
-                    }
-                ]
-            },
-            "tickets": {
-                "sectionTitle": "Tickets",
-                "subtitle": "Don't miss my upcoming public shows. Next dates available.",
-                "cta": "Get Tickets"
-            },
-            "contact": {
-                "sectionTitle": "Contact",
-                "nameLabel": "Name",
-                "namePlaceholder": "Your full name",
-                "emailLabel": "Email",
-                "emailPlaceholder": "your@email.com",
-                "messageLabel": "Message",
-                "messagePlaceholder": "Tell us about your event (date, location, audience)...",
-                "submitButton": "Send Message",
-                "submitting": "Sending...",
-                "successMessage": "Message sent! I'll get back to you soon.",
-                "errorMessage": "Something went wrong. Please try again."
-            },
-            "whatsapp": {
-                "prefillMessage": "Hi ChapMagic, I'd like to get information about your shows for an event."
-            },
-            "footer": {
-                "copyright": "© 2026 ChapMagic. All rights reserved.",
-                "privacyPolicy": "Privacy Policy",
-                "termsOfService": "Terms of Service",
-                "madeBy": "Made",
-                "with": "with",
-                "in": "in"
-            },
-            "privacy": {
-                "title": "Privacy Policy",
-                "lastUpdated": "Last updated: February 2026",
-                "sections": [
-                    {
-                        "h3": "Data Controller",
-                        "p": "ChapMagic is responsible for the personal data collected through this website."
-                    },
-                    {
-                        "h3": "Data Collected",
-                        "p": "We only collect your name and email when you fill out the contact form to request information about shows."
-                    },
-                    {
-                        "h3": "Purpose",
-                        "p": "The data will be used exclusively to respond to your inquiries and manage the hiring of magic and mentalism services."
-                    },
-                    {
-                        "h3": "Rights",
-                        "p": "You can exercise your rights of access, rectification or deletion by contacting us via email at hola@chapmagic.com."
-                    }
-                ]
-            },
-            "terms": {
-                "title": "Terms of Service",
-                "lastUpdated": "Last updated: February 2026",
-                "sections": [
-                    {
-                        "h3": "Website Use",
-                        "p": "This website provides information about ChapMagic's professional services."
-                    },
-                    {
-                        "h3": "Bookings",
-                        "p": "Any booking request made through the form is subject to confirmation of availability and final quote."
-                    },
-                    {
-                        "h3": "Intellectual Property",
-                        "p": "All content, including text, images, and videos of the shows, is property of ChapMagic and protected by law."
-                    },
-                    {
-                        "h3": "Limitation of Liability",
-                        "p": "ChapMagic is not responsible for technical service interruptions or typographical errors in the content."
+                        "p": "Vazquez Ilusionista no se hace responsable de las interrupciones técnicas del servicio o de errores tipográficos en el contenido."
                     }
                 ]
             }

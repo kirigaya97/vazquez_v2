@@ -1,4 +1,4 @@
----
+﻿---
 import SectionHeading from "../ui/SectionHeading.astro";
 import Button from "../ui/Button.astro";
 import Reveal from "../ui/Reveal.astro";
@@ -24,7 +24,7 @@ const { t } = Astro.props;
 
 <section
     id="contact"
-    class="py-section-mobile md:py-section bg-obsidian-light px-6"
+    class="py-section-mobile md:py-section bg-dark-gray px-6"
 >
     <div class="max-w-4xl mx-auto">
         <SectionHeading
@@ -53,7 +53,7 @@ const { t } = Astro.props;
                     <div class="space-y-2">
                         <label
                             for="name"
-                            class="block text-sm font-body uppercase tracking-widest text-gold"
+                            class="block text-sm font-body uppercase tracking-widest text-purple-light"
                             >{t.nameLabel}</label
                         >
                         <input
@@ -62,13 +62,13 @@ const { t } = Astro.props;
                             name="name"
                             required
                             placeholder={t.namePlaceholder}
-                            class="w-full bg-obsidian border border-smoke p-4 rounded-card text-ivory placeholder:text-smoke focus:outline-none focus:border-gold/50 transition-colors"
+                            class="w-full bg-dark border border-smoke p-4 rounded-card text-light placeholder:text-smoke focus:outline-none focus:border-purple-light/50 transition-colors"
                         />
                     </div>
                     <div class="space-y-2">
                         <label
                             for="email"
-                            class="block text-sm font-body uppercase tracking-widest text-gold"
+                            class="block text-sm font-body uppercase tracking-widest text-purple-light"
                             >{t.emailLabel}</label
                         >
                         <input
@@ -77,7 +77,7 @@ const { t } = Astro.props;
                             name="email"
                             required
                             placeholder={t.emailPlaceholder}
-                            class="w-full bg-obsidian border border-smoke p-4 rounded-card text-ivory placeholder:text-smoke focus:outline-none focus:border-gold/50 transition-colors"
+                            class="w-full bg-dark border border-smoke p-4 rounded-card text-light placeholder:text-smoke focus:outline-none focus:border-purple-light/50 transition-colors"
                         />
                     </div>
                 </div>
@@ -85,7 +85,7 @@ const { t } = Astro.props;
                 <div class="space-y-2">
                     <label
                         for="message"
-                        class="block text-sm font-body uppercase tracking-widest text-gold"
+                        class="block text-sm font-body uppercase tracking-widest text-purple-light"
                         >{t.messageLabel}</label
                     >
                     <textarea
@@ -94,7 +94,7 @@ const { t } = Astro.props;
                         required
                         rows="5"
                         placeholder={t.messagePlaceholder}
-                        class="w-full bg-obsidian border border-smoke p-4 rounded-card text-ivory placeholder:text-smoke focus:outline-none focus:border-gold/50 transition-colors resize-none"
+                        class="w-full bg-dark border border-smoke p-4 rounded-card text-light placeholder:text-smoke focus:outline-none focus:border-purple-light/50 transition-colors resize-none"
                     ></textarea>
                 </div>
 
