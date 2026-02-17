@@ -46,7 +46,7 @@ const columns = [
     <!-- LAYER 5: IMAGE PRESENTATION GRID -->
     <div
         id="hero-presentation"
-        class="absolute inset-0 grid grid-cols-1 md:grid-cols-3 opacity-0 transition-opacity duration-500 z-[5] pointer-events-none"
+        class="absolute inset-0 grid grid-cols-1 md:grid-cols-3 opacity-0 z-[5] pointer-events-none"
     >
         {
             columns.map((colImages, colIdx) => (
@@ -58,7 +58,7 @@ const columns = [
                         <img
                             src={src}
                             alt=""
-                            class="absolute inset-0 w-full h-full object-cover opacity-0 scale-100 transition-transform duration-500"
+                            class="absolute inset-0 w-full h-full object-cover opacity-0 scale-100"
                             data-img-idx={imgIdx}
                         />
                     ))}
@@ -70,14 +70,14 @@ const columns = [
     <!-- LAYER 8: DARK OVERLAY (for text readability over presentation) -->
     <div
         id="hero-presentation-overlay"
-        class="absolute inset-0 bg-dark/60 opacity-0 transition-opacity duration-500 z-[8] pointer-events-none"
+        class="absolute inset-0 bg-dark/60 opacity-0 z-[8] pointer-events-none"
     >
     </div>
 
     <!-- LAYER 10: FOREGROUND IMAGE -->
     <div
         id="hero-foreground"
-        class="absolute inset-0 flex items-end justify-center md:justify-end md:translate-x-[5vw] z-10 pointer-events-none transition-opacity duration-500"
+        class="absolute inset-0 flex items-end justify-center md:justify-end md:translate-x-[5vw] z-10 pointer-events-none"
     >
         <img
             src="/images/hero_foreground-removebg-preview.png"
@@ -92,19 +92,16 @@ const columns = [
         class="relative container mx-auto px-6 text-center z-20 pointer-events-none -translate-y-[25vh] md:translate-y-0"
     >
         <h1
-            class="hero-title opacity-0 translate-y-20 text-4xl md:text-6xl lg:text-8xl font-body font-black uppercase text-light leading-tight mb-6 drop-shadow-2xl"
+            class="hero-title text-4xl md:text-6xl lg:text-8xl font-body font-black uppercase text-light leading-tight mb-6 drop-shadow-2xl"
         >
             {t.title}
         </h1>
         <p
-            class="hero-subtitle opacity-0 translate-y-10 text-xl md:text-2xl lg:text-3xl font-heading italic text-purple-light mb-6 md:mb-12 drop-shadow-lg"
+            class="hero-subtitle text-xl md:text-2xl lg:text-3xl font-heading italic text-purple-light mb-6 md:mb-12 drop-shadow-lg"
         >
             {t.subtitle}
         </p>
-        <div
-            class="hero-cta opacity-0 translate-y-10 scale-90"
-            style="pointer-events: auto;"
-        >
+        <div class="hero-cta" style="pointer-events: auto;">
             <Button variant="gold" href="#shows" id="hero-cta-btn">
                 {t.cta}
             </Button>
@@ -234,7 +231,14 @@ const columns = [
 <script>
     import { gsap } from "../../lib/gsap-init";
 
+    let heroCleanup: (() => void) | null = null;
+
     function initHero() {
+        if (heroCleanup) {
+            heroCleanup();
+            heroCleanup = null;
+        }
+
         const trigger = document.getElementById("hero-magic-trigger");
         const presentation = document.getElementById("hero-presentation");
         const presOverlay = document.getElementById(
@@ -243,28 +247,28 @@ const columns = [
         const foreground = document.getElementById("hero-foreground");
         const tooltip = document.getElementById("hero-trigger-tooltip");
 
-        if (!trigger || !presentation || !foreground) return;
+        if (!trigger || !presentation || !foreground || !presOverlay) return;
 
         // 1. Audio Setup
         const audio = new Audio("/mp3/hero-track.mp3");
         audio.loop = true;
 
+        // Set initial hidden state via GSAP (not Tailwind classes)
+        gsap.set(".hero-title", { opacity: 0, y: 20, filter: "blur(20px)" });
+        gsap.set(".hero-subtitle", { opacity: 0, y: 10, filter: "blur(15px)" });
+        gsap.set(".hero-cta", { opacity: 0, y: 10, scale: 0.9 });
+
         // 2. Entrance Animation
         const tl = gsap.timeline();
-        tl.fromTo(
-            ".hero-title",
-            { opacity: 0, filter: "blur(20px)", y: 20 },
-            {
-                opacity: 1,
-                filter: "blur(0px)",
-                y: 0,
-                duration: 2,
-                ease: "power2.out",
-            },
-        )
-            .fromTo(
+        tl.to(".hero-title", {
+            opacity: 1,
+            filter: "blur(0px)",
+            y: 0,
+            duration: 2,
+            ease: "power2.out",
+        })
+            .to(
                 ".hero-subtitle",
-                { opacity: 0, filter: "blur(15px)", y: 10 },
                 {
                     opacity: 1,
                     filter: "blur(0px)",
@@ -274,31 +278,43 @@ const columns = [
                 },
                 "-=1.5",
             )
-            .fromTo(
+            .to(
                 ".hero-cta",
-                { opacity: 0, scale: 0.8 },
-                { opacity: 1, scale: 1, duration: 1, ease: "back.out(1.7)" },
+                {
+                    opacity: 1,
+                    scale: 1,
+                    y: 0,
+                    duration: 1,
+                    ease: "back.out(1.7)",
+                },
                 "-=0.8",
             );
 
-        // 3. Presentation Logic
         const columns = [
             document.getElementById("hero-col-0"),
             document.getElementById("hero-col-1"),
             document.getElementById("hero-col-2"),
         ].filter(Boolean) as HTMLElement[];
 
-        const intervals: number[] = [];
+        const delayedCalls: gsap.core.Tween[] = [];
         let immersive = false;
 
-        function startPresentation() {
+        const startPresentation = () => {
             if (immersive) return;
             immersive = true;
 
             // Fade out foreground, fade in presentation
-            gsap.to(foreground, { opacity: 0, duration: 0.5 });
-            gsap.to(presentation, { opacity: 1, duration: 0.5 });
-            gsap.to(presOverlay, { opacity: 1, duration: 0.5 });
+            gsap.to(foreground, { opacity: 0, duration: 0.5, overwrite: true });
+            gsap.to(presentation, {
+                opacity: 1,
+                duration: 0.5,
+                overwrite: true,
+            });
+            gsap.to(presOverlay, {
+                opacity: 1,
+                duration: 0.5,
+                overwrite: true,
+            });
 
             // User requested animations:
             // 1. Subtitle and CTA go transparent
@@ -309,22 +325,24 @@ const columns = [
                 pointerEvents: "none",
                 duration: 0.6,
                 ease: "power2.inOut",
+                overwrite: true,
             });
 
             gsap.to(".hero-title", {
                 scale: 1.15,
-                y: window.innerWidth < 768 ? "5vh" : "10vh", // Move down to center visually
+                y:
+                    window.innerWidth < 768
+                        ? window.innerHeight * 0.2
+                        : window.innerHeight * 0.1, // Move down to center visually
                 duration: 1.2,
                 ease: "power2.inOut",
+                overwrite: true,
             });
 
             // Start audio
             audio.play().catch((e) => console.log("Audio play blocked:", e));
 
-            const isMobile = window.innerWidth < 768;
-            const intervalTime = isMobile ? 700 : 1000;
-
-            columns.forEach((col, colIdx) => {
+            columns.forEach((col) => {
                 const imgs = Array.from(col.querySelectorAll("img"));
                 if (imgs.length === 0) return;
 
@@ -333,7 +351,7 @@ const columns = [
                 // Show initial random image
                 gsap.set(imgs[currentIdx], { opacity: 1, scale: 1.05 });
 
-                const interval = window.setInterval(() => {
+                const cycleImage = () => {
                     const prevIdx = currentIdx;
                     currentIdx = (currentIdx + 1) % imgs.length;
 
@@ -342,31 +360,54 @@ const columns = [
                         opacity: 0,
                         scale: 1.15,
                         duration: 0.4,
+                        overwrite: true,
                     });
                     gsap.fromTo(
                         imgs[currentIdx],
                         { opacity: 0, scale: 1.0 },
                         { opacity: 1, scale: 1.05, duration: 0.4 },
                     );
-                }, intervalTime);
 
-                intervals.push(interval);
+                    const delay = window.innerWidth < 768 ? 0.7 : 1.0;
+                    const call = gsap.delayedCall(delay, cycleImage);
+                    delayedCalls.push(call);
+                };
+
+                const initialDelay = window.innerWidth < 768 ? 0.7 : 1.0;
+                const call = gsap.delayedCall(initialDelay, cycleImage);
+                delayedCalls.push(call);
             });
-        }
+        };
 
-        function stopPresentation() {
+        const stopPresentation = () => {
             if (!immersive) return;
             immersive = false;
 
-            intervals.forEach(clearInterval);
-            intervals.length = 0;
+            delayedCalls.forEach((call) => call.kill());
+            delayedCalls.length = 0;
 
-            audio.pause();
-            audio.currentTime = 0;
+            gsap.to(audio, {
+                volume: 0,
+                duration: 0.4,
+                overwrite: true,
+                onComplete: () => {
+                    audio.pause();
+                    audio.currentTime = 0;
+                    audio.volume = 1; // Reset for next play
+                },
+            });
 
-            gsap.to(foreground, { opacity: 1, duration: 0.5 });
-            gsap.to(presentation, { opacity: 0, duration: 0.5 });
-            gsap.to(presOverlay, { opacity: 0, duration: 0.5 });
+            gsap.to(foreground, { opacity: 1, duration: 0.5, overwrite: true });
+            gsap.to(presentation, {
+                opacity: 0,
+                duration: 0.5,
+                overwrite: true,
+            });
+            gsap.to(presOverlay, {
+                opacity: 0,
+                duration: 0.5,
+                overwrite: true,
+            });
 
             // Reset text animations
             gsap.to(".hero-subtitle, .hero-cta", {
@@ -374,6 +415,7 @@ const columns = [
                 pointerEvents: "auto",
                 duration: 0.5,
                 ease: "power2.out",
+                overwrite: true,
             });
 
             gsap.to(".hero-title", {
@@ -381,6 +423,7 @@ const columns = [
                 y: 0,
                 duration: 0.8,
                 ease: "power2.out",
+                overwrite: true,
             });
 
             // Reset all images
@@ -390,20 +433,17 @@ const columns = [
                     gsap.set(img, { opacity: 0, scale: 1.0 }),
                 );
             });
-        }
+        };
 
         // 4. Hover/Tap Listeners
+        const handleTouch = (e: TouchEvent) => {
+            e.preventDefault();
+            immersive ? stopPresentation() : startPresentation();
+        };
+
         trigger.addEventListener("mouseenter", startPresentation);
         trigger.addEventListener("mouseleave", stopPresentation);
-
-        trigger.addEventListener(
-            "touchstart",
-            (e) => {
-                e.preventDefault();
-                immersive ? stopPresentation() : startPresentation();
-            },
-            { passive: false },
-        );
+        trigger.addEventListener("touchstart", handleTouch, { passive: false });
 
         // Attention System (Tooltips/Nudges)
         let hasInteracted = false;
@@ -418,6 +458,18 @@ const columns = [
         setTimeout(() => {
             if (!hasInteracted && tooltip) tooltip.style.opacity = "1";
         }, 3000);
+
+        // CLEANUP
+        heroCleanup = () => {
+            trigger.removeEventListener("mouseenter", startPresentation);
+            trigger.removeEventListener("mouseleave", stopPresentation);
+            trigger.removeEventListener("touchstart", handleTouch);
+            delayedCalls.forEach((call) => call.kill());
+            delayedCalls.length = 0;
+            audio.pause();
+            audio.currentTime = 0;
+            tl.kill();
+        };
     }
 
     document.addEventListener("astro:page-load", initHero);

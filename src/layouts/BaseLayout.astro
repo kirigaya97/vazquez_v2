@@ -1,5 +1,6 @@
 ﻿---
 import { ClientRouter } from "astro:transitions";
+import IntroReveal from "../components/IntroReveal.astro";
 import "../styles/global.css";
 
 interface Props {
@@ -40,20 +41,19 @@ const { title, description, lang = "es" } = Astro.props;
     </noscript>
 
     <ClientRouter />
-
-
   </head>
   <body>
+    <IntroReveal />
     <!-- Custom Cursor (desktop only) -->
     <div
       id="cursor-dot"
-      class="fixed top-0 left-0 w-2 h-2 bg-purple-light rounded-full pointer-events-none z-[9999] opacity-0 mix-blend-difference"
+      class="fixed top-0 left-0 w-2 h-2 bg-purple-light rounded-full pointer-events-none z-[10001] opacity-0 mix-blend-difference"
       aria-hidden="true"
     >
     </div>
     <div
       id="cursor-ring"
-      class="fixed top-0 left-0 w-10 h-10 border border-purple-light/60 rounded-full pointer-events-none z-[9999] opacity-0 mix-blend-difference"
+      class="fixed top-0 left-0 w-10 h-10 border border-purple-light/60 rounded-full pointer-events-none z-[10001] opacity-0 mix-blend-difference"
       aria-hidden="true"
     >
     </div>
@@ -97,7 +97,6 @@ const { title, description, lang = "es" } = Astro.props;
       document.addEventListener("astro:page-load", () => {
         initRevealAnimations();
       });
-
     </script>
 
     <!-- Custom Cursor Script -->

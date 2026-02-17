@@ -1,0 +1,122 @@
+---
+// Detect bots/crawlers to skip intro overlay (they can't click "Start")
+const userAgent = Astro.request.headers.get("user-agent") || "";
+const isBot = /bot|crawl|spider|slurp|googlebot|bingbot|yandex|baidu|duckduckbot|facebookexternalhit|twitterbot|linkedinbot|semrush|ahref|mj12bot|dotbot|rogerbot|archive\.org/i.test(userAgent);
+---
+
+{!isBot && (
+<div
+    id="intro-reveal"
+    class="fixed inset-0 z-[10000] bg-dark flex flex-col items-center justify-center overflow-hidden"
+    aria-hidden="true"
+    data-nosnippet
+>
+    <!-- GIF with round clip and high contrast -->
+    <div
+        class="intro-gif-container w-48 h-48 md:w-64 md:h-64 rounded-full overflow-hidden mb-12 border-2 border-purple-light/30 shadow-[0_0_40px_rgba(149,130,217,0.2)]"
+    >
+        <img
+            src="/videos/SombrasGIF.gif"
+            alt="Sombras mágicas"
+            class="w-full h-full object-cover contrast-[1.4] brightness-[1.1]"
+        />
+    </div>
+
+    <!-- Button -->
+    <button
+        id="intro-enter-btn"
+        class="font-body font-bold uppercase text-purple-light border border-purple-light/60 px-10 py-4 rounded-full text-lg md:text-xl hover:bg-purple-light/10 hover:border-purple-light transition-all duration-300 shadow-[0_0_20px_rgba(149,130,217,0.1)] active:scale-95 tracking-widest"
+    >
+        Descubrí la magia
+    </button>
+</div>
+
+<script>
+    import { gsap } from "../lib/gsap-init";
+
+    function initIntroReveal() {
+        const overlay = document.getElementById("intro-reveal");
+        const btn = document.getElementById("intro-enter-btn");
+
+        if (!overlay || !btn) return;
+
+        // Block scroll while overlay is present
+        document.body.style.overflow = "hidden";
+
+        // Entrance animation
+        gsap.set(".intro-gif-container", { opacity: 0, scale: 0.8 });
+        gsap.set(btn, { opacity: 0, y: 20 });
+
+        const tl = gsap.timeline();
+        tl.to(".intro-gif-container", {
+            opacity: 1,
+            scale: 1,
+            duration: 1.5,
+            ease: "power3.out",
+        }).to(
+            btn,
+            {
+                opacity: 1,
+                y: 0,
+                duration: 1,
+                ease: "power2.out",
+            },
+            "-=0.7",
+        );
+
+        // Subtle pulsing glow for the button
+        gsap.to(btn, {
+            boxShadow: "0 0 30px rgba(149, 130, 217, 0.3)",
+            borderColor: "rgba(149, 130, 217, 0.9)",
+            duration: 1.5,
+            repeat: -1,
+            yoyo: true,
+            ease: "sine.inOut",
+        });
+
+        btn.addEventListener("click", () => {
+            // 1. Unlock audio — play+pause a silent buffer
+            // We use the same track that the hero uses to ensure it's "warmed up"
+            const silentUnlock = new Audio("/mp3/hero-track.mp3");
+            silentUnlock.volume = 0;
+            silentUnlock
+                .play()
+                .then(() => {
+                    silentUnlock.pause();
+                    silentUnlock.currentTime = 0;
+                })
+                .catch((e) => console.log("Audio unlock failed/blocked:", e));
+
+            // 2. Animate overlay out
+            gsap.to(overlay, {
+                opacity: 0,
+                duration: 1,
+                ease: "power3.inOut",
+                onComplete: () => {
+                    document.body.style.overflow = ""; // Restore scroll
+                    overlay.remove();
+                },
+            });
+        });
+    }
+
+    // Run on mount
+    initIntroReveal();
+
+    // Note: Since this is an intro screen, we usually only want it once per session,
+    // but for development and to satisfy the requirement, we'll keep it simple.
+    // Astro View Transitions handle persistence, but since this is in BaseLayout
+    // and runs once on a full refresh, it's perfect for a "start" moment.
+</script>
+
+<style>
+    /* Ensure the button is clickable despite custom cursor which is underneath in z-index but can be tricky */
+    #intro-reveal {
+        cursor: none;
+    }
+    #intro-enter-btn {
+        pointer-events: auto;
+        cursor: none;
+    }
+</style>
+)}

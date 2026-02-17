@@ -81,20 +81,23 @@
                 "items": [
                     {
                         "id": "reception",
-                        "title": "Magia de recepción",
-                        "description": "La magia sucede a centímetros de tus ojos. Sorprendé a pequeños grupos con ilusiones modernas y tecnológicas, creando una experiencia íntima e inolvidable.",
+                        "title": "Magia de cerca",
+                        "badge": "Recepción",
+                        "description": "Experiencias íntimas e interactivas donde la magia sucede a centímetros de tus ojos, pasando por los distintos grupos del evento y creando momentos sorprendentes.",
                         "image": "/images/shows/show2.webp"
                     },
                     {
                         "id": "main-show",
-                        "title": "Show central",
-                        "description": "Un espectáculo que combina comedia y magia impactante. Diferentes formatos adaptables a eventos familiares, sociales y corporativos.",
+                        "title": "Eventos privados",
+                        "badge": "Show Central",
+                        "description": "Un show de magia y mentalismo pensado para sorprender y disfrutar, perfecto para cumpleaños, reuniones y celebraciones privadas.",
                         "image": "/images/shows/show3.webp"
                     },
                     {
                         "id": "corporate",
-                        "title": "Magia de Cerca",
-                        "description": "Experiencias mágicas para eventos corporativos. Magia tecnológica y mentalismo diseñados a medida para generar impacto, conexión y recuerdo de marca.",
+                        "title": "Eventos corporativos",
+                        "badge": "Marketing Empresarial",
+                        "description": "Experiencias profesionales diseñadas para reforzar la imagen de la marca y lograr una participación genuina de todo el público.",
                         "image": "/images/shows/show1.webp"
                     }
                 ]
