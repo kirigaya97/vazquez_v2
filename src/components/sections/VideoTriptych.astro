@@ -275,12 +275,12 @@ const { t } = Astro.props;
                 trigger: reelsWrapper,
                 start: "top top",
                 end: "bottom bottom",
-                scrub: 0.5,
+                scrub: true,
                 snap: {
                     snapTo: 1 / (totalSlides - 1),
-                    duration: { min: 0.3, max: 0.5 },
-                    delay: 0.1,
-                    ease: "power2.inOut",
+                    duration: { min: 0.2, max: 0.6 },
+                    delay: 0,
+                    ease: "power1.inOut",
                 },
                 onUpdate: (self) => {
                     const progress = self.progress;
