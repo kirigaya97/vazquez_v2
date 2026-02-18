@@ -159,7 +159,7 @@ const { t } = Astro.props;
                             </button>
                         </div>
 
-                        <div class="absolute bottom-6 left-4 right-16 z-10">
+                        <div class="absolute bottom-14 left-4 right-16 z-10">
                             <div class="flex items-center gap-2 mb-2">
                                 <span class="text-light font-body font-bold text-sm">{video.username}</span>
                                 <span class="text-light/50 text-xs">·</span>
@@ -384,7 +384,9 @@ const { t } = Astro.props;
                 });
             }
 
-            // ── EXIT: "Spit you out" — destroy observer, scroll away, cooldown ──
+            // ── EXIT: "Spit you out" — destroy observer, scroll away ──
+            // Uses a leave-IO to detect when section fully leaves viewport
+            // before re-arming entry. This prevents the re-capture loop.
             function exitSection(direction: "up" | "down") {
                 if (isExiting) return;
                 isExiting = true;
@@ -393,7 +395,7 @@ const { t } = Astro.props;
                 // 1. Kill gesture observer immediately
                 destroyGsapObserver();
 
-                // 2. Disconnect entry observer to prevent re-capture during scroll
+                // 2. Disconnect entry observer to prevent re-capture
                 entryIO.disconnect();
 
                 // 3. Scroll to adjacent section
@@ -409,25 +411,37 @@ const { t } = Astro.props;
                     }
                 }
 
-                // 4. Cooldown — reconnect entry observer after scroll settles
-                setTimeout(() => {
-                    isExiting = false;
-                    // Reset slide to appropriate position for re-entry
-                    if (direction === "down") {
-                        currentSlide = 0;
-                        gsap.set(track, { y: 0 });
-                    } else {
-                        currentSlide = totalSlides - 1;
-                        gsap.set(track, { y: -(totalSlides - 1) * window.innerHeight });
-                    }
-                    // Update dots for re-entry state
-                    document.querySelectorAll(".reel-dot").forEach((dot, i) => {
-                        (dot as HTMLElement).style.background = i === currentSlide ? "#9582D9" : "rgba(255,255,255,0.3)";
-                        (dot as HTMLElement).style.transform = i === currentSlide ? "scale(1.3)" : "scale(1)";
-                    });
-                    // Re-arm entry detection
-                    entryIO.observe(reelsSection!);
-                }, 1500);
+                // 4. Watch for the section to LEAVE the viewport completely,
+                //    then reset state and re-arm entry detection.
+                const leaveIO = new IntersectionObserver(
+                    (entries) => {
+                        entries.forEach((entry) => {
+                            if (!entry.isIntersecting) {
+                                // Section is fully off-screen → safe to re-arm
+                                leaveIO.disconnect();
+                                isExiting = false;
+
+                                // Reset slide for next entry
+                                if (direction === "down") {
+                                    currentSlide = 0;
+                                    gsap.set(track, { y: 0 });
+                                } else {
+                                    currentSlide = totalSlides - 1;
+                                    gsap.set(track, { y: -(totalSlides - 1) * window.innerHeight });
+                                }
+                                // Update dots
+                                document.querySelectorAll(".reel-dot").forEach((dot, i) => {
+                                    (dot as HTMLElement).style.background = i === currentSlide ? "#9582D9" : "rgba(255,255,255,0.3)";
+                                    (dot as HTMLElement).style.transform = i === currentSlide ? "scale(1.3)" : "scale(1)";
+                                });
+                                // Re-arm entry detection
+                                entryIO.observe(reelsSection!);
+                            }
+                        });
+                    },
+                    { threshold: 0 }
+                );
+                leaveIO.observe(reelsSection!);
             }
 
             function destroyGsapObserver() {
