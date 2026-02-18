@@ -326,57 +326,107 @@ const { t } = Astro.props;
             let sectionActive = false;
             let isExiting = false;
             let gestureDebounce = false;
+            let entryTimer: ReturnType<typeof setTimeout> | null = null;
 
-            function resetState(slideIndex: number) {
-                currentSlide = slideIndex;
-                isAnimating = false;
+            // ── FULL CLEANUP: Nuke everything back to pristine state ──
+            // Called whenever the section leaves the viewport (by the leave-IO).
+            // This guarantees clean state no matter how the user left.
+            function fullCleanup() {
+                // Kill gesture observer
+                if (gsapObserver) {
+                    gsapObserver.kill();
+                    gsapObserver = null;
+                }
+                // Kill any pending entry timer
+                if (entryTimer) {
+                    clearTimeout(entryTimer);
+                    entryTimer = null;
+                }
+                // Kill all track tweens
                 gsap.killTweensOf(track);
-                gsap.set(track, { y: -currentSlide * window.innerHeight });
+                // Reset all flags
+                sectionActive = false;
+                isExiting = false;
+                isAnimating = false;
+                gestureDebounce = false;
+                // Reset to slide 0, position 0
+                currentSlide = 0;
+                gsap.set(track, { y: 0 });
+                // Pause all videos
+                reels.forEach((reel) => {
+                    const v = reel.querySelector("video");
+                    if (v) { v.pause(); v.muted = true; }
+                    reel.querySelector(".icon-muted")?.classList.remove("hidden");
+                    reel.querySelector(".icon-unmuted")?.classList.add("hidden");
+                });
+                // Reset dots
                 document.querySelectorAll(".reel-dot").forEach((dot, i) => {
-                    (dot as HTMLElement).style.background = i === currentSlide ? "#9582D9" : "rgba(255,255,255,0.3)";
-                    (dot as HTMLElement).style.transform = i === currentSlide ? "scale(1.3)" : "scale(1)";
+                    (dot as HTMLElement).style.background = i === 0 ? "#9582D9" : "rgba(255,255,255,0.3)";
+                    (dot as HTMLElement).style.transform = i === 0 ? "scale(1.3)" : "scale(1)";
                 });
             }
 
-            // ── ENTRY: Magnetize when ≥50% visible ──
+            // ── LEAVE-IO (permanent): Full cleanup when section exits viewport ──
+            const leaveIO = new IntersectionObserver(
+                (entries) => {
+                    entries.forEach((entry) => {
+                        if (!entry.isIntersecting) {
+                            fullCleanup();
+                        }
+                    });
+                },
+                { threshold: 0 }
+            );
+            leaveIO.observe(reelsSection);
+
+            // ── ENTRY-IO (permanent): Magnetize when ≥30% visible ──
             const entryIO = new IntersectionObserver(
                 (entries) => {
                     entries.forEach((entry) => {
                         if (!entry.isIntersecting || sectionActive || isExiting) return;
                         sectionActive = true;
 
-                        // Detect scroll direction: if section top is above viewport center,
-                        // the user scrolled DOWN into it (show first slide).
-                        // If section top is below viewport center, user scrolled UP into it
-                        // (show last slide).
+                        // Detect direction: top > 0 means section top is below viewport top
+                        // → user is scrolling UP into it → show last video.
+                        // top <= 0 means section top is above viewport → scrolling DOWN → first video.
                         const rect = entry.boundingClientRect;
-                        const enteringFromBelow = rect.top > window.innerHeight * 0.3;
-                        if (enteringFromBelow) {
-                            resetState(totalSlides - 1);
-                        } else {
-                            resetState(0);
-                        }
+                        const enteringFromBelow = rect.top > 0;
 
-                        // Snap into position
+                        if (enteringFromBelow) {
+                            currentSlide = totalSlides - 1;
+                        } else {
+                            currentSlide = 0;
+                        }
+                        gsap.killTweensOf(track);
+                        gsap.set(track, { y: -currentSlide * window.innerHeight });
+
+                        // Update dots for initial state
+                        document.querySelectorAll(".reel-dot").forEach((dot, i) => {
+                            (dot as HTMLElement).style.background = i === currentSlide ? "#9582D9" : "rgba(255,255,255,0.3)";
+                            (dot as HTMLElement).style.transform = i === currentSlide ? "scale(1.3)" : "scale(1)";
+                        });
+
+                        // Snap section into viewport
                         reelsSection!.scrollIntoView({ behavior: "smooth", block: "start" });
 
-                        // Activate Observer after snap settles
-                        setTimeout(() => {
-                            if (sectionActive && !gsapObserver) {
-                                createGsapObserver();
-                            }
+                        // Activate gesture Observer after snap settles
+                        entryTimer = setTimeout(() => {
+                            entryTimer = null;
+                            if (!sectionActive || gsapObserver) return;
+                            createGsapObserver();
+                            // Play the current video
                             const v = reels[currentSlide]?.querySelector("video");
                             if (v) v.play().catch(() => {});
                         }, 500);
                     });
                 },
-                { threshold: 0.5 }
+                { threshold: 0.3 }
             );
             entryIO.observe(reelsSection);
 
             // ── GESTURE OBSERVER ──
             function createGsapObserver() {
-                if (gsapObserver) return; // Prevent duplicates
+                if (gsapObserver) return;
                 gsapObserver = Observer.create({
                     target: reelsSection!,
                     type: "touch,wheel",
@@ -384,9 +434,9 @@ const { t } = Astro.props;
                     preventDefault: true,
                     dragMinimum: 8,
                     onUp: () => {
+                        // Swipe UP → NEXT slide
                         if (isAnimating || isExiting || gestureDebounce) return;
                         lockGesture();
-
                         if (currentSlide >= totalSlides - 1) {
                             exitSection("down");
                             return;
@@ -394,9 +444,9 @@ const { t } = Astro.props;
                         goToSlide(currentSlide + 1);
                     },
                     onDown: () => {
+                        // Swipe DOWN → PREVIOUS slide
                         if (isAnimating || isExiting || gestureDebounce) return;
                         lockGesture();
-
                         if (currentSlide <= 0) {
                             exitSection("up");
                             return;
@@ -411,44 +461,23 @@ const { t } = Astro.props;
                 setTimeout(() => { gestureDebounce = false; }, 300);
             }
 
-            // ── EXIT: Navigate to #shows (up) or #jury (down) ──
+            // ── EXIT: Just navigate away — leave-IO handles cleanup ──
             function exitSection(direction: "up" | "down") {
                 if (isExiting) return;
                 isExiting = true;
-                sectionActive = false;
 
-                destroyGsapObserver();
-                entryIO.disconnect();
+                // Kill observer so no more gestures fire
+                if (gsapObserver) {
+                    gsapObserver.kill();
+                    gsapObserver = null;
+                }
 
+                // Navigate to target section
+                // leave-IO will fire fullCleanup() once reels-section is off screen
                 const targetId = direction === "down" ? "jury" : "shows";
                 const target = document.getElementById(targetId);
                 if (target) {
                     target.scrollIntoView({ behavior: "smooth", block: "start" });
-                }
-
-                // Re-arm only after section fully leaves viewport
-                const leaveIO = new IntersectionObserver(
-                    (entries) => {
-                        if (!entries[0]?.isIntersecting) {
-                            leaveIO.disconnect();
-                            isExiting = false;
-                            gestureDebounce = false;
-                            // Reset for next entry
-                            resetState(direction === "down" ? 0 : totalSlides - 1);
-                            entryIO.observe(reelsSection!);
-                        }
-                    },
-                    { threshold: 0 }
-                );
-                leaveIO.observe(reelsSection!);
-            }
-
-            function destroyGsapObserver() {
-                gsap.killTweensOf(track);
-                isAnimating = false;
-                if (gsapObserver) {
-                    gsapObserver.kill();
-                    gsapObserver = null;
                 }
             }
 
@@ -467,14 +496,11 @@ const { t } = Astro.props;
                 });
             });
 
-            // Play the first video on init
-            const firstVideo = reels[0]?.querySelector("video");
-            if (firstVideo) firstVideo.play().catch(() => {});
-
             // Cleanup for Astro page transitions
             document.addEventListener("astro:before-preparation", () => {
-                destroyGsapObserver();
+                fullCleanup();
                 entryIO.disconnect();
+                leaveIO.disconnect();
             }, { once: true });
         }
 
