@@ -17,14 +17,7 @@
         ).matches;
         if (prefersReducedMotion) return;
 
-        // On touch/mobile devices: skip Lenis but enable normalizeScroll.
-        // normalizeScroll gives GSAP control over touch momentum, preventing
-        // native inertia from blowing past snap sections in a single flick.
-        if (ScrollTrigger.isTouch) {
-            ScrollTrigger.normalizeScroll(true);
-            ScrollTrigger.config({ ignoreMobileResize: true });
-            return;
-        }
+        // (Mobile touch guard removed — Observer handles reels independently of scroll)
 
         if (lenis) {
             lenis.destroy();
