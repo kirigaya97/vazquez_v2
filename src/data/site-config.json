@@ -22,6 +22,10 @@
             "href": "#shows"
         },
         {
+            "id": "videos",
+            "href": "#videos"
+        },
+        {
             "id": "jury",
             "href": "#jury"
         },
@@ -56,6 +60,7 @@
             },
             "nav": {
                 "shows": "Espectáculos",
+                "videos": "Videos",
                 "jury": "Jueces",
                 "stats": "Cifras",
                 "tickets": "Entradas",
@@ -99,6 +104,34 @@
                         "badge": "Marketing Empresarial",
                         "description": "Experiencias profesionales diseñadas para reforzar la imagen de la marca y lograr una participación genuina de todo el público.",
                         "image": "/images/shows/show1.webp"
+                    }
+                ]
+            },
+            "videos": {
+                "items": [
+                    {
+                        "src": "/videos/video-triptic1.mp4",
+                        "username": "Fernando Vazquez",
+                        "handle": "@vazquezilusionista",
+                        "caption": "Cuando la magia sucede en tus manos ✨🎩",
+                        "likes": 847,
+                        "comments": 623
+                    },
+                    {
+                        "src": "/videos/video-triptic2.mp4",
+                        "username": "Fernando Vazquez",
+                        "handle": "@vazquezilusionista",
+                        "caption": "Mentalismo que desafía toda lógica 🧠🔮",
+                        "likes": 712,
+                        "comments": 891
+                    },
+                    {
+                        "src": "/videos/video-triptic3.mp4",
+                        "username": "Fernando Vazquez",
+                        "handle": "@vazquezilusionista",
+                        "caption": "El arte de lo imposible en vivo 🎭⚡",
+                        "likes": 963,
+                        "comments": 734
                     }
                 ]
             },

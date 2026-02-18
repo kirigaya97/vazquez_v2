@@ -1,0 +1,502 @@
+---
+interface VideoItem {
+    src: string;
+    username: string;
+    handle: string;
+    caption: string;
+    likes: number;
+    comments: number;
+}
+
+interface Props {
+    t: {
+        items: VideoItem[];
+    };
+}
+
+const { t } = Astro.props;
+---
+
+<section id="videos" class="relative bg-dark overflow-hidden">
+    <!-- ═══ DESKTOP: 3-column triptych ═══ -->
+    <div class="hidden md:grid grid-cols-3 h-screen w-full">
+        {
+            t.items.map((video, i) => (
+                <div class="video-cell relative overflow-hidden" data-index={i}>
+                    <video
+                        class="video-player w-full h-full object-cover"
+                        src={video.src}
+                        muted
+                        loop
+                        playsinline
+                        preload="none"
+                    />
+
+                    <!-- Mute/Unmute Icon — bottom-left -->
+                    <div class="video-sound-icon absolute bottom-4 left-4 z-10 w-8 h-8 flex items-center justify-center rounded-full bg-dark/50 backdrop-blur-sm border border-white/10 text-light/60 pointer-events-none transition-colors duration-300">
+                        <!-- Muted icon (default) -->
+                        <svg
+                            class="icon-muted w-4 h-4"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        >
+                            <path d="M11 5 6 9H2v6h4l5 4V5z" />
+                            <line x1="23" y1="9" x2="17" y2="15" />
+                            <line x1="17" y1="9" x2="23" y2="15" />
+                        </svg>
+                        <!-- Unmuted icon (hidden by default) -->
+                        <svg
+                            class="icon-unmuted w-4 h-4 hidden"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        >
+                            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                            <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
+                            <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                        </svg>
+                    </div>
+                </div>
+            ))
+        }
+    </div>
+
+    <!-- ═══ MOBILE: TikTok/Reels GSAP Slides ═══ -->
+    <div
+        id="reels-container"
+        class="md:hidden relative overflow-hidden"
+        style="height: 100vh;"
+    >
+        <div id="reels-track" class="relative transition-none" style="height: 100%;">
+            {
+                t.items.map((video, i) => (
+                    <div
+                        class="video-reel absolute inset-0 w-full h-full"
+                        style={`transform: translateY(${i * 100}%);`}
+                        data-index={i}
+                    >
+                        <video
+                            class="video-player absolute inset-0 w-full h-full object-cover"
+                            src={video.src}
+                            muted
+                            loop
+                            playsinline
+                            preload="none"
+                        />
+
+                        <!-- Dark gradient overlay for text readability -->
+                        <div class="absolute inset-0 bg-gradient-to-t from-dark/80 via-transparent to-dark/30 pointer-events-none" />
+
+                        <!-- ═══ Social Media Mockup UI ═══ -->
+
+                        <!-- RIGHT SIDE: Action buttons (TikTok style) -->
+                        <div class="absolute right-3 bottom-28 z-10 flex flex-col items-center gap-5">
+                            <!-- Profile pic -->
+                            <div class="relative mb-2">
+                                <div class="w-11 h-11 rounded-full border-2 border-purple-light overflow-hidden bg-dark-gray">
+                                    <img
+                                        src="/images/hero_foreground.png"
+                                        alt="Fernando"
+                                        class="w-full h-full object-cover"
+                                        loading="lazy"
+                                    />
+                                </div>
+                                <div class="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-5 h-5 bg-purple-light rounded-full flex items-center justify-center">
+                                    <svg
+                                        class="w-3 h-3 text-dark"
+                                        viewBox="0 0 24 24"
+                                        fill="currentColor"
+                                    >
+                                        <path
+                                            d="M12 5v14m-7-7h14"
+                                            stroke="currentColor"
+                                            stroke-width="3"
+                                            stroke-linecap="round"
+                                        />
+                                    </svg>
+                                </div>
+                            </div>
+
+                            <!-- Like button -->
+                            <button
+                                class="reel-action flex flex-col items-center gap-1"
+                                data-action="like"
+                                aria-label="Like"
+                            >
+                                <div class="w-10 h-10 flex items-center justify-center">
+                                    <svg
+                                        class="w-7 h-7 text-light"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        stroke-width="2"
+                                    >
+                                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                                    </svg>
+                                </div>
+                                <span class="text-light text-[11px] font-body font-semibold">
+                                    {video.likes}
+                                </span>
+                            </button>
+
+                            <!-- Comment button -->
+                            <button
+                                class="reel-action flex flex-col items-center gap-1"
+                                data-action="comment"
+                                aria-label="Comments"
+                            >
+                                <div class="w-10 h-10 flex items-center justify-center">
+                                    <svg
+                                        class="w-7 h-7 text-light"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        stroke-width="2"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                    >
+                                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                                    </svg>
+                                </div>
+                                <span class="text-light text-[11px] font-body font-semibold">
+                                    {video.comments}
+                                </span>
+                            </button>
+
+                            <!-- Share button -->
+                            <button
+                                class="reel-action flex flex-col items-center gap-1"
+                                data-action="share"
+                                aria-label="Share"
+                            >
+                                <div class="w-10 h-10 flex items-center justify-center">
+                                    <svg
+                                        class="w-7 h-7 text-light"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        stroke-width="2"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                    >
+                                        <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" />
+                                        <polyline points="16 6 12 2 8 6" />
+                                        <line x1="12" y1="2" x2="12" y2="15" />
+                                    </svg>
+                                </div>
+                                <span class="text-light text-[11px] font-body font-semibold">
+                                    Compartir
+                                </span>
+                            </button>
+
+                            <!-- Save/Bookmark button -->
+                            <button
+                                class="reel-action flex flex-col items-center gap-1"
+                                data-action="save"
+                                aria-label="Save"
+                            >
+                                <div class="w-10 h-10 flex items-center justify-center">
+                                    <svg
+                                        class="w-7 h-7 text-light"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        stroke-width="2"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                    >
+                                        <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
+                                    </svg>
+                                </div>
+                                <span class="text-light text-[11px] font-body font-semibold">
+                                    Guardar
+                                </span>
+                            </button>
+
+                            <!-- Sound toggle (mobile) -->
+                            <button
+                                class="reel-sound-toggle flex flex-col items-center gap-1"
+                                aria-label="Toggle sound"
+                            >
+                                <div class="w-10 h-10 flex items-center justify-center rounded-full bg-dark/40 backdrop-blur-sm border border-white/10">
+                                    <svg
+                                        class="icon-muted w-5 h-5 text-light"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        stroke-width="2"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                    >
+                                        <path d="M11 5 6 9H2v6h4l5 4V5z" />
+                                        <line x1="23" y1="9" x2="17" y2="15" />
+                                        <line x1="17" y1="9" x2="23" y2="15" />
+                                    </svg>
+                                    <svg
+                                        class="icon-unmuted w-5 h-5 text-light hidden"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        stroke-width="2"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                    >
+                                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                                        <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
+                                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                                    </svg>
+                                </div>
+                            </button>
+                        </div>
+
+                        <!-- BOTTOM LEFT: User info + caption (TikTok style) -->
+                        <div class="absolute bottom-6 left-4 right-16 z-10">
+                            <div class="flex items-center gap-2 mb-2">
+                                <span class="text-light font-body font-bold text-sm">
+                                    {video.username}
+                                </span>
+                                <span class="text-light/50 text-xs font-body">·</span>
+                                <span class="text-light/60 text-xs font-body">Seguir</span>
+                            </div>
+                            <p class="text-light/90 text-sm font-body leading-relaxed">
+                                {video.caption}
+                            </p>
+                        </div>
+                    </div>
+                ))
+            }
+        </div>
+    </div>
+</section>
+
+<script>
+    import { gsap } from "../../lib/gsap-init";
+
+    function initVideoTriptych() {
+        const videos = document.querySelectorAll<HTMLVideoElement>(
+            "#videos .video-player",
+        );
+
+        // ════════════════════════════════════════════════════════════════
+        // ═══ COMMON: Intersection Observer (Pause when off-screen) ═══
+        // ════════════════════════════════════════════════════════════════
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    const video = entry.target as HTMLVideoElement;
+                    if (entry.isIntersecting) {
+                        if (video.readyState === 0 && video.src) {
+                            video.load();
+                        }
+                        // Only auto-play if it's desktop OR if it's the current mobile slide
+                        const isDesktop = window.innerWidth >= 768;
+                        if (isDesktop) {
+                            video.play().catch(() => {});
+                        }
+                    } else {
+                        video.pause();
+                    }
+                });
+            },
+            { threshold: 0.2 },
+        );
+
+        videos.forEach((v) => observer.observe(v));
+
+        // ════════════════════════════════════════════════════════════════
+        // ═══ DESKTOP: Hover Logic (Unmute + Color) ═══
+        // ════════════════════════════════════════════════════════════════
+        const cells = document.querySelectorAll<HTMLElement>(".video-cell");
+        cells.forEach((cell) => {
+            const video = cell.querySelector<HTMLVideoElement>(".video-player");
+            const iconMuted = cell.querySelector(".icon-muted");
+            const iconUnmuted = cell.querySelector(".icon-unmuted");
+            if (!video || !iconMuted || !iconUnmuted) return;
+
+            cell.addEventListener("mouseenter", () => {
+                // Mute others
+                document
+                    .querySelectorAll<HTMLVideoElement>(".video-player")
+                    .forEach((v) => {
+                        v.muted = true;
+                    });
+                document
+                    .querySelectorAll(".video-sound-icon .icon-muted")
+                    .forEach((el) => el.classList.remove("hidden"));
+                document
+                    .querySelectorAll(".video-sound-icon .icon-unmuted")
+                    .forEach((el) => el.classList.add("hidden"));
+
+                // Unmute this one
+                video.muted = false;
+                iconMuted.classList.add("hidden");
+                iconUnmuted.classList.remove("hidden");
+
+                // Highlight icon
+                gsap.to(cell.querySelector(".video-sound-icon"), {
+                    borderColor: "rgba(149, 130, 217, 0.6)",
+                    color: "rgba(149, 130, 217, 1)",
+                    duration: 0.3,
+                });
+            });
+
+            cell.addEventListener("mouseleave", () => {
+                video.muted = true;
+                iconMuted.classList.remove("hidden");
+                iconUnmuted.classList.add("hidden");
+
+                gsap.to(cell.querySelector(".video-sound-icon"), {
+                    borderColor: "rgba(255, 255, 255, 0.1)",
+                    color: "rgba(255, 255, 255, 0.6)",
+                    duration: 0.3,
+                });
+            });
+        });
+
+        // ════════════════════════════════════════════════════════════════
+        // ═══ MOBILE: GSAP Slide System + Interaction ═══
+        // ════════════════════════════════════════════════════════════════
+        const container = document.getElementById("reels-container");
+        const track = document.getElementById("reels-track");
+        const reels = document.querySelectorAll<HTMLElement>(".video-reel");
+        
+        if (!container || !track || reels.length === 0) return;
+
+        let currentSlide = 0;
+        const totalSlides = reels.length;
+        let isAnimating = false;
+        let touchStartY = 0;
+        let touchDeltaY = 0;
+        const SWIPE_THRESHOLD = 50;
+
+        function goToSlide(index: number) {
+            if (index < 0 || index >= totalSlides || isAnimating) return;
+            isAnimating = true;
+            currentSlide = index;
+
+            gsap.to(track, {
+                y: -(currentSlide * window.innerHeight),
+                duration: 0.6,
+                ease: "power3.out",
+                onComplete: () => {
+                    isAnimating = false;
+                },
+            });
+
+            // Handle video states
+            reels.forEach((reel, i) => {
+                const video = reel.querySelector("video");
+                if (!video) return;
+                
+                if (i === currentSlide) {
+                    video.play().catch(() => {});
+                } else {
+                    video.pause();
+                    video.muted = true;
+                    // Reset icons
+                    const iconMuted = reel.querySelector(".icon-muted");
+                    const iconUnmuted = reel.querySelector(".icon-unmuted");
+                    iconMuted?.classList.remove("hidden");
+                    iconUnmuted?.classList.add("hidden");
+                }
+            });
+        }
+
+        // Touch event listeners
+        container.addEventListener("touchstart", (e: any) => {
+            touchStartY = e.touches[0].clientY;
+            touchDeltaY = 0;
+        }, { passive: true });
+
+        container.addEventListener("touchmove", (e: any) => {
+            touchDeltaY = touchStartY - e.touches[0].clientY;
+        }, { passive: true });
+
+        container.addEventListener("touchend", () => {
+            if (Math.abs(touchDeltaY) > SWIPE_THRESHOLD) {
+                if (touchDeltaY > 0) goToSlide(currentSlide + 1);
+                else goToSlide(currentSlide - 1);
+            }
+        });
+
+        // Loop through reels for tap-to-mute
+        reels.forEach((reel) => {
+            const video = reel.querySelector<HTMLVideoElement>("video");
+            const iconMuted = reel.querySelector(".icon-muted");
+            const iconUnmuted = reel.querySelector(".icon-unmuted");
+
+            if (!video || !iconMuted || !iconUnmuted) return;
+
+            // Tap anywhere on reel to toggle mute
+            reel.addEventListener("click", (e) => {
+                // Ignore if clicking action buttons
+                if ((e.target as HTMLElement).closest(".reel-action, .reel-sound-toggle")) return;
+
+                video.muted = !video.muted;
+                iconMuted.classList.toggle("hidden", !video.muted);
+                iconUnmuted.classList.toggle("hidden", video.muted);
+            });
+        });
+
+        // Like button logic
+        document.querySelectorAll('.reel-action[data-action="like"]').forEach((btn) => {
+            btn.addEventListener("click", (e) => {
+                e.stopPropagation();
+                const svg = btn.querySelector("svg");
+                if (!svg) return;
+                const isLiked = svg.getAttribute("fill") === "currentColor";
+                svg.setAttribute("fill", isLiked ? "none" : "currentColor");
+                svg.classList.toggle("text-red-500", !isLiked);
+                svg.classList.toggle("text-light", isLiked);
+                gsap.fromTo(
+                    svg,
+                    { scale: 1.4 },
+                    { scale: 1, duration: 0.4, ease: "elastic.out(1, 0.3)" }
+                );
+            });
+        });
+
+        // Initial setup for mobile
+        if (window.innerWidth < 768) {
+            goToSlide(0);
+        }
+    }
+
+    document.addEventListener("astro:page-load", initVideoTriptych);
+</script>
+
+<style>
+    /* Desktop: B&W Filter + Scale */
+    @media (hover: hover) {
+        .video-cell .video-player {
+            filter: grayscale(1);
+            transition: transform 1.5s cubic-bezier(0.22, 1, 0.36, 1), filter 0.8s ease;
+        }
+        .video-cell:hover .video-player {
+            transform: scale(1.05);
+            filter: grayscale(0);
+        }
+    }
+
+    /* Mobile: absolute positioning for track animation */
+    #reels-track {
+        will-change: transform;
+    }
+
+    /* Hide scrollbar */
+    .hide-scrollbar::-webkit-scrollbar {
+        display: none;
+    }
+    .hide-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+</style>
+
