@@ -29,7 +29,7 @@ const { t } = Astro.props;
                         muted
                         loop
                         playsinline
-                        preload="none"
+                        preload="metadata"
                     />
 
                     <!-- Mute/Unmute Icon — bottom-left -->
@@ -68,278 +68,174 @@ const { t } = Astro.props;
         }
     </div>
 
-    <!-- ═══ MOBILE: TikTok/Reels GSAP Slides ═══ -->
+    <!-- ═══ MOBILE: TikTok/Reels ScrollTrigger (JuryVIP pattern) ═══ -->
     <div
-        id="reels-container"
-        class="md:hidden relative overflow-hidden"
-        style="height: 100vh;"
+        id="reels-wrapper"
+        class="md:hidden relative"
+        style={`height: ${t.items.length * 100}vh;`}
     >
-        <div id="reels-track" class="relative transition-none" style="height: 100%;">
-            {
-                t.items.map((video, i) => (
-                    <div
-                        class="video-reel absolute inset-0 w-full h-full"
-                        style={`transform: translateY(${i * 100}%);`}
-                        data-index={i}
-                    >
-                        <video
-                            class="video-player absolute inset-0 w-full h-full object-cover"
-                            src={video.src}
-                            muted
-                            loop
-                            playsinline
-                            preload="none"
-                        />
+        <!-- Sticky viewport -->
+        <div id="reels-viewport" class="sticky top-0 h-screen w-full overflow-hidden">
+            <div id="reels-track" class="relative w-full h-full">
+                {
+                    t.items.map((video, i) => (
+                        <div
+                            class="video-reel absolute inset-0 w-full h-full"
+                            style={`transform: translateY(${i * 100}%);`}
+                            data-index={i}
+                        >
+                            <video
+                                class="video-player absolute inset-0 w-full h-full object-cover"
+                                src={video.src}
+                                muted
+                                loop
+                                playsinline
+                                preload="metadata"
+                            />
 
-                        <!-- Dark gradient overlay for text readability -->
-                        <div class="absolute inset-0 bg-gradient-to-t from-dark/80 via-transparent to-dark/30 pointer-events-none" />
+                            <!-- Dark gradient overlay -->
+                            <div class="absolute inset-0 bg-gradient-to-t from-dark/80 via-transparent to-dark/30 pointer-events-none" />
 
-                        <!-- ═══ Social Media Mockup UI ═══ -->
-
-                        <!-- RIGHT SIDE: Action buttons (TikTok style) -->
-                        <div class="absolute right-3 bottom-28 z-10 flex flex-col items-center gap-5">
-                            <!-- Profile pic -->
-                            <div class="relative mb-2">
-                                <div class="w-11 h-11 rounded-full border-2 border-purple-light overflow-hidden bg-dark-gray">
-                                    <img
-                                        src="/images/hero_foreground.png"
-                                        alt="Fernando"
-                                        class="w-full h-full object-cover"
-                                        loading="lazy"
-                                    />
-                                </div>
-                                <div class="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-5 h-5 bg-purple-light rounded-full flex items-center justify-center">
-                                    <svg
-                                        class="w-3 h-3 text-dark"
-                                        viewBox="0 0 24 24"
-                                        fill="currentColor"
-                                    >
-                                        <path
-                                            d="M12 5v14m-7-7h14"
-                                            stroke="currentColor"
-                                            stroke-width="3"
-                                            stroke-linecap="round"
+                            <!-- Social UI (TikTok style) -->
+                            <div class="absolute right-3 bottom-28 z-10 flex flex-col items-center gap-5">
+                                <div class="relative mb-2">
+                                    <div class="w-11 h-11 rounded-full border-2 border-purple-light overflow-hidden bg-dark-gray">
+                                        <img
+                                            src="/images/hero_foreground.png"
+                                            alt="Fernando"
+                                            class="w-full h-full object-cover"
+                                            loading="lazy"
                                         />
-                                    </svg>
+                                    </div>
+                                    <div class="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-5 h-5 bg-purple-light rounded-full flex items-center justify-center">
+                                        <svg class="w-3 h-3 text-dark" viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M12 5v14m-7-7h14" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+                                        </svg>
+                                    </div>
                                 </div>
+
+                                <button class="reel-action flex flex-col items-center gap-1" data-action="like">
+                                    <div class="w-10 h-10 flex items-center justify-center">
+                                        <svg class="w-7 h-7 text-light" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                                        </svg>
+                                    </div>
+                                    <span class="text-light text-[11px] font-body font-semibold">{video.likes}</span>
+                                </button>
+
+                                <button class="reel-action flex flex-col items-center gap-1" data-action="comment">
+                                    <div class="w-10 h-10 flex items-center justify-center">
+                                        <svg class="w-7 h-7 text-light" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                                        </svg>
+                                    </div>
+                                    <span class="text-light text-[11px] font-body font-semibold">{video.comments}</span>
+                                </button>
+
+                                <button class="reel-action flex flex-col items-center gap-1" data-action="share">
+                                    <div class="w-10 h-10 flex items-center justify-center">
+                                        <svg class="w-7 h-7 text-light" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" /><polyline points="16 6 12 2 8 6" /><line x1="12" y1="2" x2="12" y2="15" />
+                                        </svg>
+                                    </div>
+                                    <span class="text-light text-[11px] font-body font-semibold">Compartir</span>
+                                </button>
+
+                                <button class="reel-action flex flex-col items-center gap-1" data-action="save">
+                                    <div class="w-10 h-10 flex items-center justify-center">
+                                        <svg class="w-7 h-7 text-light" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
+                                        </svg>
+                                    </div>
+                                    <span class="text-light text-[11px] font-body font-semibold">Guardar</span>
+                                </button>
+
+                                <button class="reel-sound-toggle flex flex-col items-center gap-1">
+                                    <div class="w-10 h-10 flex items-center justify-center rounded-full bg-dark/40 backdrop-blur-sm border border-white/10">
+                                        <svg class="icon-muted w-5 h-5 text-light" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M11 5 6 9H2v6h4l5 4V5z" /><line x1="23" y1="9" x2="17" y2="15" /><line x1="17" y1="9" x2="23" y2="15" />
+                                        </svg>
+                                        <svg class="icon-unmuted w-5 h-5 text-light hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" /><path d="M19.07 4.93a10 10 0 0 1 0 14.14" /><path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                                        </svg>
+                                    </div>
+                                </button>
                             </div>
 
-                            <!-- Like button -->
-                            <button
-                                class="reel-action flex flex-col items-center gap-1"
-                                data-action="like"
-                                aria-label="Like"
-                            >
-                                <div class="w-10 h-10 flex items-center justify-center">
-                                    <svg
-                                        class="w-7 h-7 text-light"
-                                        viewBox="0 0 24 24"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        stroke-width="2"
-                                    >
-                                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
-                                    </svg>
+                            <div class="absolute bottom-6 left-4 right-16 z-10">
+                                <div class="flex items-center gap-2 mb-2">
+                                    <span class="text-light font-body font-bold text-sm">{video.username}</span>
+                                    <span class="text-light/50 text-xs">·</span>
+                                    <span class="text-light/60 text-xs">Seguir</span>
                                 </div>
-                                <span class="text-light text-[11px] font-body font-semibold">
-                                    {video.likes}
-                                </span>
-                            </button>
-
-                            <!-- Comment button -->
-                            <button
-                                class="reel-action flex flex-col items-center gap-1"
-                                data-action="comment"
-                                aria-label="Comments"
-                            >
-                                <div class="w-10 h-10 flex items-center justify-center">
-                                    <svg
-                                        class="w-7 h-7 text-light"
-                                        viewBox="0 0 24 24"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        stroke-width="2"
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                    >
-                                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-                                    </svg>
-                                </div>
-                                <span class="text-light text-[11px] font-body font-semibold">
-                                    {video.comments}
-                                </span>
-                            </button>
-
-                            <!-- Share button -->
-                            <button
-                                class="reel-action flex flex-col items-center gap-1"
-                                data-action="share"
-                                aria-label="Share"
-                            >
-                                <div class="w-10 h-10 flex items-center justify-center">
-                                    <svg
-                                        class="w-7 h-7 text-light"
-                                        viewBox="0 0 24 24"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        stroke-width="2"
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                    >
-                                        <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" />
-                                        <polyline points="16 6 12 2 8 6" />
-                                        <line x1="12" y1="2" x2="12" y2="15" />
-                                    </svg>
-                                </div>
-                                <span class="text-light text-[11px] font-body font-semibold">
-                                    Compartir
-                                </span>
-                            </button>
-
-                            <!-- Save/Bookmark button -->
-                            <button
-                                class="reel-action flex flex-col items-center gap-1"
-                                data-action="save"
-                                aria-label="Save"
-                            >
-                                <div class="w-10 h-10 flex items-center justify-center">
-                                    <svg
-                                        class="w-7 h-7 text-light"
-                                        viewBox="0 0 24 24"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        stroke-width="2"
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                    >
-                                        <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
-                                    </svg>
-                                </div>
-                                <span class="text-light text-[11px] font-body font-semibold">
-                                    Guardar
-                                </span>
-                            </button>
-
-                            <!-- Sound toggle (mobile) -->
-                            <button
-                                class="reel-sound-toggle flex flex-col items-center gap-1"
-                                aria-label="Toggle sound"
-                            >
-                                <div class="w-10 h-10 flex items-center justify-center rounded-full bg-dark/40 backdrop-blur-sm border border-white/10">
-                                    <svg
-                                        class="icon-muted w-5 h-5 text-light"
-                                        viewBox="0 0 24 24"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        stroke-width="2"
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                    >
-                                        <path d="M11 5 6 9H2v6h4l5 4V5z" />
-                                        <line x1="23" y1="9" x2="17" y2="15" />
-                                        <line x1="17" y1="9" x2="23" y2="15" />
-                                    </svg>
-                                    <svg
-                                        class="icon-unmuted w-5 h-5 text-light hidden"
-                                        viewBox="0 0 24 24"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        stroke-width="2"
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                    >
-                                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
-                                        <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
-                                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
-                                    </svg>
-                                </div>
-                            </button>
-                        </div>
-
-                        <!-- BOTTOM LEFT: User info + caption (TikTok style) -->
-                        <div class="absolute bottom-6 left-4 right-16 z-10">
-                            <div class="flex items-center gap-2 mb-2">
-                                <span class="text-light font-body font-bold text-sm">
-                                    {video.username}
-                                </span>
-                                <span class="text-light/50 text-xs font-body">·</span>
-                                <span class="text-light/60 text-xs font-body">Seguir</span>
+                                <p class="text-light/90 text-sm font-body leading-relaxed">{video.caption}</p>
                             </div>
-                            <p class="text-light/90 text-sm font-body leading-relaxed">
-                                {video.caption}
-                            </p>
                         </div>
-                    </div>
-                ))
-            }
+                    ))
+                }
+            </div>
         </div>
     </div>
 </section>
 
 <script>
-    import { gsap } from "../../lib/gsap-init";
+    import { gsap, ScrollTrigger } from "../../lib/gsap-init";
 
     function initVideoTriptych() {
-        const videos = document.querySelectorAll<HTMLVideoElement>(
-            "#videos .video-player",
-        );
+        // ═══ Preload Logic (Eager idle buffering) ═══
+        function preloadVideos() {
+            const allVideos = document.querySelectorAll<HTMLVideoElement>("#videos .video-player");
+            allVideos.forEach((video) => {
+                if (video.readyState < 2) {
+                    video.load();
+                }
+            });
+        }
+        if ("requestIdleCallback" in window) {
+            (window as any).requestIdleCallback(preloadVideos, { timeout: 3000 });
+        } else {
+            setTimeout(preloadVideos, 2000);
+        }
 
         // ════════════════════════════════════════════════════════════════
-        // ═══ COMMON: Intersection Observer (Pause when off-screen) ═══
+        // ═══ DESKTOP: Hover Logic + Observer ═══
         // ════════════════════════════════════════════════════════════════
-        const observer = new IntersectionObserver(
+        const desktopCells = document.querySelectorAll<HTMLElement>(".video-cell");
+        
+        // Observer for play/pause (desktop only)
+        const desktopObserver = new IntersectionObserver(
             (entries) => {
                 entries.forEach((entry) => {
-                    const video = entry.target as HTMLVideoElement;
+                    const video = entry.target.querySelector("video");
+                    if (!video) return;
                     if (entry.isIntersecting) {
-                        if (video.readyState === 0 && video.src) {
-                            video.load();
-                        }
-                        // Only auto-play if it's desktop OR if it's the current mobile slide
-                        const isDesktop = window.innerWidth >= 768;
-                        if (isDesktop) {
-                            video.play().catch(() => {});
-                        }
+                        video.play().catch(() => {});
                     } else {
                         video.pause();
                     }
                 });
             },
-            { threshold: 0.2 },
+            { threshold: 0.2 }
         );
+        desktopCells.forEach((cell) => desktopObserver.observe(cell));
 
-        videos.forEach((v) => observer.observe(v));
-
-        // ════════════════════════════════════════════════════════════════
-        // ═══ DESKTOP: Hover Logic (Unmute + Color) ═══
-        // ════════════════════════════════════════════════════════════════
-        const cells = document.querySelectorAll<HTMLElement>(".video-cell");
-        cells.forEach((cell) => {
+        desktopCells.forEach((cell) => {
             const video = cell.querySelector<HTMLVideoElement>(".video-player");
             const iconMuted = cell.querySelector(".icon-muted");
             const iconUnmuted = cell.querySelector(".icon-unmuted");
             if (!video || !iconMuted || !iconUnmuted) return;
 
             cell.addEventListener("mouseenter", () => {
-                // Mute others
-                document
-                    .querySelectorAll<HTMLVideoElement>(".video-player")
-                    .forEach((v) => {
-                        v.muted = true;
-                    });
-                document
-                    .querySelectorAll(".video-sound-icon .icon-muted")
-                    .forEach((el) => el.classList.remove("hidden"));
-                document
-                    .querySelectorAll(".video-sound-icon .icon-unmuted")
-                    .forEach((el) => el.classList.add("hidden"));
+                // Mute all others
+                document.querySelectorAll<HTMLVideoElement>(".video-player").forEach((v) => { v.muted = true; });
+                document.querySelectorAll(".video-sound-icon .icon-muted").forEach((el) => el.classList.remove("hidden"));
+                document.querySelectorAll(".video-sound-icon .icon-unmuted").forEach((el) => el.classList.add("hidden"));
 
                 // Unmute this one
                 video.muted = false;
                 iconMuted.classList.add("hidden");
                 iconUnmuted.classList.remove("hidden");
 
-                // Highlight icon
                 gsap.to(cell.querySelector(".video-sound-icon"), {
                     borderColor: "rgba(149, 130, 217, 0.6)",
                     color: "rgba(149, 130, 217, 1)",
@@ -351,7 +247,6 @@ const { t } = Astro.props;
                 video.muted = true;
                 iconMuted.classList.remove("hidden");
                 iconUnmuted.classList.add("hidden");
-
                 gsap.to(cell.querySelector(".video-sound-icon"), {
                     borderColor: "rgba(255, 255, 255, 0.1)",
                     color: "rgba(255, 255, 255, 0.6)",
@@ -361,91 +256,73 @@ const { t } = Astro.props;
         });
 
         // ════════════════════════════════════════════════════════════════
-        // ═══ MOBILE: GSAP Slide System + Interaction ═══
+        // ═══ MOBILE: ScrollTrigger Snap System ═══
         // ════════════════════════════════════════════════════════════════
-        const container = document.getElementById("reels-container");
+        const reelsWrapper = document.getElementById("reels-wrapper");
         const track = document.getElementById("reels-track");
         const reels = document.querySelectorAll<HTMLElement>(".video-reel");
         
-        if (!container || !track || reels.length === 0) return;
+        if (reelsWrapper && track && reels.length > 0) {
+            const totalSlides = reels.length;
+            let currentSlide = -1;
 
-        let currentSlide = 0;
-        const totalSlides = reels.length;
-        let isAnimating = false;
-        let touchStartY = 0;
-        let touchDeltaY = 0;
-        const SWIPE_THRESHOLD = 50;
+            // Cleanup for Astro transitions
+            ScrollTrigger.getAll().forEach(st => {
+                if (st.vars.trigger === reelsWrapper) st.kill();
+            });
 
-        function goToSlide(index: number) {
-            if (index < 0 || index >= totalSlides || isAnimating) return;
-            isAnimating = true;
-            currentSlide = index;
+            ScrollTrigger.create({
+                trigger: reelsWrapper,
+                start: "top top",
+                end: "bottom bottom",
+                scrub: 0.5,
+                snap: {
+                    snapTo: 1 / (totalSlides - 1),
+                    duration: { min: 0.3, max: 0.5 },
+                    delay: 0.1,
+                    ease: "power2.inOut",
+                },
+                onUpdate: (self) => {
+                    const progress = self.progress;
+                    const targetY = -progress * (totalSlides - 1) * window.innerHeight;
+                    gsap.set(track, { y: targetY });
 
-            gsap.to(track, {
-                y: -(currentSlide * window.innerHeight),
-                duration: 0.6,
-                ease: "power3.out",
-                onComplete: () => {
-                    isAnimating = false;
+                    const activeIndex = Math.round(progress * (totalSlides - 1));
+                    if (activeIndex !== currentSlide) {
+                        currentSlide = activeIndex;
+                        reels.forEach((reel, i) => {
+                            const video = reel.querySelector("video");
+                            if (!video) return;
+                            if (i === currentSlide) {
+                                video.play().catch(() => {});
+                            } else {
+                                video.pause();
+                                video.muted = true;
+                                reel.querySelector(".icon-muted")?.classList.remove("hidden");
+                                reel.querySelector(".icon-unmuted")?.classList.add("hidden");
+                            }
+                        });
+                    }
                 },
             });
 
-            // Handle video states
-            reels.forEach((reel, i) => {
-                const video = reel.querySelector("video");
-                if (!video) return;
-                
-                if (i === currentSlide) {
-                    video.play().catch(() => {});
-                } else {
-                    video.pause();
-                    video.muted = true;
-                    // Reset icons
-                    const iconMuted = reel.querySelector(".icon-muted");
-                    const iconUnmuted = reel.querySelector(".icon-unmuted");
-                    iconMuted?.classList.remove("hidden");
-                    iconUnmuted?.classList.add("hidden");
-                }
+            // Tap-to-mute
+            reels.forEach((reel) => {
+                const video = reel.querySelector<HTMLVideoElement>("video");
+                const iconMuted = reel.querySelector(".icon-muted");
+                const iconUnmuted = reel.querySelector(".icon-unmuted");
+                if (!video || !iconMuted || !iconUnmuted) return;
+
+                reel.addEventListener("click", (e) => {
+                    if ((e.target as HTMLElement).closest(".reel-action, .reel-sound-toggle")) return;
+                    video.muted = !video.muted;
+                    iconMuted.classList.toggle("hidden", !video.muted);
+                    iconUnmuted.classList.toggle("hidden", video.muted);
+                });
             });
         }
 
-        // Touch event listeners
-        container.addEventListener("touchstart", (e: any) => {
-            touchStartY = e.touches[0].clientY;
-            touchDeltaY = 0;
-        }, { passive: true });
-
-        container.addEventListener("touchmove", (e: any) => {
-            touchDeltaY = touchStartY - e.touches[0].clientY;
-        }, { passive: true });
-
-        container.addEventListener("touchend", () => {
-            if (Math.abs(touchDeltaY) > SWIPE_THRESHOLD) {
-                if (touchDeltaY > 0) goToSlide(currentSlide + 1);
-                else goToSlide(currentSlide - 1);
-            }
-        });
-
-        // Loop through reels for tap-to-mute
-        reels.forEach((reel) => {
-            const video = reel.querySelector<HTMLVideoElement>("video");
-            const iconMuted = reel.querySelector(".icon-muted");
-            const iconUnmuted = reel.querySelector(".icon-unmuted");
-
-            if (!video || !iconMuted || !iconUnmuted) return;
-
-            // Tap anywhere on reel to toggle mute
-            reel.addEventListener("click", (e) => {
-                // Ignore if clicking action buttons
-                if ((e.target as HTMLElement).closest(".reel-action, .reel-sound-toggle")) return;
-
-                video.muted = !video.muted;
-                iconMuted.classList.toggle("hidden", !video.muted);
-                iconUnmuted.classList.toggle("hidden", video.muted);
-            });
-        });
-
-        // Like button logic
+        // Like button animation
         document.querySelectorAll('.reel-action[data-action="like"]').forEach((btn) => {
             btn.addEventListener("click", (e) => {
                 e.stopPropagation();
@@ -455,25 +332,16 @@ const { t } = Astro.props;
                 svg.setAttribute("fill", isLiked ? "none" : "currentColor");
                 svg.classList.toggle("text-red-500", !isLiked);
                 svg.classList.toggle("text-light", isLiked);
-                gsap.fromTo(
-                    svg,
-                    { scale: 1.4 },
-                    { scale: 1, duration: 0.4, ease: "elastic.out(1, 0.3)" }
-                );
+                gsap.fromTo(svg, { scale: 1.4 }, { scale: 1, duration: 0.4, ease: "elastic.out(1, 0.3)" });
             });
         });
-
-        // Initial setup for mobile
-        if (window.innerWidth < 768) {
-            goToSlide(0);
-        }
     }
 
     document.addEventListener("astro:page-load", initVideoTriptych);
 </script>
 
 <style>
-    /* Desktop: B&W Filter + Scale */
+    /* Desktop Hover Effects */
     @media (hover: hover) {
         .video-cell .video-player {
             filter: grayscale(1);
@@ -485,18 +353,8 @@ const { t } = Astro.props;
         }
     }
 
-    /* Mobile: absolute positioning for track animation */
     #reels-track {
         will-change: transform;
-    }
-
-    /* Hide scrollbar */
-    .hide-scrollbar::-webkit-scrollbar {
-        display: none;
-    }
-    .hide-scrollbar {
-        -ms-overflow-style: none;
-        scrollbar-width: none;
     }
 </style>
 
