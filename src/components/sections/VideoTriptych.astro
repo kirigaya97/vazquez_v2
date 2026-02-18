@@ -320,102 +320,55 @@ const { t } = Astro.props;
                 });
             }
 
-            // ── Pin the section when it enters the viewport ──
-            // This prevents the page from scrolling PAST the reels while Observer is active
-            let observer: Observer | null = null;
+            // ── Detect when section enters viewport via IntersectionObserver ──
+            // No ScrollTrigger pin needed — Observer's preventDefault effectively
+            // stops all scrolling while active, keeping the section in view.
+            let gsapObserver: Observer | null = null;
+            let sectionActive = false;
 
-            ScrollTrigger.create({
-                trigger: reelsSection,
-                start: "top top",
-                end: "top top", // Zero-length pin — we control exit manually
-                pin: true,
-                pinSpacing: true,
-                onEnter: () => {
-                    // Enable Observer when we enter the section
-                    if (!observer) createObserver();
-                },
-                onEnterBack: () => {
-                    // Re-enable when scrolling back up into the section
-                    currentSlide = totalSlides - 1;
-                    gsap.set(track, { y: -currentSlide * window.innerHeight });
-                    if (!observer) createObserver();
-
-                    // Update dots and video for re-entry from bottom
-                    reels.forEach((reel, i) => {
-                        const video = reel.querySelector("video");
-                        if (!video) return;
-                        if (i === currentSlide) {
-                            video.play().catch(() => {});
-                        } else {
-                            video.pause();
-                        }
-                    });
-                    document.querySelectorAll(".reel-dot").forEach((dot, i) => {
-                        if (i === currentSlide) {
-                            (dot as HTMLElement).style.background = "#9582D9";
-                            (dot as HTMLElement).style.transform = "scale(1.3)";
-                        } else {
-                            (dot as HTMLElement).style.background = "rgba(255,255,255,0.3)";
-                            (dot as HTMLElement).style.transform = "scale(1)";
+            const entryObserver = new IntersectionObserver(
+                (entries) => {
+                    entries.forEach((entry) => {
+                        if (entry.isIntersecting && !sectionActive) {
+                            sectionActive = true;
+                            if (!gsapObserver) createGsapObserver();
+                            // Play current video on entry
+                            const currentVideo = reels[currentSlide]?.querySelector("video");
+                            if (currentVideo) currentVideo.play().catch(() => {});
                         }
                     });
                 },
-            });
+                { threshold: 0.8 }
+            );
+            entryObserver.observe(reelsSection);
 
-            // ── Create the Observer (detects swipe/wheel without using scroll) ──
-            function createObserver() {
-                observer = Observer.create({
-                    target: reelsSection!,       // Listen on the reels section
-                    type: "touch,wheel",          // Listen to touch and wheel events
-                    wheelSpeed: -1,               // Natural scroll direction
-                    tolerance: 10,                // Minimum px to trigger (prevents accidental)
-                    preventDefault: true,         // CRITICAL: prevent browser default scroll
+            // ── Create the GSAP Observer (detects swipe/wheel, prevents scroll) ──
+            function createGsapObserver() {
+                gsapObserver = Observer.create({
+                    target: reelsSection!,
+                    type: "touch,wheel",
+                    wheelSpeed: -1,
+                    tolerance: 10,
+                    preventDefault: true,
                     onUp: () => {
-                        // Swiping UP = go to NEXT slide (content moves up)
+                        // Swiping UP = go to NEXT slide
                         if (isAnimating) return;
 
                         if (currentSlide >= totalSlides - 1) {
-                            // Already at last slide — destroy observer, let page scroll continue
-                            destroyObserver();
-                            // Unpin by scrolling past the pinned section
-                            const st = ScrollTrigger.getAll().find(
-                                (s) => s.vars.trigger === reelsSection
-                            );
-                            if (st) st.disable();
-
-                            // Scroll the page to the next section
-                            const nextSection = reelsSection!.nextElementSibling as HTMLElement;
-                            if (nextSection) {
-                                window.scrollTo({
-                                    top: nextSection.offsetTop,
-                                    behavior: "smooth",
-                                });
-                            }
+                            // At last slide — exit section downward
+                            exitSection("down");
                             return;
                         }
 
                         goToSlide(currentSlide + 1);
                     },
                     onDown: () => {
-                        // Swiping DOWN = go to PREVIOUS slide (content moves down)
+                        // Swiping DOWN = go to PREVIOUS slide
                         if (isAnimating) return;
 
                         if (currentSlide <= 0) {
-                            // Already at first slide — destroy observer, let page scroll back
-                            destroyObserver();
-                            const st = ScrollTrigger.getAll().find(
-                                (s) => s.vars.trigger === reelsSection
-                            );
-                            if (st) st.disable();
-
-                            // Scroll back to previous section
-                            const prevSection = reelsSection!.previousElementSibling as HTMLElement;
-                            if (prevSection) {
-                                window.scrollTo({
-                                    top: prevSection.offsetTop + prevSection.offsetHeight - window.innerHeight,
-                                    behavior: "smooth",
-                                });
-                            }
+                            // At first slide — exit section upward
+                            exitSection("up");
                             return;
                         }
 
@@ -424,10 +377,33 @@ const { t } = Astro.props;
                 });
             }
 
-            function destroyObserver() {
-                if (observer) {
-                    observer.kill();
-                    observer = null;
+            function exitSection(direction: "up" | "down") {
+                destroyGsapObserver();
+                sectionActive = false;
+
+                if (direction === "down") {
+                    const nextSection = reelsSection!.nextElementSibling as HTMLElement;
+                    if (nextSection) {
+                        nextSection.scrollIntoView({ behavior: "smooth" });
+                    }
+                } else {
+                    const prevSection = reelsSection!.previousElementSibling as HTMLElement;
+                    if (prevSection) {
+                        prevSection.scrollIntoView({ behavior: "smooth", block: "end" });
+                    }
+                }
+
+                // Re-arm after a delay to prevent immediate re-capture
+                setTimeout(() => {
+                    // Observer will be re-created by IntersectionObserver
+                    // if the section is still in view after scroll settles
+                }, 800);
+            }
+
+            function destroyGsapObserver() {
+                if (gsapObserver) {
+                    gsapObserver.kill();
+                    gsapObserver = null;
                 }
             }
 
@@ -452,10 +428,8 @@ const { t } = Astro.props;
 
             // Cleanup for Astro page transitions
             document.addEventListener("astro:before-preparation", () => {
-                destroyObserver();
-                ScrollTrigger.getAll().forEach(st => {
-                    if (st.vars.trigger === reelsSection) st.kill();
-                });
+                destroyGsapObserver();
+                entryObserver.disconnect();
             }, { once: true });
         }
 
