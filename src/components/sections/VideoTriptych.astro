@@ -320,84 +320,114 @@ const { t } = Astro.props;
                 });
             }
 
-            // ── Detect when section enters viewport via IntersectionObserver ──
-            // No ScrollTrigger pin needed — Observer's preventDefault effectively
-            // stops all scrolling while active, keeping the section in view.
+            // ── State flags ──
             let gsapObserver: Observer | null = null;
             let sectionActive = false;
+            let isExiting = false;  // Prevents re-entry during exit scroll
 
-            const entryObserver = new IntersectionObserver(
+            // ── ENTRY: Magnetize into position when section approaches ──
+            // When 50% visible, snap the viewport to align the section
+            // perfectly, then activate gesture Observer.
+            const entryIO = new IntersectionObserver(
                 (entries) => {
                     entries.forEach((entry) => {
-                        if (entry.isIntersecting && !sectionActive) {
+                        if (entry.isIntersecting && !sectionActive && !isExiting) {
                             sectionActive = true;
-                            if (!gsapObserver) createGsapObserver();
-                            // Play current video on entry
-                            const currentVideo = reels[currentSlide]?.querySelector("video");
-                            if (currentVideo) currentVideo.play().catch(() => {});
+
+                            // "Drag you in" — snap section to fill the viewport
+                            reelsSection!.scrollIntoView({ behavior: "smooth", block: "start" });
+
+                            // Create gesture observer after a brief settling delay
+                            setTimeout(() => {
+                                if (sectionActive && !gsapObserver) {
+                                    createGsapObserver();
+                                }
+                                // Play current video
+                                const v = reels[currentSlide]?.querySelector("video");
+                                if (v) v.play().catch(() => {});
+                            }, 400);
                         }
                     });
                 },
-                { threshold: 0.8 }
+                { threshold: 0.5 }
             );
-            entryObserver.observe(reelsSection);
+            entryIO.observe(reelsSection);
 
-            // ── Create the GSAP Observer (detects swipe/wheel, prevents scroll) ──
+            // ── GESTURE OBSERVER ──
             function createGsapObserver() {
                 gsapObserver = Observer.create({
                     target: reelsSection!,
                     type: "touch,wheel",
-                    wheelSpeed: -1,
-                    tolerance: 10,
-                    preventDefault: true,
+                    tolerance: 15,              // Minimum px before trigger
+                    preventDefault: true,        // Block native scroll
+                    dragMinimum: 8,              // Better touch detection
                     onUp: () => {
-                        // Swiping UP = go to NEXT slide
-                        if (isAnimating) return;
+                        // Finger moves UP → content scrolls up → NEXT slide
+                        if (isAnimating || isExiting) return;
 
                         if (currentSlide >= totalSlides - 1) {
-                            // At last slide — exit section downward
                             exitSection("down");
                             return;
                         }
-
                         goToSlide(currentSlide + 1);
                     },
                     onDown: () => {
-                        // Swiping DOWN = go to PREVIOUS slide
-                        if (isAnimating) return;
+                        // Finger moves DOWN → content scrolls down → PREVIOUS slide
+                        if (isAnimating || isExiting) return;
 
                         if (currentSlide <= 0) {
-                            // At first slide — exit section upward
                             exitSection("up");
                             return;
                         }
-
                         goToSlide(currentSlide - 1);
                     },
                 });
             }
 
+            // ── EXIT: "Spit you out" — destroy observer, scroll away, cooldown ──
             function exitSection(direction: "up" | "down") {
-                destroyGsapObserver();
+                if (isExiting) return;
+                isExiting = true;
                 sectionActive = false;
 
+                // 1. Kill gesture observer immediately
+                destroyGsapObserver();
+
+                // 2. Disconnect entry observer to prevent re-capture during scroll
+                entryIO.disconnect();
+
+                // 3. Scroll to adjacent section
                 if (direction === "down") {
-                    const nextSection = reelsSection!.nextElementSibling as HTMLElement;
-                    if (nextSection) {
-                        nextSection.scrollIntoView({ behavior: "smooth" });
+                    const next = reelsSection!.nextElementSibling as HTMLElement;
+                    if (next) {
+                        next.scrollIntoView({ behavior: "smooth", block: "start" });
                     }
                 } else {
-                    const prevSection = reelsSection!.previousElementSibling as HTMLElement;
-                    if (prevSection) {
-                        prevSection.scrollIntoView({ behavior: "smooth", block: "end" });
+                    const prev = reelsSection!.previousElementSibling as HTMLElement;
+                    if (prev) {
+                        prev.scrollIntoView({ behavior: "smooth", block: "end" });
                     }
                 }
 
-                // Re-arm after a delay to prevent immediate re-capture
+                // 4. Cooldown — reconnect entry observer after scroll settles
                 setTimeout(() => {
-                    // Observer will be re-created by IntersectionObserver
-                    // if the section is still in view after scroll settles
-                }, 800);
+                    isExiting = false;
+                    // Reset slide to appropriate position for re-entry
+                    if (direction === "down") {
+                        currentSlide = 0;
+                        gsap.set(track, { y: 0 });
+                    } else {
+                        currentSlide = totalSlides - 1;
+                        gsap.set(track, { y: -(totalSlides - 1) * window.innerHeight });
+                    }
+                    // Update dots for re-entry state
+                    document.querySelectorAll(".reel-dot").forEach((dot, i) => {
+                        (dot as HTMLElement).style.background = i === currentSlide ? "#9582D9" : "rgba(255,255,255,0.3)";
+                        (dot as HTMLElement).style.transform = i === currentSlide ? "scale(1.3)" : "scale(1)";
+                    });
+                    // Re-arm entry detection
+                    entryIO.observe(reelsSection!);
+                }, 1500);
             }
 
             function destroyGsapObserver() {
@@ -429,7 +459,7 @@ const { t } = Astro.props;
             // Cleanup for Astro page transitions
             document.addEventListener("astro:before-preparation", () => {
                 destroyGsapObserver();
-                entryObserver.disconnect();
+                entryIO.disconnect();
             }, { once: true });
         }
 
