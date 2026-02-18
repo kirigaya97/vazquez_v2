@@ -17,6 +17,15 @@
         ).matches;
         if (prefersReducedMotion) return;
 
+        // Skip Lenis on touch/mobile devices.
+        // ScrollTrigger snap + Lenis = documented incompatibility on mobile.
+        // Lenis intercepts the programmatic scroll that snap produces, creating
+        // a feedback loop. Native mobile scrolling works perfectly with ScrollTrigger.
+        if (ScrollTrigger.isTouch) {
+            ScrollTrigger.config({ ignoreMobileResize: true });
+            return;
+        }
+
         if (lenis) {
             lenis.destroy();
         }
