@@ -69,16 +69,16 @@ const { t } = Astro.props;
     </div>
 
     <!-- ═══ MOBILE: Observer-driven Reels (NO scroll dependency) ═══ -->
+    <!-- ═══ MOBILE: CSS Scroll-Snap Reels ═══ -->
     <div
         id="reels-section"
-        class="md:hidden relative h-screen w-full overflow-hidden"
+        class="md:hidden relative h-screen w-full"
     >
-        <div id="reels-track" class="relative w-full h-full">
+        <div id="reels-container" class="reels-scroll-container">
             {
                 t.items.map((video, i) => (
                     <div
-                        class="video-reel absolute inset-0 w-full h-full"
-                        style={`transform: translateY(${i * 100}%);`}
+                        class="video-reel"
                         data-index={i}
                     >
                         <video
@@ -186,7 +186,7 @@ const { t } = Astro.props;
 </section>
 
 <script>
-    import { gsap, ScrollTrigger, Observer } from "../../lib/gsap-init";
+    import { gsap, ScrollTrigger } from "../../lib/gsap-init";
 
     function initVideoTriptych() {
         // ═══ Preload Logic (Eager idle buffering) ═══
@@ -263,223 +263,88 @@ const { t } = Astro.props;
         });
 
         // ════════════════════════════════════════════════════════════════
-        // ═══ MOBILE: Observer-Driven Reels (gesture-based, no scroll) ═══
+        // ═══ MOBILE: CSS Scroll-Snap Reels ═══
         // ════════════════════════════════════════════════════════════════
+        const reelsContainer = document.getElementById("reels-container");
         const reelsSection = document.getElementById("reels-section");
-        const track = document.getElementById("reels-track");
         const reels = document.querySelectorAll<HTMLElement>(".video-reel");
 
-        if (reelsSection && track && reels.length > 0) {
-            const totalSlides = reels.length;
-            let currentSlide = 0;
-            let isAnimating = false;
+        if (reelsContainer && reelsSection && reels.length > 0) {
+            let currentIndex = 0;
 
-            // ── Helper: Go to a specific slide ──
-            function goToSlide(index: number) {
-                // Clamp index to valid range
-                if (index < 0 || index >= totalSlides) return;
-                if (index === currentSlide) return;
-                if (isAnimating) return;
-
-                isAnimating = true;
-                currentSlide = index;
-
-                // Animate the track to show the target slide
-                gsap.to(track, {
-                    y: -currentSlide * window.innerHeight,
-                    duration: 0.5,
-                    ease: "power2.inOut",
-                    overwrite: true,
-                    onComplete: () => {
-                        isAnimating = false;
-                    },
-                });
-
-                // Play/pause videos
-                reels.forEach((reel, i) => {
-                    const video = reel.querySelector("video");
-                    if (!video) return;
-                    if (i === currentSlide) {
-                        video.play().catch(() => {});
-                    } else {
-                        video.pause();
-                        video.muted = true;
-                        reel.querySelector(".icon-muted")?.classList.remove("hidden");
-                        reel.querySelector(".icon-unmuted")?.classList.add("hidden");
-                    }
-                });
-
-                // Update dot indicators
-                document.querySelectorAll(".reel-dot").forEach((dot, i) => {
-                    if (i === currentSlide) {
-                        (dot as HTMLElement).style.background = "#9582D9";
-                        (dot as HTMLElement).style.transform = "scale(1.3)";
-                    } else {
-                        (dot as HTMLElement).style.background = "rgba(255,255,255,0.3)";
-                        (dot as HTMLElement).style.transform = "scale(1)";
-                    }
-                });
-            }
-
-            // ── State ──
-            let gsapObserver: Observer | null = null;
-            let sectionActive = false;
-            let isExiting = false;
-            let gestureDebounce = false;
-            let entryTimer: ReturnType<typeof setTimeout> | null = null;
-
-            // ── FULL CLEANUP: Nuke everything back to pristine state ──
-            // Called whenever the section leaves the viewport (by the leave-IO).
-            // This guarantees clean state no matter how the user left.
-            function fullCleanup() {
-                // Kill gesture observer
-                if (gsapObserver) {
-                    gsapObserver.kill();
-                    gsapObserver = null;
-                }
-                // Kill any pending entry timer
-                if (entryTimer) {
-                    clearTimeout(entryTimer);
-                    entryTimer = null;
-                }
-                // Kill all track tweens
-                gsap.killTweensOf(track);
-                // Reset all flags
-                sectionActive = false;
-                isExiting = false;
-                isAnimating = false;
-                gestureDebounce = false;
-                // Reset to slide 0, position 0
-                currentSlide = 0;
-                gsap.set(track, { y: 0 });
-                // Pause all videos
-                reels.forEach((reel) => {
-                    const v = reel.querySelector("video");
-                    if (v) { v.pause(); v.muted = true; }
-                    reel.querySelector(".icon-muted")?.classList.remove("hidden");
-                    reel.querySelector(".icon-unmuted")?.classList.add("hidden");
-                });
-                // Reset dots
-                document.querySelectorAll(".reel-dot").forEach((dot, i) => {
-                    (dot as HTMLElement).style.background = i === 0 ? "#9582D9" : "rgba(255,255,255,0.3)";
-                    (dot as HTMLElement).style.transform = i === 0 ? "scale(1.3)" : "scale(1)";
-                });
-            }
-
-            // ── LEAVE-IO (permanent): Full cleanup when section exits viewport ──
-            const leaveIO = new IntersectionObserver(
+            // ── IntersectionObserver: auto play/pause videos ──
+            const reelObserver = new IntersectionObserver(
                 (entries) => {
                     entries.forEach((entry) => {
-                        if (!entry.isIntersecting) {
-                            fullCleanup();
+                        const video = entry.target.querySelector("video");
+                        if (!video) return;
+                        if (entry.isIntersecting) {
+                            video.play().catch(() => {});
+                            // Update current index
+                            const idx = parseInt(entry.target.getAttribute("data-index") || "0", 10);
+                            currentIndex = idx;
+                            // Update dot indicators
+                            document.querySelectorAll(".reel-dot").forEach((dot, i) => {
+                                (dot as HTMLElement).style.background = i === idx ? "#9582D9" : "rgba(255,255,255,0.3)";
+                                (dot as HTMLElement).style.transform = i === idx ? "scale(1.3)" : "scale(1)";
+                            });
+                        } else {
+                            video.pause();
                         }
                     });
                 },
-                { threshold: 0 }
+                {
+                    root: reelsContainer,
+                    threshold: 0.75,
+                }
             );
-            leaveIO.observe(reelsSection);
+            reels.forEach((reel) => reelObserver.observe(reel));
 
-            // ── ENTRY-IO (permanent): Magnetize when ≥30% visible ──
+            // ── Entry magnetism: snap section into view ──
             const entryIO = new IntersectionObserver(
                 (entries) => {
                     entries.forEach((entry) => {
-                        if (!entry.isIntersecting || sectionActive || isExiting) return;
-                        sectionActive = true;
-
-                        // Detect direction: top > 0 means section top is below viewport top
-                        // → user is scrolling UP into it → show last video.
-                        // top <= 0 means section top is above viewport → scrolling DOWN → first video.
-                        const rect = entry.boundingClientRect;
-                        const enteringFromBelow = rect.top > 0;
-
-                        if (enteringFromBelow) {
-                            currentSlide = totalSlides - 1;
-                        } else {
-                            currentSlide = 0;
+                        if (entry.isIntersecting) {
+                            reelsSection!.scrollIntoView({ behavior: "smooth", block: "start" });
                         }
-                        gsap.killTweensOf(track);
-                        gsap.set(track, { y: -currentSlide * window.innerHeight });
-
-                        // Update dots for initial state
-                        document.querySelectorAll(".reel-dot").forEach((dot, i) => {
-                            (dot as HTMLElement).style.background = i === currentSlide ? "#9582D9" : "rgba(255,255,255,0.3)";
-                            (dot as HTMLElement).style.transform = i === currentSlide ? "scale(1.3)" : "scale(1)";
-                        });
-
-                        // Snap section into viewport
-                        reelsSection!.scrollIntoView({ behavior: "smooth", block: "start" });
-
-                        // Activate gesture Observer after snap settles
-                        entryTimer = setTimeout(() => {
-                            entryTimer = null;
-                            if (!sectionActive || gsapObserver) return;
-                            createGsapObserver();
-                            // Play the current video
-                            const v = reels[currentSlide]?.querySelector("video");
-                            if (v) v.play().catch(() => {});
-                        }, 500);
                     });
                 },
                 { threshold: 0.3 }
             );
             entryIO.observe(reelsSection);
 
-            // ── GESTURE OBSERVER ──
-            function createGsapObserver() {
-                if (gsapObserver) return;
-                gsapObserver = Observer.create({
-                    target: reelsSection!,
-                    type: "touch,wheel",
-                    tolerance: 15,
-                    preventDefault: true,
-                    dragMinimum: 8,
-                    onUp: () => {
-                        // Swipe UP → NEXT slide
-                        if (isAnimating || isExiting || gestureDebounce) return;
-                        lockGesture();
-                        if (currentSlide >= totalSlides - 1) {
-                            exitSection("down");
-                            return;
-                        }
-                        goToSlide(currentSlide + 1);
-                    },
-                    onDown: () => {
-                        // Swipe DOWN → PREVIOUS slide
-                        if (isAnimating || isExiting || gestureDebounce) return;
-                        lockGesture();
-                        if (currentSlide <= 0) {
-                            exitSection("up");
-                            return;
-                        }
-                        goToSlide(currentSlide - 1);
-                    },
-                });
-            }
+            // ── Exit logic: detect overscroll attempts at boundaries ──
+            let touchStartY = 0;
+            let exitCooldown = false;
 
-            function lockGesture() {
-                gestureDebounce = true;
-                setTimeout(() => { gestureDebounce = false; }, 300);
-            }
+            reelsContainer.addEventListener("touchstart", (e) => {
+                touchStartY = e.touches[0].clientY;
+            }, { passive: true });
 
-            // ── EXIT: Just navigate away — leave-IO handles cleanup ──
-            function exitSection(direction: "up" | "down") {
-                if (isExiting) return;
-                isExiting = true;
+            reelsContainer.addEventListener("touchend", (e) => {
+                if (exitCooldown) return;
+                const touchEndY = e.changedTouches[0].clientY;
+                const deltaY = touchStartY - touchEndY;
+                const { scrollTop, scrollHeight, clientHeight } = reelsContainer;
 
-                // Kill observer so no more gestures fire
-                if (gsapObserver) {
-                    gsapObserver.kill();
-                    gsapObserver = null;
+                // Swipe UP at bottom → exit down to #jury
+                if (deltaY > 50 && scrollTop + clientHeight >= scrollHeight - 5 && currentIndex >= reels.length - 1) {
+                    exitCooldown = true;
+                    entryIO.disconnect();
+                    const jury = document.getElementById("jury");
+                    if (jury) jury.scrollIntoView({ behavior: "smooth", block: "start" });
+                    setTimeout(() => { exitCooldown = false; entryIO.observe(reelsSection!); }, 1500);
                 }
 
-                // Navigate to target section
-                // leave-IO will fire fullCleanup() once reels-section is off screen
-                const targetId = direction === "down" ? "jury" : "shows";
-                const target = document.getElementById(targetId);
-                if (target) {
-                    target.scrollIntoView({ behavior: "smooth", block: "start" });
+                // Swipe DOWN at top → exit up to #shows
+                if (deltaY < -50 && scrollTop <= 0 && currentIndex <= 0) {
+                    exitCooldown = true;
+                    entryIO.disconnect();
+                    const shows = document.getElementById("shows");
+                    if (shows) shows.scrollIntoView({ behavior: "smooth", block: "start" });
+                    setTimeout(() => { exitCooldown = false; entryIO.observe(reelsSection!); }, 1500);
                 }
-            }
+            }, { passive: true });
 
             // ── Tap-to-mute ──
             reels.forEach((reel) => {
@@ -498,9 +363,8 @@ const { t } = Astro.props;
 
             // Cleanup for Astro page transitions
             document.addEventListener("astro:before-preparation", () => {
-                fullCleanup();
+                reelObserver.disconnect();
                 entryIO.disconnect();
-                leaveIO.disconnect();
             }, { once: true });
         }
 
@@ -535,14 +399,26 @@ const { t } = Astro.props;
         }
     }
 
-    #reels-track {
-        will-change: transform;
+    /* Mobile Reels: CSS scroll-snap container */
+    .reels-scroll-container {
+        height: 100%;
+        overflow-y: scroll;
+        scroll-snap-type: y mandatory;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior: contain;
+        scrollbar-width: none;          /* Firefox */
+    }
+    .reels-scroll-container::-webkit-scrollbar {
+        display: none;                  /* Chrome/Safari */
     }
 
-    /* Prevent overscroll bounce on the reels section (iOS) */
-    #reels-section {
-        overscroll-behavior: none;
-        touch-action: none;
+    /* Each reel fills the viewport and snaps */
+    .video-reel {
+        height: 100vh;
+        scroll-snap-align: start;
+        scroll-snap-stop: always;
+        position: relative;
+        overflow: hidden;
     }
 </style>
 
