@@ -2,12 +2,14 @@
 interface Quote {
   text: string;
   author: string;
-  role: string;
+  rating: number;
+  timeAgo: string;
 }
 
 interface Props {
   t: {
     sectionTitle: string;
+    subtitle: string;
     quotes: Quote[];
   };
 }
@@ -15,7 +17,7 @@ interface Props {
 const { t } = Astro.props;
 ---
 
-<section id="jury" class="bg-dark relative">
+<section id="reviews" class="bg-dark relative">
     <!-- Scroll-pinned container: height = 100vh per quote + 1 for the heading -->
     <div class="jury-vip-wrapper relative" style={`height: ${(t.quotes.length + 1) * 100}vh;`}>
         <!-- Pinned viewport -->
@@ -26,47 +28,67 @@ const { t } = Astro.props;
                 <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-purple-light/5 rounded-full blur-[180px]"></div>
             </div>
 
-            <!-- Giant decorative quote mark (background) -->
-            <svg class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 md:w-96 md:h-96 text-purple-light/[0.03] pointer-events-none" fill="currentColor" viewBox="0 0 32 32">
-                <path d="M10 8v8h6a6 6 0 0 1-6 6v2a8 8 0 0 0 8-8V8h-8zm12 0v8h6a6 6 0 0 1-6 6v2a8 8 0 0 0 8-8V8h-8z"></path>
-            </svg>
-
             <!-- Section Title (fades out as first quote arrives) -->
             <div class="jury-vip-title absolute inset-0 flex flex-col items-center justify-center px-6 z-10">
-                <span class="text-purple-light font-heading italic text-lg md:text-xl mb-4 block">Reconocimiento Internacional</span>
+                <span class="text-purple-light font-heading italic text-lg md:text-xl mb-4 block">{t.subtitle}</span>
                 <h2 class="text-3xl md:text-5xl lg:text-6xl font-heading text-light leading-tight text-center">
                     {t.sectionTitle}
                 </h2>
                 <div class="w-24 h-1 bg-purple-light mt-6 mx-auto"></div>
             </div>
 
-            <!-- Quote cards (stacked, each fades in/out) -->
+            <!-- Review cards (stacked, each fades in/out) -->
             {t.quotes.map((quote, index) => (
                 <div
                     class={`jury-vip-quote absolute inset-0 flex items-center justify-center px-6 z-10 opacity-0`}
                     data-index={index}
                 >
-                    <div class="max-w-4xl mx-auto text-center">
-                        <!-- Stars row -->
-                        <div class="flex justify-center gap-2 mb-8">
-                            {[...Array(5)].map(() => (
-                                <svg class="w-5 h-5 text-purple-light" fill="currentColor" viewBox="0 0 20 20">
-                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
-                                </svg>
-                            ))}
+                    <div class="max-w-2xl w-full mx-auto bg-smoke/40 backdrop-blur-md p-8 md:p-12 rounded-3xl border border-light/5 shadow-2xl relative">
+                        
+                        <!-- Header: Avatar + Star Rating -->
+                        <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
+                            <div class="flex items-center gap-4">
+                                <!-- Google Style Avatar -->
+                                <div class="w-14 h-14 rounded-full bg-purple-light flex items-center justify-center text-dark font-bold text-xl uppercase shadow-inner">
+                                    {quote.author.charAt(0)}
+                                </div>
+                                <div>
+                                    <h4 class="text-light font-bold text-lg md:text-xl leading-none mb-1">{quote.author}</h4>
+                                    <p class="text-light-muted text-sm">{quote.timeAgo}</p>
+                                </div>
+                            </div>
+
+                            <!-- Gold Stars -->
+                            <div class="flex gap-1">
+                                {[...Array(5)].map((_, i) => (
+                                    <svg 
+                                        class={`w-5 h-5 ${i < quote.rating ? 'text-gold' : 'text-light/20'}`} 
+                                        fill="currentColor" 
+                                        viewBox="0 0 20 20"
+                                    >
+                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                                    </svg>
+                                ))}
+                            </div>
                         </div>
 
-                        <!-- Quote text -->
-                        <p class="text-2xl md:text-4xl lg:text-5xl font-heading italic text-light leading-snug mb-10">
-                            "{quote.text}"
-                        </p>
+                        <!-- Review body -->
+                        <div class="relative">
+                            <svg class="absolute -top-4 -left-2 w-8 h-8 text-light/5 -z-10" fill="currentColor" viewBox="0 0 32 32">
+                                <path d="M10 8v8h6a6 6 0 0 1-6 6v2a8 8 0 0 0 8-8V8h-8zm12 0v8h6a6 6 0 0 1-6 6v2a8 8 0 0 0 8-8V8h-8z"></path>
+                            </svg>
+                            <p class="text-lg md:text-xl text-light/90 leading-relaxed font-body">
+                                {quote.text}
+                            </p>
+                        </div>
 
-                        <!-- Gold divider -->
-                        <div class="w-16 h-0.5 bg-purple-light/40 mx-auto mb-8"></div>
-
-                        <!-- Attribution -->
-                        <p class="text-purple-light font-heading font-bold text-xl md:text-2xl">{quote.author}</p>
-                        <p class="text-light-muted text-sm uppercase tracking-[0.3em] mt-2">{quote.role}</p>
+                        <!-- Google attribution nudge -->
+                        <div class="mt-8 flex items-center justify-end gap-2 opacity-30 grayscale hover:grayscale-0 transition-all duration-300">
+                             <span class="text-xs uppercase tracking-tighter">Publicado en</span>
+                             <svg class="w-16 h-5" viewBox="0 0 74 24" fill="currentColor">
+                                <path d="M11.66 21.08c-2.35 0-4.32-.82-5.75-2.42-1.42-1.61-2.14-3.64-2.14-5.91s.73-4.3 2.16-5.92c1.43-1.61 3.39-2.42 5.73-2.42 1.7 0 3.2.49 4.4 1.44 1.2.95 2.06 2.3 2.45 4.02h-2.52c-.32-.97-.88-1.74-1.65-2.27s-1.67-.8-2.68-.8c-1.53 0-2.81.55-3.78 1.63s-1.45 2.53-1.45 4.32.48 3.25 1.45 4.33c.97 1.08 2.23 1.63 3.76 1.63 1.1 0 2.02-.27 2.76-.8.74-.53 1.28-1.28 1.58-2.23h2.6c-.4 1.77-1.32 3.16-2.68 4.14-1.35.98-2.98 1.48-4.88 1.48zM24.84 21.08c-2.16 0-3.9-.76-5.26-2.26-1.36-1.5-2.04-3.48-2.04-5.94 0-2.43.68-4.4 2.04-5.9 1.36-1.51 3.1-2.26 5.22-2.26s3.87.75 5.24 2.25c1.37 1.49 2.06 3.46 2.06 5.9 0 2.45-.69 4.43-2.06 5.94-1.36 1.5-3.1 2.27-5.26 2.27zm0-2.38c1.37 0 2.47-.53 3.32-1.58.85-1.04 1.28-2.47 1.28-4.28 0-1.8-.43-3.23-1.28-4.28-.85-1.05-1.95-1.58-3.32-1.58-1.35 0-2.46.52-3.32 1.56-.86 1.04-1.29 2.47-1.29 4.3 0 1.83.43 3.26 1.29 4.3.86 1.04 1.97 1.56 3.32 1.56zM40.24 21.08c-2.16 0-3.9-.76-5.26-2.26-1.36-1.5-2.04-3.48-2.04-5.94 0-2.43.68-4.4 2.04-5.9 1.36-1.51 3.11-2.26 5.23-2.26 2.12 0 3.86.75 5.23 2.25 1.37 1.49 2.06 3.46 2.06 5.9 0 2.45-.69 4.43-2.06 5.94-1.36 1.5-3.11 2.27-5.26 2.27zm0-2.38c1.37 0 2.47-.53 3.32-1.58.85-1.04 1.28-2.47 1.28-4.28 0-1.8-.43-3.23-1.28-4.28-.86-1.05-1.96-1.58-3.32-1.58-1.35 0-2.46.52-3.32 1.56-.86 1.04-1.29 2.47-1.29 4.3 0 1.83.43 3.26 1.29 4.3.86 1.04 1.97 1.56 3.32 1.56zM55.12 26.68c-1.83 0-3.34-.44-4.52-1.33s-1.96-2.12-2.32-3.68h2.64c.26.85.73 1.5 1.4 1.95.68.45 1.53.68 2.56.68 1.4 0 2.47-.42 3.2-1.25.74-.83 1.12-2.07 1.12-3.7v-1.12c-.65.85-1.48 1.47-2.48 1.85s-2.08.57-3.24.57c-1.85 0-3.37-.68-4.57-2.04-1.2-1.36-1.8-3.21-1.8-5.55 0-2.34.6-4.2 1.8-5.57 1.2-1.37 2.73-2.06 4.6-2.06 1.23 0 2.32.2 3.26.6 2.16 2 2.26 2.26 2.26 2.26v-2.26h2.44v14.4c.04 2.27-.61 4-1.96 5.18-1.34 1.19-3.13 1.78-5.36 1.78zm.56-11.4c1.17 0 2.12-.46 2.84-1.38.72-.92 1.08-2.26 1.08-4.04 0-1.78-.36-3.13-1.08-4.04-.72-.91-1.67-1.37-2.84-1.37-1.18 0-2.14.46-2.86 1.37-.73.92-1.09 2.26-1.09 4.04 0 1.78.36 3.12 1.09 4.04.73.91 1.68 1.37 2.86 1.37zM66.44 2.12V21h-2.4V2.12h2.4zM73.4 15.68h2.46c-.33 1.76-1.22 3.12-2.65 4.08-1.43.96-3.11 1.44-5.06 1.44-2.2 0-3.95-.75-5.26-2.25-1.31-1.5-1.96-3.48-1.96-5.94 0-2.45.65-4.42 1.94-5.92 1.29-1.5 3-2.25 5.14-2.25 2.12 0 3.79.74 5 2.22 1.2 1.48 1.8 3.4 1.8 5.76v.84h-10.3c.12 1.61.64 2.87 1.56 3.78.92.9 2.06 1.36 3.42 1.36.93 0 1.72-.22 2.36-.66.64-.44 1.16-1.26 1.55-2.46zm-7.66-4h7.68c-.13-1.35-.55-2.38-1.26-3.08-.71-.7-1.62-1.06-2.74-1.06-1.02 0-1.89.36-2.62 1.08-.73.72-1.08 1.74-1.06 3.06z"></path>
+                             </svg>
+                        </div>
                     </div>
                 </div>
             ))}

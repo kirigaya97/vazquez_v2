@@ -359,12 +359,12 @@ const { t } = Astro.props;
                 const deltaY = touchStartY - touchEndY;
                 const { scrollTop, scrollHeight, clientHeight } = reelsContainer;
 
-                // Swipe UP at bottom → exit down to #jury
+                // Swipe UP at bottom → exit down to #reviews
                 if (deltaY > 50 && scrollTop + clientHeight >= scrollHeight - 5 && currentIndex >= reels.length - 1) {
                     exitCooldown = true;
                     entryIO.disconnect();
-                    const jury = document.getElementById("jury");
-                    if (jury) jury.scrollIntoView({ behavior: "smooth", block: "start" });
+                    const reviews = document.getElementById("reviews");
+                    if (reviews) reviews.scrollIntoView({ behavior: "smooth", block: "start" });
                     setTimeout(() => { exitCooldown = false; entryIO.observe(reelsSection!); }, 1500);
                 }
 

@@ -26,8 +26,8 @@
             "href": "#videos"
         },
         {
-            "id": "jury",
-            "href": "#jury"
+            "id": "reviews",
+            "href": "#reviews"
         },
         {
             "id": "stats",
@@ -61,7 +61,7 @@
             "nav": {
                 "shows": "Espectáculos",
                 "videos": "Videos",
-                "jury": "Jueces",
+                "reviews": "Opiniones",
                 "stats": "Cifras",
                 "about": "Sobre Fer",
                 "contact": "Contacto",
@@ -134,13 +134,33 @@
                     }
                 ]
             },
-            "jury": {
-                "sectionTitle": "Lo Que Dicen",
+            "reviews": {
+                "sectionTitle": "Opiniones",
+                "subtitle": "Lo que dicen nuestros clientes",
                 "quotes": [
                     {
-                        "text": "Placeholder — reemplazar con testimonios reales.",
-                        "author": "Nombre",
-                        "role": "Rol"
+                        "text": "Contratamos a Fernando para el cumpleaños de 50 de mi marido y fue un éxito total. Los invitados no paraban de comentar los trucos durante toda la noche. ¡Momento inolvidable!",
+                        "author": "María Gonzalez",
+                        "rating": 5,
+                        "timeAgo": "hace 2 semanas"
+                    },
+                    {
+                        "text": "Lo tuvimos en un evento corporativo de 200 personas y mantuvo a todos hipnotizados. Súper profesional, puntual y el show de mentalismo dejó a todos con la boca abierta.",
+                        "author": "Leandro Pérez",
+                        "rating": 5,
+                        "timeAgo": "hace 1 mes"
+                    },
+                    {
+                        "text": "Fue la mejor decisión para nuestra fiesta de fin de año. Mis hijos quedaron fascinados y los adultos todavía más. Fernando tiene un carisma único que engancha desde el primer minuto.",
+                        "author": "Carolina Ruiz",
+                        "rating": 5,
+                        "timeAgo": "hace 3 meses"
+                    },
+                    {
+                        "text": "Increíble espectáculo en nuestra boda. El momento en que adivinó la canción que elegimos fue mágico. Todos nuestros invitados siguen hablando de eso. 100% recomendado.",
+                        "author": "Tomás y Valentina",
+                        "rating": 5,
+                        "timeAgo": "hace 5 meses"
                     }
                 ]
             },
