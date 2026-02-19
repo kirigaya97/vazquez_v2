@@ -34,8 +34,8 @@
             "href": "#stats"
         },
         {
-            "id": "tickets",
-            "href": "#tickets"
+            "id": "about",
+            "href": "#about"
         },
         {
             "id": "contact",
@@ -63,8 +63,7 @@
                 "videos": "Videos",
                 "jury": "Jueces",
                 "stats": "Cifras",
-                "tickets": "Entradas",
-                "about": "Sobre Mí",
+                "about": "Sobre Fer",
                 "contact": "Contacto",
                 "bookNow": "Reservar"
             },
