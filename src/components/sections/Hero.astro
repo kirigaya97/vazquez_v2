@@ -296,7 +296,7 @@ const columns = [
             document.getElementById("hero-col-2"),
         ].filter(Boolean) as HTMLElement[];
 
-        const delayedCalls: gsap.core.Tween[] = [];
+        const columnTimers: gsap.core.Tween[] = [];
         let immersive = false;
 
         const startPresentation = () => {
@@ -342,7 +342,7 @@ const columns = [
             // Start audio
             audio.play().catch((e) => console.log("Audio play blocked:", e));
 
-            columns.forEach((col) => {
+            columns.forEach((col, colIdx) => {
                 const imgs = Array.from(col.querySelectorAll("img"));
                 if (imgs.length === 0) return;
 
@@ -365,17 +365,23 @@ const columns = [
                     gsap.fromTo(
                         imgs[currentIdx],
                         { opacity: 0, scale: 1.0 },
-                        { opacity: 1, scale: 1.05, duration: 0.4 },
+                        {
+                            opacity: 1,
+                            scale: 1.05,
+                            duration: 0.4,
+                            overwrite: true,
+                        },
                     );
 
                     const delay = window.innerWidth < 768 ? 0.7 : 1.0;
-                    const call = gsap.delayedCall(delay, cycleImage);
-                    delayedCalls.push(call);
+                    columnTimers[colIdx] = gsap.delayedCall(delay, cycleImage);
                 };
 
                 const initialDelay = window.innerWidth < 768 ? 0.7 : 1.0;
-                const call = gsap.delayedCall(initialDelay, cycleImage);
-                delayedCalls.push(call);
+                columnTimers[colIdx] = gsap.delayedCall(
+                    initialDelay,
+                    cycleImage,
+                );
             });
         };
 
@@ -383,8 +389,8 @@ const columns = [
             if (!immersive) return;
             immersive = false;
 
-            delayedCalls.forEach((call) => call.kill());
-            delayedCalls.length = 0;
+            columnTimers.forEach((call) => call.kill());
+            columnTimers.length = 0;
 
             gsap.to(audio, {
                 volume: 0,
@@ -490,8 +496,8 @@ const columns = [
             trigger.removeEventListener("touchstart", handleTriggerTouch);
             window.removeEventListener("touchstart", handleGlobalTouch);
             exitIO.disconnect();
-            delayedCalls.forEach((call) => call.kill());
-            delayedCalls.length = 0;
+            columnTimers.forEach((call) => call.kill());
+            columnTimers.length = 0;
             audio.pause();
             audio.currentTime = 0;
             tl.kill();

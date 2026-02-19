@@ -13,7 +13,7 @@ const isBot = /bot|crawl|spider|slurp|googlebot|bingbot|yandex|baidu|duckduckbot
 >
     <!-- GIF with round clip and high contrast -->
     <div
-        class="intro-gif-container w-48 h-48 md:w-64 md:h-64 rounded-full overflow-hidden mb-12 border-2 border-purple-light/30 shadow-[0_0_40px_rgba(149,130,217,0.2)]"
+        class="intro-gif-container w-48 h-48 md:w-64 md:h-64 rounded-full overflow-hidden mb-12 border-2 border-purple-light/30 shadow-[0_0_40px_rgba(149,130,217,0.2)] opacity-0 scale-[0.8]"
     >
         <img
             src="/videos/SombrasGIF.gif"
@@ -25,7 +25,7 @@ const isBot = /bot|crawl|spider|slurp|googlebot|bingbot|yandex|baidu|duckduckbot
     <!-- Button -->
     <button
         id="intro-enter-btn"
-        class="font-body font-bold uppercase text-purple-light border border-purple-light/60 px-10 py-4 rounded-full text-lg md:text-xl hover:bg-purple-light/10 hover:border-purple-light transition-all duration-300 shadow-[0_0_20px_rgba(149,130,217,0.1)] active:scale-95 tracking-widest"
+        class="font-body font-bold uppercase text-purple-light border border-purple-light/60 px-10 py-4 rounded-full text-lg md:text-xl hover:bg-purple-light/10 hover:border-purple-light transition-all duration-300 shadow-[0_0_20px_rgba(149,130,217,0.1)] active:scale-95 tracking-widest opacity-0 translate-y-5"
     >
         Descubrí la magia
     </button>
@@ -35,6 +35,13 @@ const isBot = /bot|crawl|spider|slurp|googlebot|bingbot|yandex|baidu|duckduckbot
     import { gsap } from "../lib/gsap-init";
 
     function initIntroReveal() {
+        // Only show on first visit or full page reload
+        if (sessionStorage.getItem("intro-seen")) {
+            const overlay = document.getElementById("intro-reveal");
+            if (overlay) overlay.remove();
+            return;
+        }
+
         const overlay = document.getElementById("intro-reveal");
         const btn = document.getElementById("intro-enter-btn");
 
@@ -44,9 +51,7 @@ const isBot = /bot|crawl|spider|slurp|googlebot|bingbot|yandex|baidu|duckduckbot
         document.body.style.overflow = "hidden";
 
         // Entrance animation
-        gsap.set(".intro-gif-container", { opacity: 0, scale: 0.8 });
-        gsap.set(btn, { opacity: 0, y: 20 });
-
+        // GSAP will animate from the Tailwind initial states (opacity-0 etc.)
         const tl = gsap.timeline();
         tl.to(".intro-gif-container", {
             opacity: 1,
@@ -75,8 +80,10 @@ const isBot = /bot|crawl|spider|slurp|googlebot|bingbot|yandex|baidu|duckduckbot
         });
 
         btn.addEventListener("click", () => {
+            // Set session flag so loader doesn't re-appear on soft navigations
+            sessionStorage.setItem("intro-seen", "1");
+
             // 1. Unlock audio — play+pause a silent buffer
-            // We use the same track that the hero uses to ensure it's "warmed up"
             const silentUnlock = new Audio("/mp3/hero-track.mp3");
             silentUnlock.volume = 0;
             silentUnlock
@@ -100,8 +107,9 @@ const isBot = /bot|crawl|spider|slurp|googlebot|bingbot|yandex|baidu|duckduckbot
         });
     }
 
-    // Run on mount
-    initIntroReveal();
+    // Run on every page load (View Transitions)
+    // The sessionStorage guard inside handles the logic
+    document.addEventListener("astro:page-load", initIntroReveal);
 
     // Note: Since this is an intro screen, we usually only want it once per session,
     // but for development and to satisfy the requirement, we'll keep it simple.
