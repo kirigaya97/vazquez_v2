@@ -170,10 +170,14 @@
                     }
                 ]
             },
-            "tickets": {
-                "sectionTitle": "Entradas",
-                "subtitle": "No te pierdas mis próximos shows públicos. Próximas fechas disponibles.",
-                "cta": "Comprar Entradas"
+            "aboutMe": {
+                "sectionTitle": "Sobre Fer",
+                "image": "/images/about-me.png",
+                "welcome": "¡Buenas!",
+                "intro": "Acá te habla Fer y quiero contarte brevemente por qué deberías elegirme.",
+                "body": "Soy un obsesionado por la magia, amo sus detalles y sus maneras de relacionarse con nuestro mundo cotidiano. Amo mi trabajo y cada vez que hago un show, se nota. Por eso creo firmemente en que lo vamos a pasar increíble en tu evento, porque todo lo que vas a ver en el show, está cuidado, estudiado, puesto a prueba y hecho con mucho amor para compartir una experiencia completamente única con tus invitados.",
+                "outro": "Nos vemos en tu evento.",
+                "signature": "Fernando Vazquez"
             },
             "contact": {
                 "sectionTitle": "Contacto",

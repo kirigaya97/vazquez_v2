@@ -1,0 +1,86 @@
+---
+import Reveal from "../ui/Reveal.astro";
+
+interface Props {
+    t: {
+        sectionTitle: string;
+        image: string;
+        welcome: string;
+        intro: string;
+        body: string;
+        outro: string;
+        signature: string;
+    };
+}
+
+const { t } = Astro.props;
+---
+
+<section id="about" class="py-section-mobile md:py-section bg-dark px-6">
+    <div
+        class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 items-center"
+    >
+        <!-- Image column -->
+        <Reveal>
+            <div class="relative mx-auto md:mx-0 max-w-sm md:max-w-none group">
+                <!-- Warm glow behind image -->
+                <div
+                    class="absolute -inset-8 bg-accent-warm/10 rounded-full blur-3xl pointer-events-none group-hover:bg-accent-warm/20 transition-colors duration-700"
+                >
+                </div>
+                <img
+                    src={t.image}
+                    alt={t.signature}
+                    class="relative w-full rounded-2xl border border-purple-light/20 shadow-2xl grayscale-[0.2] group-hover:grayscale-0 transition-all duration-700"
+                />
+            </div>
+        </Reveal>
+
+        <!-- Text column -->
+        <div class="space-y-6">
+            <Reveal>
+                <div class="w-12 h-1 bg-accent-warm rounded-full"></div>
+                <h2 class="text-3xl md:text-5xl font-heading text-light mt-4">
+                    {t.sectionTitle}
+                </h2>
+            </Reveal>
+
+            <Reveal>
+                <p
+                    class="text-lg md:text-xl text-light font-body leading-relaxed"
+                >
+                    <span
+                        class="text-accent-warm font-bold text-xl md:text-2xl"
+                    >
+                        {t.welcome}
+                    </span>
+                    <br />
+                    {t.intro}
+                </p>
+            </Reveal>
+
+            <Reveal>
+                <p
+                    class="text-base md:text-lg text-light-muted font-body leading-relaxed"
+                >
+                    {t.body}
+                </p>
+            </Reveal>
+
+            <Reveal>
+                <div class="pt-4">
+                    <p
+                        class="text-base md:text-lg text-light-muted font-body leading-relaxed"
+                    >
+                        {t.outro}
+                    </p>
+                    <p
+                        class="mt-4 text-purple-light font-heading italic text-lg md:text-xl"
+                    >
+                        — {t.signature}
+                    </p>
+                </div>
+            </Reveal>
+        </div>
+    </div>
+</section>
