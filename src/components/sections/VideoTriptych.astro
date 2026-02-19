@@ -331,6 +331,13 @@ const { t } = Astro.props;
                                 reel.querySelector(".icon-muted")?.classList.remove("hidden");
                                 reel.querySelector(".icon-unmuted")?.classList.add("hidden");
                             });
+                        } else {
+                            // Re-trigger play for the currently visible reel
+                            const visibleReel = reels[currentIndex];
+                            if (visibleReel) {
+                                const v = visibleReel.querySelector("video");
+                                if (v) v.play().catch(() => {});
+                            }
                         }
                     });
                 },

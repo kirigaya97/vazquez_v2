@@ -355,6 +355,14 @@ const columns = [
                     const prevIdx = currentIdx;
                     currentIdx = (currentIdx + 1) % imgs.length;
 
+                    // Kill any stale tweens and hide all images except the outgoing one
+                    imgs.forEach((img, i) => {
+                        if (i !== prevIdx && i !== currentIdx) {
+                            gsap.killTweensOf(img);
+                            gsap.set(img, { opacity: 0 });
+                        }
+                    });
+
                     // Crossfade
                     gsap.to(imgs[prevIdx], {
                         opacity: 0,
@@ -362,22 +370,21 @@ const columns = [
                         duration: 0.4,
                         overwrite: true,
                     });
-                    gsap.fromTo(
-                        imgs[currentIdx],
-                        { opacity: 0, scale: 1.0 },
-                        {
-                            opacity: 1,
-                            scale: 1.05,
-                            duration: 0.4,
-                            overwrite: true,
-                        },
-                    );
 
-                    const delay = window.innerWidth < 768 ? 0.7 : 1.0;
+                    // Use set + to instead of fromTo to avoid the single-frame flash
+                    gsap.set(imgs[currentIdx], { scale: 1.0 });
+                    gsap.to(imgs[currentIdx], {
+                        opacity: 1,
+                        scale: 1.05,
+                        duration: 0.4,
+                        overwrite: true,
+                    });
+
+                    const delay = window.innerWidth < 768 ? 1.0 : 1.2;
                     columnTimers[colIdx] = gsap.delayedCall(delay, cycleImage);
                 };
 
-                const initialDelay = window.innerWidth < 768 ? 0.7 : 1.0;
+                const initialDelay = window.innerWidth < 768 ? 1.0 : 1.2;
                 columnTimers[colIdx] = gsap.delayedCall(
                     initialDelay,
                     cycleImage,
