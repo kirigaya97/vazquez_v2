@@ -219,10 +219,14 @@ const { t } = Astro.props;
                         video.play().catch(() => {});
                     } else {
                         video.pause();
+                        video.muted = true;
+                        // Reset icons
+                        entry.target.querySelector(".icon-muted")?.classList.remove("hidden");
+                        entry.target.querySelector(".icon-unmuted")?.classList.add("hidden");
                     }
                 });
             },
-            { threshold: 0.2 }
+            { threshold: 0 }
         );
         desktopCells.forEach((cell) => desktopObserver.observe(cell));
 
@@ -313,6 +317,27 @@ const { t } = Astro.props;
             );
             entryIO.observe(reelsSection);
 
+            // ── PERFORMANCE: Global mute/pause when section leaves viewport ──
+            const performanceIO = new IntersectionObserver(
+                (entries) => {
+                    entries.forEach((entry) => {
+                        if (!entry.isIntersecting) {
+                            reels.forEach(reel => {
+                                const v = reel.querySelector("video");
+                                if (v) {
+                                    v.pause();
+                                    v.muted = true;
+                                }
+                                reel.querySelector(".icon-muted")?.classList.remove("hidden");
+                                reel.querySelector(".icon-unmuted")?.classList.add("hidden");
+                            });
+                        }
+                    });
+                },
+                { threshold: 0 }
+            );
+            performanceIO.observe(reelsSection);
+
             // ── Exit logic: detect overscroll attempts at boundaries ──
             let touchStartY = 0;
             let exitCooldown = false;
@@ -365,6 +390,7 @@ const { t } = Astro.props;
             document.addEventListener("astro:before-preparation", () => {
                 reelObserver.disconnect();
                 entryIO.disconnect();
+                performanceIO.disconnect();
             }, { once: true });
         }
 
