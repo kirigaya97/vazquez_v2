@@ -11,6 +11,7 @@
   --color-light-muted: #D9D9D9;
   --color-smoke: #2A2A2A;
   --color-accent-warm: #E8C547;
+  --color-gold: var(--color-accent-warm);
 
   /* Fonts */
   --font-heading: 'Playfair Display', Georgia, serif;
