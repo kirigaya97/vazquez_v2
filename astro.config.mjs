@@ -4,7 +4,7 @@ import vercel from '@astrojs/vercel';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://vazquezilusionista.com',
+  site: 'https://vazquezilusionista.com.ar',
   adapter: vercel(),
   integrations: [
   ],
