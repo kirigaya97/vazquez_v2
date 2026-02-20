@@ -172,7 +172,6 @@ html {
 /* ═══ Hero Trigger Pulsing Glow (GPU-composited) ═══ */
 .hero-trigger-glow {
   border-radius: 50%;
-  position: relative;
 }
 
 .hero-trigger-glow::before {
