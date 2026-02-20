@@ -87,7 +87,7 @@ const { t } = Astro.props;
                             muted
                             loop
                             playsinline
-                            preload="metadata"
+                            preload={i === 0 ? "metadata" : "none"}
                         />
 
                         <!-- Dark gradient overlay -->

@@ -1,6 +1,8 @@
 ﻿---
+import { Image } from "astro:assets";
 import Button from "../ui/Button.astro";
 import siteConfig from "../../data/site-config.json";
+import heroForeground from "../../assets/hero/hero_foreground.png";
 
 interface Props {
     t: {
@@ -83,13 +85,14 @@ const columns = [
         id="hero-foreground"
         class="absolute inset-0 flex items-end justify-center md:justify-end md:translate-x-[5vw] z-10 pointer-events-none"
     >
-        <img
-            src="/images/hero_foreground.png"
+        <Image
+            src={heroForeground}
             alt="Fernando Vazquez"
             class="h-[50vh] md:h-[60vh] w-auto max-w-none md:max-w-full object-contain object-bottom"
+            loading="eager"
             fetchpriority="high"
-            width="578"
-            height="432"
+            format="webp"
+            quality={80}
         />
     </div>
 
