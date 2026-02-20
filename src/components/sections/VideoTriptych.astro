@@ -98,10 +98,12 @@ const { t } = Astro.props;
                             <div class="relative mb-2">
                                 <div class="w-11 h-11 rounded-full border-2 border-purple-light overflow-hidden bg-dark-gray">
                                     <img
-                                        src="/images/hero_foreground.png"
+                                        src="/images/avatar-thumb.webp"
                                         alt="Fernando"
                                         class="w-full h-full object-cover"
                                         loading="lazy"
+                                        width="88"
+                                        height="88"
                                     />
                                 </div>
                                 <div class="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-5 h-5 bg-purple-light rounded-full flex items-center justify-center">
@@ -147,7 +149,7 @@ const { t } = Astro.props;
                                 <span class="text-light text-[11px] font-body font-semibold">Guardar</span>
                             </button>
 
-                            <button class="reel-sound-toggle flex flex-col items-center gap-1">
+                            <button class="reel-sound-toggle flex flex-col items-center gap-1" aria-label="Toggle sound">
                                 <div class="w-10 h-10 flex items-center justify-center rounded-full bg-dark/40 backdrop-blur-sm border border-white/10">
                                     <svg class="icon-muted w-5 h-5 text-light" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                         <path d="M11 5 6 9H2v6h4l5 4V5z" /><line x1="23" y1="9" x2="17" y2="15" /><line x1="17" y1="9" x2="23" y2="15" />

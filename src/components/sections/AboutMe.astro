@@ -32,6 +32,10 @@ const { t } = Astro.props;
                     src={t.image}
                     alt={t.signature}
                     class="relative w-full rounded-2xl border border-purple-light/20 shadow-2xl grayscale-[0.2] group-hover:grayscale-0 transition-all duration-700 scale-x-[-1] group-hover:scale-x-[-1.05] group-hover:scale-y-[1.05]"
+                    loading="lazy"
+                    decoding="async"
+                    width="577"
+                    height="433"
                 />
             </div>
         </Reveal>

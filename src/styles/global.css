@@ -169,24 +169,34 @@ html {
   animation: orbitText 10s linear infinite;
 }
 
-/* ═══ Hero Trigger Pulsing Glow ═══ */
-@keyframes triggerPulse {
+/* ═══ Hero Trigger Pulsing Glow (GPU-composited) ═══ */
+.hero-trigger-glow {
+  border-radius: 50%;
+  position: relative;
+}
+
+.hero-trigger-glow::before {
+  content: '';
+  position: absolute;
+  inset: -10px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(149, 130, 217, 0.35) 0%, transparent 70%);
+  opacity: 0.4;
+  animation: triggerPulseGpu 2.5s ease-in-out infinite;
+  pointer-events: none;
+  z-index: -1;
+}
+
+@keyframes triggerPulseGpu {
 
   0%,
   100% {
-    box-shadow:
-      0 0 30px rgba(149, 130, 217, 0.15),
-      0 0 60px rgba(149, 130, 217, 0.08);
+    opacity: 0.3;
+    transform: scale(1);
   }
 
   50% {
-    box-shadow:
-      0 0 50px rgba(149, 130, 217, 0.35),
-      0 0 100px rgba(149, 130, 217, 0.15);
+    opacity: 0.7;
+    transform: scale(1.15);
   }
-}
-
-.hero-trigger-glow {
-  border-radius: 50%;
-  animation: triggerPulse 2.5s ease-in-out infinite;
 }
