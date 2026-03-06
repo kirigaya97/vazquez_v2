@@ -285,34 +285,74 @@ const TOTAL_IMAGES = 105;
         const columnTimers: gsap.core.Tween[] = [];
         let immersive = false;
 
+        // ── Idle preload: seed images per column ─────────────────────────────
+        // Seeds are pre-created as DOM nodes AND fetched via new Image() so
+        // the browser caches them. When the trigger fires, the first frames
+        // render instantly without a network round-trip.
+        const SEEDS_PER_COL = 3;
+        const TOTAL_IMAGES = 105;
+        const COL_SIZE = Math.ceil(TOTAL_IMAGES / 3);
+
+        function createImageNode(globalIdx: number, eager = false) {
+            const img = document.createElement("img");
+            img.src = `/images/hero-presentation-webp/hero-${(globalIdx + 1).toString().padStart(2, "00")}.webp`;
+            img.className =
+                "absolute inset-0 w-full h-full object-cover opacity-0 scale-100";
+            img.dataset.imgIdx = globalIdx.toString();
+            img.loading = eager ? "eager" : "lazy";
+            img.decoding = "async";
+            img.width = 400;
+            img.height = 800;
+            return img;
+        }
+
+        // Phase 1 — seed preload (runs at idle after entrance anim completes)
+        const schedulePreload = () => {
+            const ric =
+                (window as any).requestIdleCallback ??
+                ((cb: () => void) => setTimeout(cb, 200));
+            ric(() => {
+                if (imagesLoaded) return; // already fully loaded, skip
+                columns.forEach((col, colIdx) => {
+                    const startIdx = colIdx * COL_SIZE;
+                    for (let i = startIdx; i < startIdx + SEEDS_PER_COL; i++) {
+                        if (i >= Math.min(startIdx + COL_SIZE, TOTAL_IMAGES))
+                            break;
+                        const node = createImageNode(i, true);
+                        col.appendChild(node);
+                        // Prime browser cache via a detached Image
+                        const preloader = new Image();
+                        preloader.src = node.src;
+                    }
+                });
+            });
+        };
+
+        // Schedule seed preload after entrance animation (~2s)
+        setTimeout(schedulePreload, 2000);
+
+        // Phase 2 — fill remaining images (runs once on first trigger)
+        const ensureImagesLoaded = () => {
+            if (imagesLoaded) return;
+            imagesLoaded = true;
+
+            columns.forEach((col, colIdx) => {
+                const startIdx = colIdx * COL_SIZE;
+                const seedsInDom = col.querySelectorAll("img").length;
+                const endIdx = Math.min(startIdx + COL_SIZE, TOTAL_IMAGES);
+
+                for (let i = startIdx + seedsInDom; i < endIdx; i++) {
+                    col.appendChild(createImageNode(i, true));
+                }
+            });
+        };
+
         const startPresentation = () => {
             if (immersive) return;
             immersive = true;
 
-            // Load images dynamically if not already loaded
-            if (!imagesLoaded) {
-                imagesLoaded = true;
-                const totalImages = 105;
-                const colSize = Math.ceil(totalImages / 3);
-
-                columns.forEach((col, colIdx) => {
-                    const startIdx = colIdx * colSize;
-                    const endIdx = Math.min(startIdx + colSize, totalImages);
-
-                    for (let i = startIdx; i < endIdx; i++) {
-                        const img = document.createElement("img");
-                        img.src = `/images/hero-presentation-webp/hero-${(i + 1).toString().padStart(2, "0")}.webp`;
-                        img.className =
-                            "absolute inset-0 w-full h-full object-cover opacity-0 scale-100";
-                        img.dataset.imgIdx = i.toString();
-                        img.loading = "eager";
-                        img.decoding = "async";
-                        img.width = 400;
-                        img.height = 800;
-                        col.appendChild(img);
-                    }
-                });
-            }
+            // Ensure all images exist (seeds already there, rest appended now)
+            ensureImagesLoaded();
 
             // Fade out foreground, fade in presentation
             gsap.to(foreground, { opacity: 0, duration: 0.5, overwrite: true });
@@ -357,9 +397,11 @@ const TOTAL_IMAGES = 105;
                 const imgs = Array.from(col.querySelectorAll("img"));
                 if (imgs.length === 0) return;
 
-                let currentIdx = Math.floor(Math.random() * imgs.length);
+                // Start from a seeded image (guaranteed in cache)
+                const seedCount = Math.min(SEEDS_PER_COL, imgs.length);
+                let currentIdx = Math.floor(Math.random() * seedCount);
 
-                // Show initial random image
+                // Show initial seeded image instantly
                 gsap.set(imgs[currentIdx], { opacity: 1, scale: 1.05 });
 
                 const cycleImage = () => {
