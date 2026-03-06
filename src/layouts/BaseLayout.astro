@@ -2,14 +2,23 @@
 import { ClientRouter } from "astro:transitions";
 import IntroReveal from "../components/IntroReveal.astro";
 import "../styles/global.css";
+import { getImage } from "astro:assets";
+import heroForeground from "../assets/hero/hero_foreground.png";
 
 interface Props {
   title: string;
   description: string;
   lang?: string;
+  preloadHero?: boolean;
 }
 
-const { title, description, lang = "es" } = Astro.props;
+const { title, description, lang = "es", preloadHero = true } = Astro.props;
+
+const optimizedHero = await getImage({
+  src: heroForeground,
+  format: "webp",
+  quality: 80,
+});
 ---
 
 <!doctype html>
@@ -41,6 +50,18 @@ const { title, description, lang = "es" } = Astro.props;
     </noscript>
 
     <ClientRouter />
+
+    <!-- Preload LCP Image -->
+    {
+      preloadHero && (
+        <link
+          rel="preload"
+          as="image"
+          href={optimizedHero.src}
+          fetchpriority="high"
+        />
+      )
+    }
   </head>
   <body>
     <IntroReveal />

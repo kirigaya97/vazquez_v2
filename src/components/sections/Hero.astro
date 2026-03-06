@@ -22,20 +22,7 @@ interface Props {
 
 const { t } = Astro.props;
 
-// Image pools for presentation
-const presentationImages = Array.from(
-    { length: 105 },
-    (_, i) =>
-        `/images/hero-presentation-webp/hero-${(i + 1).toString().padStart(2, "0")}.webp`,
-);
-
-// Split images into 3 columns for desktop
-const colSize = Math.ceil(presentationImages.length / 3);
-const columns = [
-    presentationImages.slice(0, colSize),
-    presentationImages.slice(colSize, colSize * 2),
-    presentationImages.slice(colSize * 2),
-];
+const TOTAL_IMAGES = 105;
 ---
 
 <section
@@ -51,24 +38,12 @@ const columns = [
         class="absolute inset-0 grid grid-cols-1 md:grid-cols-3 opacity-0 z-[5] pointer-events-none"
     >
         {
-            columns.map((colImages, colIdx) => (
+            [0, 1, 2].map((colIdx) => (
                 <div
                     id={`hero-col-${colIdx}`}
                     class={`relative overflow-hidden ${colIdx > 0 ? "hidden md:block" : "col-span-1"}`}
-                >
-                    {colImages.map((src, imgIdx) => (
-                        <img
-                            src={src}
-                            alt=""
-                            class="absolute inset-0 w-full h-full object-cover opacity-0 scale-100"
-                            data-img-idx={imgIdx}
-                            loading="lazy"
-                            decoding="async"
-                            width="400"
-                            height="800"
-                        />
-                    ))}
-                </div>
+                    data-col-index={colIdx}
+                />
             ))
         }
     </div>
@@ -124,7 +99,7 @@ const columns = [
         class="hero-trigger-glow absolute bottom-[calc(2.5rem+3vh)] left-6 w-[140px] h-[140px] md:bottom-16 md:left-10 md:w-[200px] md:h-[200px] flex items-center justify-center cursor-pointer select-none z-[30]"
         role="button"
         tabindex="0"
-        aria-label={t.hoverPrompt}
+        aria-label={t.tapPrompt}
         data-cursor="magic"
     >
         <!-- 3D Spinning Star -->
@@ -239,11 +214,10 @@ const columns = [
 </section>
 
 <script>
-    import { gsap } from "../../lib/gsap-init";
-
     let heroCleanup: (() => void) | null = null;
+    let imagesLoaded = false;
 
-    function initHero() {
+    async function initHero() {
         if (heroCleanup) {
             heroCleanup();
             heroCleanup = null;
@@ -262,6 +236,8 @@ const columns = [
         // 1. Audio Setup
         const audio = new Audio("/mp3/hero-track.mp3");
         audio.loop = true;
+
+        const { gsap } = await import("../../lib/gsap-init");
 
         // Set initial hidden state via GSAP (not Tailwind classes)
         gsap.set(".hero-title", { opacity: 0, y: 20, filter: "blur(20px)" });
@@ -312,6 +288,31 @@ const columns = [
         const startPresentation = () => {
             if (immersive) return;
             immersive = true;
+
+            // Load images dynamically if not already loaded
+            if (!imagesLoaded) {
+                imagesLoaded = true;
+                const totalImages = 105;
+                const colSize = Math.ceil(totalImages / 3);
+
+                columns.forEach((col, colIdx) => {
+                    const startIdx = colIdx * colSize;
+                    const endIdx = Math.min(startIdx + colSize, totalImages);
+
+                    for (let i = startIdx; i < endIdx; i++) {
+                        const img = document.createElement("img");
+                        img.src = `/images/hero-presentation-webp/hero-${(i + 1).toString().padStart(2, "0")}.webp`;
+                        img.className =
+                            "absolute inset-0 w-full h-full object-cover opacity-0 scale-100";
+                        img.dataset.imgIdx = i.toString();
+                        img.loading = "eager";
+                        img.decoding = "async";
+                        img.width = 400;
+                        img.height = 800;
+                        col.appendChild(img);
+                    }
+                });
+            }
 
             // Fade out foreground, fade in presentation
             gsap.to(foreground, { opacity: 0, duration: 0.5, overwrite: true });

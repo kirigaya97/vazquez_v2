@@ -88,10 +88,12 @@ const currentYear = new Date().getFullYear();
         <div
             class="mt-16 pt-8 border-t border-smoke/30 flex flex-col md:flex-row justify-between items-center gap-6"
         >
-            <p class="text-xs text-smoke font-body text-center md:text-left">
+            <p
+                class="text-xs text-[#8a8a8a] font-body text-center md:text-left"
+            >
                 {t.copyright.replace("2026", currentYear.toString())}
             </p>
-            <div class="flex gap-6 text-xs text-smoke font-body">
+            <div class="flex gap-6 text-xs text-[#8a8a8a] font-body">
                 <a
                     href="/privacy"
                     class="hover:text-purple-light transition-colors"
@@ -110,18 +112,18 @@ const currentYear = new Date().getFullYear();
             class="mt-8 text-center opacity-40 hover:opacity-100 transition-opacity duration-500"
         >
             <p class="text-[10px] tracking-widest font-body uppercase">
-                <span class="text-[#74ACDF]">{t.madeBy}</span>
-                <span class="text-light">{t.with}</span>
+                <span class="text-[#69B4E8]">{t.madeBy}</span>
+                <span class="text-[#9a9c9b]">{t.with}</span>
                 <span
                     class="text-gold text-sm inline-block transform translate-y-[1px]"
                     >❤</span
                 >
-                <span class="text-light">{t.in}</span>
-                <span class="text-[#74ACDF]">Argentina</span>.
+                <span class="text-[#9a9c9b]">{t.in}</span>
+                <span class="text-[#69B4E8]">Argentina</span>.
                 <a
                     href="https://dev.rodrigocamino.com/"
                     target="_blank"
-                    class="ml-1 text-light-muted hover:text-purple-light transition-colors underline decoration-purple-light/20 underline-offset-4"
+                    class="ml-1 text-[#9a9c9b] hover:text-purple-light transition-colors underline decoration-purple-light/20 underline-offset-4"
                 >
                     Rodrigo Camino
                 </a>
