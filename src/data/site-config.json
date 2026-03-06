@@ -139,28 +139,34 @@
                 "subtitle": "Lo que dicen nuestros clientes",
                 "quotes": [
                     {
-                        "text": "Contratamos a Fernando para el cumpleaños de 50 de mi marido y fue un éxito total. Los invitados no paraban de comentar los trucos durante toda la noche. ¡Momento inolvidable!",
-                        "author": "María Gonzalez",
+                        "text": "Una excelente animación; trucos de 'adivinación mental' sorprendentes y todo en clima muy amigable e ingenioso. Fer y Lu vinieron a casa, fueron puntuales, prolijos y mágicos literalmente hablando. Fueron la mejor opción para un cumple sorpresa con gente de edad muy variada. Los recomiendo; no se pierdan la 'adivinación de sueños'. Es lo masss. Todos los invitados quedaron encantados.",
+                        "author": "Laura Mi",
                         "rating": 5,
-                        "timeAgo": "hace 2 semanas"
+                        "timeAgo": "Cliente Verificado"
                     },
                     {
-                        "text": "Lo tuvimos en un evento corporativo de 200 personas y mantuvo a todos hipnotizados. Súper profesional, puntual y el show de mentalismo dejó a todos con la boca abierta.",
-                        "author": "Leandro Pérez",
+                        "text": "No tengan dudas, vale la pena contratarlo. Es cierto que todos nos quedamos hablando del show, una vez finalizado. Hizo que mi reunión sea aún mejor, descontracturando a la gente. Es excelente.",
+                        "author": "Graciela Bavio",
                         "rating": 5,
-                        "timeAgo": "hace 1 mes"
+                        "timeAgo": "Cliente Verificado"
                     },
                     {
-                        "text": "Fue la mejor decisión para nuestra fiesta de fin de año. Mis hijos quedaron fascinados y los adultos todavía más. Fernando tiene un carisma único que engancha desde el primer minuto.",
-                        "author": "Carolina Ruiz",
+                        "text": "Fernando realmente nos hizo pasar un bellísimo momento con sus trucos de magia, mentalismo y sombras chinescas, super recomendable.",
+                        "author": "Gabriela Dandolo",
                         "rating": 5,
-                        "timeAgo": "hace 3 meses"
+                        "timeAgo": "Cliente Verificado"
                     },
                     {
-                        "text": "Increíble espectáculo en nuestra boda. El momento en que adivinó la canción que elegimos fue mágico. Todos nuestros invitados siguen hablando de eso. 100% recomendado.",
-                        "author": "Tomás y Valentina",
+                        "text": "Excelente espectáculo. Muy buena energía y todo muy profesional. Gracias !!",
+                        "author": "Guillermo Cinelli",
                         "rating": 5,
-                        "timeAgo": "hace 5 meses"
+                        "timeAgo": "Cliente Verificado"
+                    },
+                    {
+                        "text": "Excelente noche con magia e ilusionismo Asombro y diversión asegurada !!",
+                        "author": "Cristina Pinelli",
+                        "rating": 5,
+                        "timeAgo": "Cliente Verificado"
                     }
                 ]
             },

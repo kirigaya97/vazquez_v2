@@ -6,7 +6,10 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "map": "node scripts/map-context.mjs",
+    "map:full": "node scripts/map-context.mjs --full",
+    "map:dry": "node scripts/map-context.mjs --full --dry-run"
   },
   "dependencies": {
     "@astrojs/vercel": "^9.0.4",
