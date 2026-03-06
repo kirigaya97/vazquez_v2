@@ -2,6 +2,7 @@
 import SectionHeading from "../ui/SectionHeading.astro";
 import Reveal from "../ui/Reveal.astro";
 import GoldenBorder from "../ui/GoldenBorder.astro";
+import siteConfig from "../../data/site-config.json";
 
 interface ShowItem {
     id: string;
@@ -73,7 +74,11 @@ const { t } = Astro.props;
                                         <p class="text-light-muted leading-relaxed text-sm mb-6 max-w-[90%] line-clamp-4">
                                             {show.description}
                                         </p>
-                                        <div class="inline-flex items-center gap-2 text-purple-light text-xs font-bold uppercase tracking-widest border-b border-purple-light/30 pb-1">
+                                        <a
+                                            href={`https://wa.me/${siteConfig.contact.whatsapp.replace(/\+/g, "")}?text=${encodeURIComponent(`Hola Fer, quiero más información sobre ${show.title}`)}`}
+                                            target="_blank"
+                                            class="inline-flex items-center gap-2 text-purple-light text-xs font-bold uppercase tracking-widest border-b border-purple-light/30 pb-1 hover:text-white transition-colors"
+                                        >
                                             Más información
                                             <svg
                                                 xmlns="http://www.w3.org/2000/svg"
@@ -90,7 +95,7 @@ const { t } = Astro.props;
                                                     <path d="m12 5 7 7-7 7" />
                                                 </>
                                             </svg>
-                                        </div>
+                                        </a>
                                     </div>
                                 </div>
                             </div>

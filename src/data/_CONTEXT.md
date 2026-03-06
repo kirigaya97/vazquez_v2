@@ -1,19 +1,20 @@
 # 📁 src/data
 
 ## Propósito
-Este directorio centraliza la configuración global, el contenido estático y las traducciones del proyecto, funcionando como la "fuente de verdad" (Single Source of Truth) para la identidad visual y los textos del sitio.
+Este directorio centraliza la configuración global, la identidad visual y todo el contenido textual del sitio. Actúa como la "única fuente de verdad" para facilitar el mantenimiento de textos, enlaces y parámetros de marca sin modificar la estructura de los componentes.
 
 ## Archivos
 | Archivo | Descripción |
 |---|---|
-| site-config.json | Configuración maestra que contiene branding, navegación, metadatos i18n, datos de contacto y el contenido de todas las secciones del sitio. |
+| `site-config.json` | Configuración maestra que contiene branding, navegación, información de contacto, redes sociales y todas las traducciones de las secciones del sitio. |
 
 ## Relaciones
-- **Usa**: Ninguno (archivo de datos estático).
-- **Usado por**: Componentes en `src/components/`, layouts en `src/layouts/` y páginas en `src/pages/` para la inyección de contenido y configuración de UI.
+- **Usa**: No aplica (archivo de datos estáticos).
+- **Usado por**: Componentes en `src/components/`, layouts en `src/layouts/` y páginas en `src/pages/` para renderizar contenido dinámico y aplicar estilos de marca.
 
 ## Detalles clave
-- **Internacionalización (i18n)**: El archivo gestiona todas las traducciones bajo el objeto `translations.es`, facilitando la escalabilidad a otros idiomas en el futuro.
-- **Branding Dinámico**: Define la paleta de colores (Primary, Accent, etc.) y tipografías que deben ser consistentes con la configuración de Tailwind CSS y GSAP.
-- **Gestión de Secciones**: Estructura los datos para componentes complejos como `Shows`, `Stats` y `Reviews`, permitiendo actualizar el catálogo de servicios o testimonios sin tocar el código de los componentes.
-- **Configuración de Contacto**: Centraliza los destinos de formularios y enlaces directos a WhatsApp y redes sociales.
+- **Esquema de Color y Tipografía**: Define los tokens de diseño (primary, accent, fonts) que deben respetarse en la implementación de Tailwind.
+- **Internacionalización (i18n)**: Aunque actualmente se centra en español (`es`), la estructura está preparada para soportar múltiples idiomas dentro del objeto `translations`.
+- **Gestión de Secciones**: Cada sección del sitio (Hero, Shows, Reviews, Stats, etc.) tiene su propio objeto de contenido, permitiendo actualizaciones rápidas de textos o imágenes.
+- **Datos Estructurados**: Almacena información crítica como números de WhatsApp, correos de destino de formularios y metadatos SEO.
+- **Contenido Legal**: Incluye los textos para las páginas de Privacidad y Términos, asegurando consistencia legal en todo el sitio.

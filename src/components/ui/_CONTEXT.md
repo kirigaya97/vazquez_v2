@@ -1,24 +1,23 @@
 # 📁 src/components/ui
 
 ## Propósito
-Este directorio contiene los componentes atómicos y fundamentales de la interfaz de usuario. Son piezas reutilizables, agnósticas al contenido específico, encargadas de mantener la consistencia visual y ejecutar las micro-interacciones y animaciones base del proyecto.
+Este directorio contiene los componentes atómicos y elementos de interfaz reutilizables del proyecto. Se enfoca en proporcionar bloques de construcción visuales con alta fidelidad estética, consistencia de diseño y animaciones integradas.
 
 ## Archivos
 | Archivo | Descripción |
 |---|---|
-| **Button.astro** | Componente de botón polimórfico (renderiza `<a>` o `<button>`) con variantes de estilo: primary, secondary, gold y outline. |
-| **CounterVanilla.astro** | Contador numérico animado que utiliza GSAP y ScrollTrigger para incrementar valores cuando el elemento entra en el viewport. |
-| **GoldenBorder.astro** | Efecto visual avanzado que dibuja un borde animado mediante Canvas 2D al hacer hover sobre un elemento padre. |
-| **Reveal.astro** | Wrapper utilitario para aplicar animaciones de entrada (fade-in y slide-up) a elementos mediante clases de Tailwind. |
-| **SectionHeading.astro** | Encabezado estándar para secciones que incluye subtítulo itálico, título principal y una línea decorativa inferior. |
+| Button.astro | Componente polimórfico (botón o enlace) con múltiples variantes visuales (primary, gold, outline) y estados interactivos. |
+| CounterVanilla.astro | Contador numérico animado para estadísticas que se activa mediante scroll utilizando GSAP y ScrollTrigger. |
+| GoldenBorder.astro | Efecto de borde luminoso animado basado en Canvas que reacciona al hover del mouse, diseñado para elementos destacados en escritorio. |
+| Reveal.astro | Wrapper simple para aplicar clases de animación de entrada (fade-in y desplazamiento) a cualquier contenido. |
+| SectionHeading.astro | Estructura estandarizada para títulos de sección que incluye subtítulo decorativo, título principal y línea divisoria. |
 
 ## Relaciones
-- **Usa**: GSAP y ScrollTrigger (vía `src/lib/gsap-init.ts`) para las animaciones de los contadores.
-- **Usado por**: Componentes de `src/components/sections/` y páginas principales para construir la estructura visual del sitio.
+- **Usa**: `gsap`, `ScrollTrigger` (vía `src/lib/gsap-init.ts`), Tailwind CSS 4 para utilidades de estilo y animaciones.
+- **Usado por**: Componentes de `src/components/sections/` y páginas en `src/pages/` para construir la jerarquía visual del sitio.
 
 ## Detalles clave
-- **Interactividad Híbrida**: Combina Tailwind CSS 4 para el estilado declarativo con scripts de cliente (Vanilla JS/GSAP) para animaciones complejas.
-- **Optimización de GoldenBorder**: El efecto de borde está restringido a dispositivos desktop (MD+) y utiliza `requestAnimationFrame` para garantizar un rendimiento fluido del canvas sin sobrecargar el hilo principal.
-- **Ciclo de Vida Astro**: Los scripts integrados utilizan el evento `astro:page-load` para asegurar que las animaciones se reinicialicen correctamente durante la navegación entre páginas (View Transitions).
-- **Polimorfismo**: El componente `Button` decide dinámicamente qué etiqueta HTML usar basándose en la presencia de la prop `href`, mejorando la semántica y accesibilidad.
-- **Diseño Visual**: Implementa una estética premium basada en gradientes púrpura, tipografías elegantes y efectos de brillo (shadow-glow).
+- **Interactividad Avanzada**: Uso de GSAP para animaciones complejas ligadas al scroll y Canvas API para efectos visuales de alta performance (`GoldenBorder`).
+- **Compatibilidad con View Transitions**: Los scripts utilizan el evento `astro:page-load` para asegurar que las animaciones y listeners se reinicialicen correctamente durante la navegación.
+- **Polimorfismo**: El componente `Button` detecta automáticamente si debe renderizar una etiqueta `<a>` o `<button>` basándose en la presencia del atributo `href`.
+- **Diseño Adaptativo**: Algunos componentes complejos como `GoldenBorder` están restringidos a dispositivos de escritorio (`md:block`) para optimizar el rendimiento en móviles.

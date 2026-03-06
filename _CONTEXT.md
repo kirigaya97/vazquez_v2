@@ -1,24 +1,27 @@
-# 📁 /
+# 📁 / (Raíz del Proyecto)
 
 ## Propósito
-Directorio raíz del proyecto "Vázquez Ilusionista", un sitio web de alto rendimiento desarrollado con Astro v5. Actúa como el centro de configuración para el despliegue en Vercel, la gestión de dependencias y la integración de herramientas de diseño y animación.
+Punto de entrada y configuración global del proyecto "Vazquez Ilusionista", gestionando la infraestructura de compilación, las dependencias de animaciones de alto rendimiento y el despliegue en Vercel.
 
 ## Archivos
 | Archivo | Descripción |
 |---|---|
-| `astro.config.mjs` | Configuración principal de Astro, incluyendo el adaptador de Vercel y el plugin de Vite para Tailwind CSS 4. |
-| `package.json` | Definición de dependencias, scripts de automatización (Astro, mapeo de contexto) y metadatos del proyecto. |
-| `tsconfig.json` | Configuración de TypeScript con soporte estricto para Astro y tipado de React para componentes interactivos. |
+| `astro.config.mjs` | Configuración central de Astro que integra Tailwind CSS 4 vía Vite y el adaptador de Vercel. |
+| `package.json` | Define las dependencias del proyecto (GSAP, Lenis, React), scripts de desarrollo y herramientas de mapeo de contexto. |
+| `tsconfig.json` | Configuración de TypeScript con soporte para JSX de React y reglas estrictas de Astro. |
+| `AI_ROUTER.md` | Documentación de arquitectura y reglas específicas para la navegación y prompts de IA. |
+| `README.md` | Guía general del proyecto, instrucciones de configuración y visión técnica. |
 | `.env.example` | Plantilla de variables de entorno para servicios externos como Resend. |
 | `.gitignore` | Definición de archivos y directorios excluidos del control de versiones. |
-| `README.md` | Documentación general y guía de inicio rápido del proyecto. |
+| `lighthouse_results.pdf` | Reporte de auditoría de rendimiento, accesibilidad y SEO del sitio. |
 
 ## Relaciones
-- **Usa**: Astro v5, Tailwind CSS 4, Vercel Adapter, GSAP, Lenis, Resend.
-- **Usado por**: El entorno de ejecución de Vercel y los procesos de desarrollo local.
+- **Usa**: Astro v5, Tailwind CSS 4, GSAP, Lenis, React, Vercel Adapter.
+- **Usado por**: Vercel (para el despliegue), Scripts de automatización en `scripts/`.
 
 ## Detalles clave
-- **Arquitectura de Animación**: Combina GSAP para secuencias visuales y Lenis para scroll suave, configurados globalmente.
-- **Estilizado Moderno**: Implementa Tailwind CSS 4 mediante su nuevo plugin oficial para Vite, eliminando la necesidad de archivos de configuración CSS complejos.
-- **Infraestructura de Datos**: El proyecto incluye scripts personalizados en el directorio `scripts/` para la generación automática de contexto y optimización de assets.
-- **Integración de React**: Configurado para soportar "Hydration" de componentes React (Islands Architecture) dentro del ecosistema Astro.
+- **Estilización Moderna**: Utiliza Tailwind CSS v4 a través de su nuevo plugin para Vite, optimizando el tiempo de compilación.
+- **Ecosistema de Animación**: Combina GSAP y Motion para microinteracciones con Lenis para el control del scroll global.
+- **Arquitectura de Islas**: Configurado para soportar React Islands, permitiendo interactividad selectiva en un entorno principalmente estático.
+- **Automatización**: Incluye un sistema propio de mapeo de contexto (`scripts/map-context.mjs`) para facilitar la comprensión del proyecto por herramientas de IA.
+- **Despliegue**: Optimizado para el entorno de ejecución de Vercel mediante `@astrojs/vercel`.

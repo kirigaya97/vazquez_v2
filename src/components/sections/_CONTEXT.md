@@ -1,28 +1,29 @@
 # 📁 src/components/sections
 
 ## Propósito
-Este directorio contiene los componentes de alto nivel que conforman las secciones principales de la landing page. Están diseñados para ser piezas modulares que gestionan tanto la presentación visual como la lógica de interacción compleja (GSAP, ScrollTrigger, multimedia).
+Este directorio contiene los componentes de alto nivel que conforman las secciones principales de la landing page. Estos componentes gestionan la narrativa visual, integran animaciones complejas de GSAP y manejan la interactividad principal del usuario.
 
 ## Archivos
 | Archivo | Descripción |
 |---|---|
-| AboutMe.astro | Sección biográfica con imagen estilizada y animaciones de revelación para el texto narrativo. |
-| Contact.astro | Formulario de contacto funcional con validación, protección anti-spam (honeypot/timestamp) y envío asíncrono. |
-| Footer.astro | Pie de página institucional que centraliza redes sociales, datos de contacto legal y créditos del desarrollador. |
-| Hero.astro | Pantalla de bienvenida inmersiva con disparador de "modo mágico", audio sincronizado y presentación dinámica de imágenes. |
-| JuryFeedback.astro | Galería de testimonios de reconocimiento internacional con diseño de citas alternadas y acentos visuales. |
-| JuryVIP.astro | Sistema de reseñas estilo Google con scroll fijado (pinned) donde las tarjetas transicionan mediante ScrollTrigger. |
-| Shows.astro | Catálogo interactivo de servicios con tarjetas que expanden su descripción mediante hover o scroll en móviles. |
-| Stats.astro | Sección de métricas de trayectoria con contadores animados y bordes decorativos dorados. |
-| VideoTriptych.astro | Experiencia de video híbrida: triptico interactivo en desktop y feed vertical estilo "Reels" con scroll-snap en mobile. |
+| **AboutMe.astro** | Sección biográfica con diseño de dos columnas y animaciones de revelado. |
+| **Contact.astro** | Formulario de contacto con sistema anti-spam (honeypot/timestamp) e integración con API. |
+| **Footer.astro** | Pie de página con enlaces sociales, información legal y créditos del desarrollador. |
+| **Hero.astro** | Cabecera interactiva con grilla de 105 imágenes, audio, animaciones 3D y estados inmersivos. |
+| **JuryFeedback.astro** | Sección de testimonios internacionales con diseño alternado y decoraciones visuales. |
+| **JuryVIP.astro** | Galería de reseñas tipo Google con scroll-pinning y transición de opacidad por scroll. |
+| **Shows.astro** | Catálogo de servicios con tarjetas interactivas, bordes dorados dinámicos y estados táctiles. |
+| **Stats.astro** | Visualización de logros numéricos mediante contadores animados y tarjetas con desenfoque. |
+| **VideoTriptych.astro** | Galería de videos: tríptico en desktop y sistema de Reels con scroll-snap en mobile. |
 
 ## Relaciones
-- **Usa**: Componentes de `../ui/` (Reveal, Button, GoldenBorder, CounterVanilla, SectionHeading), utilidades de `../../lib/gsap-init.ts` y configuración de `../../data/site-config.json`.
-- **Usado por**: Principalmente por `src/pages/index.astro` para ensamblar la página de inicio.
+- **Usa**: `../ui/` (Reveal, Button, SectionHeading, GoldenBorder, Counter), `../../lib/gsap-init`, `../../data/site-config.json`, `astro:assets`.
+- **Usado por**: `src/pages/index.astro`.
 
 ## Detalles clave
-- **Lógica de Animación Avanzada**: Se utiliza GSAP y ScrollTrigger para gestionar estados complejos, como el scroll infinito simulado en `JuryVIP` y las transiciones del `Hero`.
-- **Dualidad Mobile/Desktop**: Varios componentes (especialmente `VideoTriptych` y `Shows`) implementan lógicas de interacción radicalmente distintas según el dispositivo para optimizar la UX.
-- **Gestión de Multimedia**: El `Hero` y `VideoTriptych` incluyen manejo de precarga, reproducción condicional de video/audio y gestión de estados de silencio (mute/unmute).
-- **Consistencia de Diseño**: Se apoya en clases de Tailwind CSS 4 y componentes UI compartidos para mantener la estética "premium" (dorados, desenfoques, tipografía heading).
-- **Ciclo de Vida Astro**: Las interacciones del lado del cliente están encapsuladas en scripts que escuchan el evento `astro:page-load` para asegurar la compatibilidad con View Transitions.
+- **Animaciones Avanzadas**: Uso extensivo de GSAP y ScrollTrigger para manejar estados complejos, especialmente en `Hero` y `JuryVIP`.
+- **Diferenciación de Dispositivos**: `VideoTriptych` y `Shows` implementan lógicas de interacción radicalmente distintas para desktop (hover/click) y mobile (scroll-snap/observer).
+- **Optimización de Performance**: El componente `Hero` utiliza `requestIdleCallback` y un sistema de "seeds" para precargar 105 imágenes sin bloquear el hilo principal.
+- **Seguridad en Formularios**: `Contact` implementa un honeypot invisible y validación de tiempo de carga para mitigar el spam de bots.
+- **Interactividad Inmersiva**: El `Hero` integra audio (`hero-track.mp3`) y cambios de escala en tiempo real para crear una experiencia "mágica" al interactuar con el trigger.
+- **Consistencia Visual**: Todas las secciones consumen el componente `Reveal` para asegurar una entrada fluida y coordinada de los elementos al hacer scroll.

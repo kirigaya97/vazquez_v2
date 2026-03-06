@@ -1,19 +1,19 @@
 # 📁 src/styles
 
 ## Propósito
-Este directorio centraliza la identidad visual y el sistema de diseño del proyecto, definiendo los tokens de Tailwind CSS 4, los estilos base del documento y las animaciones personalizadas que crean la atmósfera de misterio e ilusionismo.
+Este directorio centraliza la identidad visual y los estilos globales del proyecto. Define la configuración base de Tailwind CSS 4, la paleta de colores temática y las animaciones complejas de bajo nivel que no se gestionan mediante librerías de JS.
 
 ## Archivos
 | Archivo | Descripción |
 |---|---|
-| global.css | Punto de entrada principal que configura el tema de Tailwind, define la paleta de colores "Mystery", tipografías, estilos de scrollbar y efectos visuales complejos para el Hero. |
+| `global.css` | Punto de entrada principal de estilos; define variables de tema, capas base, estilos de scrollbar y animaciones personalizadas (GPU-accelerated). |
 
 ## Relaciones
-- **Usa**: `tailwindcss` (v4 vía @import).
-- **Usado por**: `src/layouts/BaseLayout.astro` para aplicar los estilos globales a todo el sitio.
+- **Usa**: Tailwind CSS 4 (vía `@import "tailwindcss"`), Google Fonts (Playfair Display e Inter).
+- **Usado por**: `src/layouts/BaseLayout.astro` (generalmente importado en el layout principal para aplicarse a todo el sitio).
 
 ## Detalles clave
-- **Tailwind 4 @theme**: Utiliza la nueva sintaxis de variables CSS para definir tokens de diseño como los colores (Purple/Mystery palette), fuentes (Playfair Display/Inter) y espaciados personalizados.
-- **Atmósfera Visual**: Implementa un fondo de ruido dinámico (`hero-noise-bg`) mediante un patrón SVG con animación de vibración (jitter) para añadir textura táctil.
-- **Animaciones CSS**: Incluye lógica de transformación 3D para el símbolo central y efectos de resplandor pulsante (`hero-trigger-glow`) optimizados para composición por GPU.
-- **UX & Scroll**: Define una barra de desplazamiento personalizada con degradados púrpura y aplica `overflow-x: clip` en el body para asegurar la estabilidad visual durante las animaciones de entrada.
+- **Tailwind CSS 4**: Utiliza la nueva directiva `@theme` para definir tokens de diseño como colores corporativos (paleta de púrpuras y misterio) y escalas de espaciado personalizadas.
+- **Optimización de Animaciones**: Incluye animaciones críticas para el Hero (ruido de fondo, efectos 3D y pulsos de brillo) utilizando propiedades transform y opacity para asegurar el renderizado por GPU.
+- **Consistencia Visual**: Define variables específicas para el ecosistema "Vazquez Ilusionista", incluyendo una scrollbar personalizada y fuentes tipográficas que refuerzan la estética de magia y elegancia.
+- **Layout Base**: Configura el comportamiento fundamental de `html` y `body` para prevenir desbordamientos horizontales (`overflow-x: clip`) y asegurar la integración con Lenis (Smooth Scroll).
