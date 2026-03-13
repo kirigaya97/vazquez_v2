@@ -30,10 +30,6 @@
             "href": "#reviews"
         },
         {
-            "id": "stats",
-            "href": "#stats"
-        },
-        {
             "id": "about",
             "href": "#about"
         },
@@ -62,7 +58,6 @@
                 "shows": "Espectáculos",
                 "videos": "Videos",
                 "reviews": "Opiniones",
-                "stats": "Cifras",
                 "about": "Sobre Fer",
                 "contact": "Contacto",
                 "bookNow": "Reservar"
@@ -167,31 +162,6 @@
                         "author": "Cristina Pinelli",
                         "rating": 5,
                         "timeAgo": "Cliente Verificado"
-                    }
-                ]
-            },
-            "stats": {
-                "sectionTitle": "En Números",
-                "items": [
-                    {
-                        "value": 14,
-                        "label": "Países",
-                        "prefix": "+"
-                    },
-                    {
-                        "value": 700,
-                        "label": "Shows",
-                        "prefix": "+"
-                    },
-                    {
-                        "value": 40000,
-                        "label": "Espectadores",
-                        "prefix": "+"
-                    },
-                    {
-                        "value": 15,
-                        "label": "Años de Magia",
-                        "prefix": "+"
                     }
                 ]
             },
